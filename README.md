@@ -1,4 +1,4 @@
 
 # TODO
 
- - [-] Truncate long post text
+ - [ ] Truncate long post text
