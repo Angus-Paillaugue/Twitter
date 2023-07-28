@@ -1,0 +1,67 @@
+<script>
+    import "../app.css";
+    import { Navbar } from "$lib/components";
+    import { Toast } from 'flowbite-svelte';
+    import { toasts, searchBar, preferences, pageMetaData } from "$lib/stores"
+    import { browser } from '$app/environment';
+
+    export let data;
+
+    if (browser) {
+        preferences.subscribe((data) => {
+            const { theme } = data;
+            if(theme == "dark"){
+                document.documentElement.classList.add('dark');
+            }else{
+                document.documentElement.classList.remove('dark');
+            }
+        });
+    }
+</script>
+
+
+<Navbar user={data?.user}/>
+
+
+<svelte:head>
+    <title>{$pageMetaData.title}</title>
+    <meta name="description" content="{$pageMetaData.description}">
+</svelte:head>
+
+
+<main class="min-h-screen transition-all {$searchBar ? "pt-14 mb-[92px]" : "pt-0"}">
+    <header class="bg-white border border-gray-200 dark:bg-gray-800 dark:border-gray-700 p-4 flex flex-row gap-4 items-center">
+        <button on:click={() => {history.back()}} class="button-border-gray" name="back">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-gray-800 dark:text-white"><path stroke-linecap="round" stroke-linejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" /></svg>
+        </button>
+        <h3>{$pageMetaData.headerText}</h3>
+    </header>
+
+    <slot />
+</main>
+
+
+<div class="fixed top-2 right-2 flex flex-col gap-2 z-50">
+    {#each $toasts as toast}
+        {#if toast.type == "error"}
+            <Toast color="red">
+                <svelte:fragment slot="icon">
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
+                </svelte:fragment>
+                {toast.message}
+            </Toast>
+        {:else if toast.type == "success"}
+            <Toast color="green">
+                <svelte:fragment slot="icon">
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                </svelte:fragment>
+                {toast.message}
+            </Toast>
+        {:else}
+            <Toast color="gray">
+                <svg slot="icon" aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clip-rule="evenodd"></path></svg>
+                {toast.message}
+            </Toast>
+        {/if}
+    {/each}
+</div>

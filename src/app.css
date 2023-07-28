@@ -1,0 +1,100 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Mulish:wght@200;300;400;500;600;700;800;900;1000&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+::-webkit-scrollbar {
+  @apply w-2
+}
+::-webkit-scrollbar-track {
+  @apply bg-neutral-300
+}
+::-webkit-scrollbar-thumb {
+  @apply rounded-full bg-neutral-400
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-neutral-500
+}
+
+::selection {
+  @apply text-neutral-100 bg-primary-600
+}
+
+* {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-white dark:bg-neutral-800 overflow-x-hidden text-text-main
+}
+
+.button-primary {
+  @apply focus:outline-none text-white bg-primary-600 hover:bg-primary-700 font-medium rounded-lg text-sm px-5 py-2.5 flex flex-row gap-2 items-center justify-center disabled:bg-primary-400 disabled:cursor-not-allowed shadow-primary-700 dark:shadow-primary-500 hover:shadow-lg hover:dark:shadow-lg transition-all
+}
+.button-red {
+  @apply text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center shadow-red-700 dark:shadow-red-500 hover:shadow-lg hover:dark:shadow-sm transition-all flex flex-row gap-2 items-center justify-center
+}
+.button-border-gray {
+  @apply text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600 shadow-gray-700 dark:shadow-gray-500 hover:shadow-sm transition-all flex flex-row gap-2 items-center justify-center
+}
+
+.link {
+  @apply font-medium text-primary-600 dark:text-primary-400 hover:underline cursor-pointer
+}
+hr {
+  @apply my-4 border-gray-300 dark:border-gray-700 w-full
+}
+
+h1 {
+  @apply text-5xl font-sans font-semibold text-text-main dark:text-gray-50
+}
+h2 {
+  @apply text-4xl font-sans font-semibold text-text-main dark:text-gray-50
+}
+h3 {
+  @apply text-3xl font-sans font-semibold text-text-main dark:text-gray-50
+}
+h4 {
+  @apply text-2xl font-sans font-semibold text-text-main dark:text-gray-50
+}
+h5 {
+  @apply text-xl font-sans font-semibold text-text-main dark:text-gray-50
+}
+h6 {
+  @apply text-lg font-sans font-semibold text-text-main dark:text-gray-50
+}
+p {
+  @apply block text-base leading-8 font-light dark:text-gray-300 text-gray-500 font-['Mulish']
+}
+
+.card {
+  @apply rounded-lg md:p-10 p-6 w-full flex flex-col items-start gap-4 bg-transparent dark:bg-gray-700 text-start transition-all border dark:border-gray-600 border-gray-200
+}
+.card-button {
+  @apply rounded-lg md:p-10 p-6 w-full flex flex-col justify-start items-start gap-6 bg-transparent dark:bg-gray-700 cursor-pointer disabled:cursor-not-allowed text-xl text-start hover:shadow-lg hover:-translate-y-1 transition-all dark:shadow-gray-700 border dark:border-gray-600 border-gray-200 relative text-gray-500 dark:text-gray-50
+}
+.card-button p {
+  @apply leading-5 mt-2
+}
+.card-button svg {
+  @apply text-2xl
+}
+
+
+.postCard {
+  @apply rounded-lg md:p-4 p-2 flex flex-col items-start gap-4 bg-transparent dark:bg-gray-700 text-start transition-all w-full border dark:border-gray-600 border-gray-200 dark:text-gray-50 text-text-main
+}
+
+.userCard {
+  @apply flex flex-col cursor-pointer relative md:hover:shadow-lg rounded-lg bg-transparent dark:bg-gray-700 transition-all overflow-hidden border dark:border-gray-600 border-gray-200
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
