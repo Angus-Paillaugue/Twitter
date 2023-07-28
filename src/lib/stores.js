@@ -5,6 +5,7 @@ export const toasts = writable([]);
 export const deletePostModal = writable({ display:false, id:null });
 export const searchBar = writable(false);
 export const pageMetaData = writable({ title:"", description:"", headerText:"" });
+export const header = writable(true);
 export const preferences = persisted('preferences', {
   theme: 'light',
 });

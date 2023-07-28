@@ -44,7 +44,7 @@ body {
   @apply font-medium text-primary-600 dark:text-primary-400 hover:underline cursor-pointer
 }
 hr {
-  @apply my-4 border-gray-300 dark:border-gray-700 w-full
+  @apply my-4 border-gray-200 dark:border-gray-600 w-full
 }
 
 h1 {

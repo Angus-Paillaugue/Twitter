@@ -2,10 +2,14 @@
     import "../app.css";
     import { Navbar } from "$lib/components";
     import { Toast } from 'flowbite-svelte';
-    import { toasts, searchBar, preferences, pageMetaData } from "$lib/stores"
+    import { toasts, searchBar, preferences, pageMetaData, header } from "$lib/stores"
     import { browser } from '$app/environment';
+    import { onMount } from "svelte";
 
     export let data;
+
+    let previousScrollPost = 0
+    let newScrollPos = 0;
 
     if (browser) {
         preferences.subscribe((data) => {
@@ -17,6 +21,16 @@
             }
         });
     }
+
+    onMount(() => {
+        previousScrollPost = window.scrollY;
+        window.addEventListener("scroll", () => {
+            previousScrollPost = newScrollPos;
+            newScrollPos = window.scrollY;
+        });
+    });
+
+    $: $header = previousScrollPost > newScrollPos;
 </script>
 
 
@@ -29,8 +43,8 @@
 </svelte:head>
 
 
-<main class="min-h-screen transition-all {$searchBar ? "pt-14 mb-[92px]" : "pt-0"}">
-    <header class="bg-white border border-gray-200 dark:bg-gray-800 dark:border-gray-700 p-4 flex flex-row gap-4 items-center">
+<main class="min-h-screen transition-all pt-16 {data?.user ? "mb-24" : ""} {$searchBar ? "mt-[56px]" : ""}">
+    <header class="bg-white border-b border-gray-200 dark:border-gray-600 dark:bg-gray-800 px-4 flex flex-row gap-4 items-center fixed w-full z-30 {$searchBar ? "top-[56px]" : "top-0 duration-500"} transition-all h-16 {previousScrollPost < newScrollPos ? "-translate-y-full" : "translate-y-0"}">
         <button on:click={() => {history.back()}} class="button-border-gray" name="back">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-gray-800 dark:text-white"><path stroke-linecap="round" stroke-linejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" /></svg>
         </button>

@@ -1,23 +1,23 @@
 <script>
     import { onMount } from "svelte";
     import { Post } from "$lib/components"
-    import { pageMetaData } from "$lib/stores"
+    import { pageMetaData, header } from "$lib/stores"
 
     export let data;
 
     const { usersAside } = data;
     let isDown = false;
+    let isMorePostsToLoad = true;
+    let feed = data.feed;
+    let lastNumberOfPosts = feed.length;
     let bookmarks = [];
     let offset = 0;
     let startX;
     let scrollLeft;
-    let feed = data.feed;
     let user;
 
     $: user = data.user;
-    
     $: if(user) bookmarks = user.bookmarks;
-
     $: offset = feed.length;
 
     onMount(() => {
@@ -31,10 +31,16 @@
     });
 
     async function loadSubsPosts() {
-        const res = await fetch(`/api/getSubsPosts?offset=${offset}`, { method:"GET" });
-        const apiRes = await res.json();
-        if(!apiRes.error || !apiRes.message){
-            feed = [ ...feed, ...apiRes.feed ];
+        if(isMorePostsToLoad){
+            const res = await fetch(`/api/getSubsPosts?offset=${offset}`, { method:"GET" });
+            const apiRes = await res.json();
+            if(!apiRes.error || !apiRes.message){
+                feed = [ ...feed, ...apiRes.feed ];
+                if(feed.length == lastNumberOfPosts){
+                    isMorePostsToLoad = false
+                }
+                lastNumberOfPosts = feed.length
+            }
         }
     }
 
@@ -56,14 +62,15 @@
         <img class="mx-auto" src="/hero.svg" alt="" />
     </section>
 {:else}
+
     <main class="flex md:flex-row flex-col-reverse justify-between md:px-6 md:gap-6 px-2 gap-2 md:items-start items-center h-full">
-        <section class="w-full flex flex-col max-w-md md:gap-6 gap-2 mx-auto md:my-6 mt-2 h-full">
+        <section class="w-full flex flex-col max-w-md md:gap-6 gap-2 mx-auto mt-6 h-full" id="Subscriptions">
             {#each feed as post}
                 <Post post={post} bookmarks={bookmarks} />
             {/each}
         </section>
         <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-        <aside class="md:sticky md:top-0 md:h-full md:w-96 max-w-md md:flex-col gap-6 mx-auto p-0 md:x-3 pb-4 pt-6 md:overflow-y-auto md:overflow-x-hidden flex flex-row w-full overflow-x-auto will-change-transform cursor-pointer no-scrollbar"
+        <aside class="md:sticky md:top-0 md:h-full md:w-96 max-w-md md:flex-col gap-6 mx-auto p-0 md:x-3 pb-4 md:overflow-y-auto md:overflow-x-hidden flex flex-row w-full overflow-x-auto will-change-transform cursor-pointer no-scrollbar transition-all duration-500 pt-6"
         on:mousedown={(e) => {let slider = e.target.closest("aside");isDown = true;slider.classList.add('cursor-grab');startX = e.pageX - slider.offsetLeft;scrollLeft = slider.scrollLeft;}} 
         on:mouseleave={(e) => {isDown = false;e.target.closest("aside").classList.remove('cursor-grab');}} 
         on:mouseup={(e) => {isDown = false;e.target.closest("aside").classList.remove('cursor-grab');}} 
