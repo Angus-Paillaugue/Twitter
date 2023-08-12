@@ -1,7 +1,8 @@
 <script>
     import { Post } from '$lib/components';
     import { onMount } from "svelte";
-    import { pageMetaData } from "$lib/stores"
+    import { pageMetaData } from "$lib/stores";
+    import { fade } from 'svelte/transition';
 
     export let data;
 
@@ -13,6 +14,7 @@
     let offset = 0;
     let isMorePosts = true;
     let bioP;
+    $: isSubscribed = subscriptions.filter(el => el.username == profile.username).length > 0;
 
     $: offset = posts.length;
     $: if(fullBio){bioP.style.maxHeight = bioP.scrollHeight+16+"px";}else if(bioP){bioP.style.maxHeight = "24px";}
@@ -58,9 +60,9 @@
             </div>
             {#if user}
                 <button class="button-primary" on:click={() => {toggleSubscription(profile.username)}}>
-                    {#if subscriptions.filter(el => el.username == profile.username).length > 0 }
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+                    {#if isSubscribed}
                         Followed
+                        <svg in:fade xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" class="transition-all" style="stroke-dasharray: 100;animation: dash 4s;" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
                     {:else}
                         Follow
                     {/if}
