@@ -9,6 +9,7 @@
 
     $pageMetaData.title = `${post.username}'s post`;
     $pageMetaData.description = `${post.username}'s post`;
+    $pageMetaData.currentPageName = "Post";
 </script>
 
 <section class="flex flex-col max-w-lg w-full border border-b-0 border-border h-full">

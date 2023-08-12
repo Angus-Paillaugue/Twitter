@@ -46,6 +46,7 @@
     
     $pageMetaData.title = `${profile.username}'s profile.`;
     $pageMetaData.description = `${profile.username}'s profile.`;
+    $pageMetaData.currentPageName = "Profile";
 </script>
 
 <section class="w-full">
@@ -54,7 +55,7 @@
             <!-- svelte-ignore a11y-img-redundant-alt -->
             <img src="{profile.profilePicture}" alt="Profile picture" class="rounded-full lg:h-36 transition-all lg:w-36 md:h-24 md:w-24 w-16 h-16 absolute bottom-0 left-2 md:left-5 translate-y-3/4 ring-4 ring-neutral-800">
         </div>
-        <div class="lg:h-[108px] md:h-[70px] h-[54px] mb-2 flex justify-between items-center lg:p-4 p-2 lg:pl-44 md:pl-32 pl-20">
+        <div class="lg:h-[108px] md:h-[70px] mb-2 flex flex-col sm:flex-row justify-between md:items-center gap-2 lg:p-4 p-2 lg:pl-44 md:pl-32 pl-20">
             <div class="h-full flex items-start">
                 <h1 class="lg:text-4xl text-2xl">{profile.username}</h1>
             </div>
@@ -66,7 +67,7 @@
                     {:else}
                         Follow
                     {/if}
-                </button>    
+                </button>
             {/if}
         </div>
     

@@ -9,7 +9,7 @@ export async function load({ locals }) {
     if(locals.user){
         const { user } = locals;
         
-        if(user.subscriptions.length == 0){
+        if(user.subscriptions.length === 0){
             feed = await postsRef.find({  }).sort({date:-1}).limit(20).toArray();
         }else{
             feed = await postsRef.find({ username:{ $in:[...user.subscriptions.map(sub => sub.subscriptions)] } }).sort({date:-1}).limit(20).toArray();
@@ -26,7 +26,7 @@ export async function load({ locals }) {
         
         // let usersAside = structuredClone(await usersRef.find({  }).limit(20).toArray());
 
-        return { feed};
+        return { feed };
     }else {
         return { feed:[] }
     }

@@ -1,22 +1,19 @@
 <script>
     import { onMount } from "svelte";
-    import { Post } from "$lib/components"
-    import { pageMetaData } from "$lib/stores"
-    import { enhance } from '$app/forms'
+    import { Post } from "$lib/components";
+    import { pageMetaData } from "$lib/stores";
+    import { enhance } from '$app/forms';
 
     export let data;
     export let form;
 
-    // const { usersAside } = data;
-    // let isDown = false;
-    let isMorePostsToLoad = true;
     let feed = data.feed;
     let lastNumberOfPosts = feed.length;
+    let isMorePostsToLoad = true;
+    let morePostsLoading = false;
     let bookmarks = [];
     let offset = 0;
     let tabIndex = 0;
-    // let startX;
-    // let scrollLeft;
     let user;
 
     $: user = data.user;
@@ -35,21 +32,26 @@
 
 
     async function loadSubsPosts() {
-        if(isMorePostsToLoad){
+        if(isMorePostsToLoad && !morePostsLoading){
+            morePostsLoading = true;
             const res = await fetch(`/api/getSubsPosts?offset=${offset}`, { method:"GET" });
             const apiRes = await res.json();
             if(!apiRes.error || !apiRes.message){
                 feed = [ ...feed, ...apiRes.feed ];
-                if(feed.length == lastNumberOfPosts){
-                    isMorePostsToLoad = false
+                if(feed.length === lastNumberOfPosts){
+                    isMorePostsToLoad = false;
                 }
-                lastNumberOfPosts = feed.length
+                lastNumberOfPosts = feed.length;
             }
+            morePostsLoading = false;
         }
     }
 
+    // $: console.log(feed.map(el => el.id));
+
     $pageMetaData.title = "Home";
     $pageMetaData.description = "Home page of this amazing social network.";
+    $pageMetaData.currentPageName = "Home";
 </script>
 
 {#if !user}

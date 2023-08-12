@@ -1,27 +1,26 @@
 import { usersRef, postsRef } from "$lib/server/db"
 
 export async function GET({ locals, url }) {
-    if(locals.user){
-        const { user } = locals;
-        let offset = Number(url.searchParams.get('offset') || 0);
+    const { user } = locals;
+    let offset = Number(url.searchParams.get('offset') || 0);
 
-        let feed;
-        
-        if(user.subscriptions.length !== 0){
-            feed = await postsRef.find({ username:{ $in:[...user.subscriptions.map(sub => sub.username)] } }).sort({date:-1}).limit(offset+20).toArray();
-            feed = feed.slice(offset);
-    
-            feed = structuredClone(await Promise.all(feed.map(async (post) => {
-                return{ ...post, user: await usersRef.findOne({ username:post.username })}
-            })));
+    let feed = [];
+    if(!locals.user) return new Response(JSON.stringify({ error:true, message:"Not logged-in!" }));
 
-    
-            return new Response(JSON.stringify({ error:false, feed }));
-        }else {
-            return new Response(JSON.stringify({ error:false, feed:[] }));
-        }
-
+    if(user.subscriptions.length === 0){
+        feed = await postsRef.find({  }).sort({date:-1}).limit(offset+20).toArray();
     }else {
-        return new Response(JSON.stringify({ error:true, message:"Not logged-in!" }));
+        feed = await postsRef.find({ username:{ $in:[...user.subscriptions.map(sub => sub.subscriptions)] } }).sort({date:-1}).limit(offset+20).toArray();
     }
+    
+    feed = feed.slice(offset);
+    if(feed.length < 20){
+        let temp = await postsRef.find({  }).limit(20-feed.length).toArray();
+        feed.push(...temp);
+    }
+    feed = structuredClone(await Promise.all(feed.map(async (post) => {
+        return{ ...post, user: await usersRef.findOne({ username:post.username })}
+    })));
+
+    return new Response(JSON.stringify({ error:false, feed }));
 };

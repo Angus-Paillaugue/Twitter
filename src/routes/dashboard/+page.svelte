@@ -36,6 +36,7 @@
 
     $pageMetaData.title = "Dashboard";
     $pageMetaData.description = "Dashboard";
+    $pageMetaData.currentPageName = "Dashboard";
 </script>
 
 <svelte:head>

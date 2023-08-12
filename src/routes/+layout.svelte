@@ -9,7 +9,7 @@
 
 
 <svelte:head>
-    <title>{$pageMetaData.title}</title>
+    <title>{$pageMetaData.title} - X</title>
     <meta name="description" content="{$pageMetaData.description}">
 </svelte:head>
 
