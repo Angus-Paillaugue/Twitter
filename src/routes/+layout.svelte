@@ -16,12 +16,7 @@
 
 <main class="min-h-screen transition-all flex w-full flex-row justify-start max-w-screen-xl mx-auto {$searchBar && "pt-16"}">
     <Navbar user={data?.user}/>
-    <!-- <header class="bg-white border-b border-gray-200 dark:border-gray-600 dark:bg-gray-800 px-4 flex flex-row gap-4 items-center fixed w-full z-30 {$searchBar ? "top-[56px]" : "top-0 duration-500"} transition-all h-16 {previousScrollPost < newScrollPos ? "-translate-y-full" : "translate-y-0"}">
-        <button on:click={() => {history.back()}} class="button-border-gray" name="back">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-gray-800 dark:text-white"><path stroke-linecap="round" stroke-linejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" /></svg>
-        </button>
-        <h3>{$pageMetaData.headerText}</h3>
-    </header> -->
+    
     <slot />
 </main>
 

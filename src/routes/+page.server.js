@@ -33,7 +33,7 @@ export async function load({ locals }) {
 };
 
 export const actions = {
-    login: async ({ cookies, request, url }) => {
+    login: async ({ cookies, request }) => {
         try{
             const formData = Object.fromEntries(await request.formData());
             const { username, password } = formData;
@@ -42,19 +42,15 @@ export const actions = {
             if(!userExists) return { success:false, formData:formData, message:"No account with this username!" };
             const compare = await bcrypt.compare(password, userExists.password);
             if(compare){
-                cookies.set("token", generateAccessToken(username), { path:"/" });
-                if(url.searchParams.get("redirect")){
-                    throw redirect(303, url.searchParams.get("redirect"));
-                }else{
-                    throw redirect(303, "/dashboard");
-                }
+                cookies.set("token", generateAccessToken(username), { path:"/", httpOnly: true, sameSite:"strict", maxAge: 60 * 60 * 24 });
+                throw redirect(303, "/dashboard");
             }
             return { success:false, formData:formData, message:"Incorrect password!" };
         }catch(err){
             console.log(err);
         }
     },
-    signin: async ({ cookies, request, url }) => {
+    signin: async ({ cookies, request }) => {
         const formData = Object.fromEntries(await request.formData());
         const { email, username, password } = formData;
 
@@ -69,12 +65,8 @@ export const actions = {
 
         await usersRef.insertOne({ username: username, email:email, password:hash, profilePicture:"/defaultProfilePicture.png", banner:"/defaultBanner.jpg", bookmarks:[], subscriptions:[], joined:new Date(), bio:"No bio for now" });
 
-        cookies.set("token", generateAccessToken(username), { path:"/", httpOnly: true, maxAge: 60 * 60 * 24 * 30 });
-        if(url.searchParams.get("redirect")){
-            throw redirect(303, url.searchParams.get("redirect"));
-        }else{
-            throw redirect(301, "/dashboard");
-        }
+        cookies.set("token", generateAccessToken(username), { path:"/", httpOnly: true, sameSite:"strict", maxAge: 60 * 60 * 24 });
+        throw redirect(301, "/dashboard");
     }
 };
 

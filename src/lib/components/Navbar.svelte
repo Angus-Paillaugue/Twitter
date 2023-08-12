@@ -96,7 +96,8 @@
                         <Tooltip>{hint.username}</Tooltip>
                         {#if hint.file}
                             {#if fileType(hint.file[0]) == "image"}
-                                <img src="/files/{hint.file[0]}" alt="" class="h-24">
+                                <!-- svelte-ignore a11y-img-redundant-alt -->
+                                <img src="/files/{hint.file[0]}" alt="Post image" class="h-24">
                             {/if}
                         {/if}
                         <p class="line-clamp-3 text-ellipsis p-2">

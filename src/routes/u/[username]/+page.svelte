@@ -7,14 +7,15 @@
 
     const { profile, user } = data;
     let bookmarks = user.bookmarks;
-    let posts = data.posts
+    let posts = data.posts;
     let subscriptions = user.subscriptions;
-    let bio = profile.bio;
     let fullBio = false;
     let offset = 0;
     let isMorePosts = true;
+    let bioP;
 
     $: offset = posts.length;
+    $: if(fullBio){bioP.style.maxHeight = bioP.scrollHeight+16+"px";}else if(bioP){bioP.style.maxHeight = "24px";}
 
     onMount(() => {
         window.addEventListener("scroll", () => {
@@ -27,9 +28,7 @@
     async function toggleSubscription(username) {
         const res = await fetch("/api/toggleSubscription", { method:"POST", body:JSON.stringify({ username }) });
         const apiRes = await res.json();
-        if(!apiRes.error){
-            subscriptions = apiRes.subscriptions;
-        }
+        if(!apiRes.error)  subscriptions = apiRes.subscriptions;
     }
 
     async function loadPosts() {
@@ -69,20 +68,18 @@
             {/if}
         </div>
     
-        <p class="text-lg p-2 pb-0 transition-all duration-500 overflow-hidden {fullBio ? "max-h-[10000px] py-4" : "line-clamp-1 max-h-10"}">{@html bio}</p>
-        {#if bio.includes("<br />")}
+        <p bind:this={bioP} class="w-full transition-all overflow-hidden relative pl-2 duration-500 {fullBio && "py-4"}">
+            {@html profile.bio}
+        </p>
+        {#if profile.bio.includes("<br />")}
             <button class="ml-2 mb-2 link" on:click={() => {fullBio = !fullBio}}>
-                {#if fullBio}
-                    Show less
-                {:else}
-                    Show more
-                {/if}
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 inline-block transition-all {fullBio ? "" : "rotate-180"}"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" /></svg>              
+                Show {fullBio ? "less" : "more"}
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 inline-block transition-all duration-500 {!fullBio && "rotate-180"}"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" /></svg>              
             </button>
         {/if}
     </section>
     
-    <section class="flex flex-col max-w-lg w-full border-x border-border">
+    <section class="flex flex-col max-w-lg mx-auto w-full border-x border-border">
         {#each posts as post}
             <Post post={post} bookmarks={bookmarks} />
         {/each}
