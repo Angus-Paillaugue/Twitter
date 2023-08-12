@@ -5,10 +5,12 @@
 
     export let post;
     export let bookmarks;
+    export let borderTop;
 
     let isFullScreen = false;
     let isDeleted = false;
     let deletePostModal = false;
+    let mediaModalSrc = {type:"", src:""};
 
     async function toggleBookmark() {
         const res = await fetch("/api/toggleBookmark", { method:"POST", body:JSON.stringify({ id:post.id }) });
@@ -27,34 +29,41 @@
             $toasts = [ ...$toasts, { type:"error", message:apiRes.message } ];
         }
     }
+
+    const showMediaFS = (index) => {
+        mediaModalSrc.type = fileType(post.file[index]);
+        mediaModalSrc.src = post.file[index];
+        isFullScreen = true
+    }
 </script>
 
-{#if !isDeleted}
-    <div class="postCard">
+{#if !isDeleted && post?.user}
+    <article class="postCard {borderTop ? "border-y" : "border-b"}">
         <div class="flex flex-row justify-between gap-2 w-full">
-            <div class="flex flex-row gap-2">
+            <div class="flex flex-row items-center gap-2">
                 <!-- svelte-ignore a11y-img-redundant-alt -->
                 <a href="/u/{post.user.username}"><img src="{post.user.profilePicture}" class="rounded-full h-10 w-10" alt="Profile picture"></a>
-                <h3>{post.user.username}</h3>
+                <h4>{post.user.username}</h4>
             </div>
             <p>{formatDate(post.date)}</p>
         </div>
-        <div class="w-full pl-12 flex flex-col gap-2">
+        <div class="w-full sm:pl-12 flex flex-col gap-2">
             {#if post.text}
-                <p class="leading-6">{@html post.text ? parseMentions(post.text.replaceAll("\n", "<br>")) : ""}</p>
+                <p class="leading-6">{@html parseMentions(post.text.replaceAll("\n", "<br>"))}</p>
             {/if}
             {#if post.file}
-                <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <!-- svelte-ignore a11y-no-static-element-interactions -->
-                <div class="{isFullScreen ? "fixed top-0 left-0 w-full h-full bg-gray-600 bg-opacity-50 z-50 flex flex-col justify-center items-center" : "w-full h-full"}" on:click={() => {isFullScreen = !isFullScreen;}}>
-                    {#if fileType(post.file) == "image"}
-                        <!-- svelte-ignore a11y-img-redundant-alt -->
-                        <img class="rounded-lg {isFullScreen ? "w-auto h-auto max-h-full max-w-full" : "w-full cursor-pointer"} mx-auto" src="/files/{post.file}" alt="Post image">
-                    {:else if fileType(post.file) == "video"}
-                        <!-- svelte-ignore a11y-media-has-caption -->
-                        <video src="/files/{post.file}" controls class="rounded-lg {isFullScreen ? "w-auto h-auto max-h-full max-w-full" : "w-full cursor-pointer"} mx-auto relative"></video>
-                    {/if}
+                <div class="mx-auto grid {post.file.length === 1 ? "grid-cols-1" :  post.file.length === 2 ? "grid-cols-2" : "grid-cols-3"}">
+                    {#each post.file as file, index}
+                        {#if fileType(file) === "video"}
+                            <!-- svelte-ignore a11y-media-has-caption -->
+                            <video src="/files/{file}" controls class="rounded-lg cursor-pointer mx-auto"></video>
+                        {:else if fileType(file) === "image"}
+                            <!-- svelte-ignore a11y-img-redundant-alt -->
+                            <!-- svelte-ignore a11y-click-events-have-key-events -->
+                            <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                            <img class="rounded-lg w-full cursor-pointer mx-auto" src="/files/{file}" alt="Post image" on:click={() => {showMediaFS(index);}}>
+                        {/if}
+                    {/each}
                 </div>
             {/if}
             <div class="w-full flex flex-row justify-between items-center">
@@ -76,20 +85,30 @@
                 {/if}
             </div>
         </div>
-    </div>
-{/if}
-
-<div class="fixed top-0 left-0 w-full h-full bg-gray-600 bg-opacity-50 transition-opacity flex flex-col justify-center items-center {deletePostModal ? "z-40 opacity-100": "-z-10 opacity-0"}">
-    <div class="relative w-full max-w-md max-h-full">
-        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-            <div class="p-6 text-center">
-                <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
-                <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Are you sure you want to delete this post?</h3>
-                <div class="flex flex-row justify-center gap-2">
-                    <button type="button" class="button-border-gray" on:click={() => {deletePostModal = false;}}>No, cancel</button>
-                    <button type="button" class="button-primary" on:click={deletePost}>Yes, I'm sure</button>
+    </article>
+    <div class="fixed top-0 left-0 w-full h-full bg-neutral-600/50 transition-opacity flex flex-col justify-center items-center {deletePostModal ? "z-40 opacity-100": "-z-10 opacity-0"}">
+        <div class="relative w-full max-w-md max-h-full">
+            <div class="relative rounded-lg shadow bg-neutral-900">
+                <div class="p-6 text-center">
+                    <svg class="mx-auto mb-4 text-neutral-100 w-12 h-12" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+                    <h3 class="mb-5">Are you sure you want to delete this post?</h3>
+                    <div class="flex flex-row justify-center gap-2">
+                        <button type="button" class="button-secondary" on:click={() => {deletePostModal = false;}}>No, cancel</button>
+                        <button type="button" class="button-primary" on:click={deletePost}>Yes, I'm sure</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+{/if}
+
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+<div class="bg-neutral-800/50 fixed top-0 left-0 w-full h-full transition-all flex flex-col items-center justify-center {isFullScreen ? "opacity-100 z-50" : "opacity-0 -z-10"}" on:click={() => isFullScreen = false}>
+    {#if mediaModalSrc.type === "image"}
+        <img src="/files/{mediaModalSrc.src}" alt="" class="rounded-lg max-h-full max-w-full">
+    {:else if mediaModalSrc.type === "video"}
+        <!-- svelte-ignore a11y-media-has-caption -->
+        <video src="/files/{mediaModalSrc.src}" class="max-h-full max-w-full"></video>
+    {/if}
 </div>

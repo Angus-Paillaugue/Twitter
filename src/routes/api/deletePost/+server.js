@@ -7,8 +7,9 @@ export async function POST({ locals, request }) {
         const { id } = formData;
 
         let post = await postsRef.findOne({ id })
-
-        if(post.file) unlinkSync(`static/files/${post.file}`);
+        for(const file of post.file){
+            unlinkSync(`static/files/${file}`);
+        }
 
         await postsRef.deleteOne({ id });
 

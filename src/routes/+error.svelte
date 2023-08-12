@@ -4,7 +4,6 @@
 
     $pageMetaData.title = `${$page.status || "404"} Error`;
     $pageMetaData.description = "Error";
-    $pageMetaData.headerText = "Error";
 </script>
 
 <div class="hero min-h-screen">

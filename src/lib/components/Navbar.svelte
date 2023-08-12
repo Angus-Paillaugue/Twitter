@@ -34,25 +34,26 @@
 </script>
 
 {#if display}
-    <div class="h-16 bg-white backdrop-blur border border-gray-200 rounded-full dark:bg-gray-700 bg-opacity-50 dark:bg-opacity-50 dark:border-gray-600 grid max-w-lg grid-cols-3 mx-max fixed z-30 w-full -translate-x-1/2 bottom-2 sm:bottom-4 left-1/2 shadow-lg">
-        <a href="/" class="inline-flex flex-col items-center justify-center rounded-l-full px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group transition-all duration-200 hover:bg-opacity-40 dark:hover:bg-opacity-40">
-            <svg class="w-5 h-5 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-500 transition-all duration-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
+    <div class="h-screen border-r border-border md:mr-4 sticky top-0 flex flex-col gap-4 text-neutral-100 text-lg p-2 sm:p-4">
+        <svg viewBox="0 0 24 24" class="mx-auto fill-neutral-100"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+        <a href="/" class="flex flex-row gap-2 items-center px-4 py-2 transition-all rounded-full hover:bg-neutral-800">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 sm:w-8 lg:w-10 aspect-square transition-all">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
             </svg>
-            <span class="sr-only">Home</span>
+            <span class="max-md:hidden">Home</span>
         </a>
-        <Tooltip>Home</Tooltip>
-        <div class="flex items-center justify-center">
-            <button type="button" on:click={() => {$searchBar = !$searchBar}} class="inline-flex items-center justify-center w-10 h-10 font-medium bg-primary-600 rounded-full hover:bg-primary-700 group focus:ring-4 focus:ring-primary-300 focus:outline-none dark:focus:ring-primary-800">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-white"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" /></svg>                          
-                <span class="sr-only">Search</span>
-            </button>
-        </div>
-        <Tooltip>Search</Tooltip>
-        <a href="/dashboard" class="inline-flex flex-col items-center justify-center px-5 rounded-r-full hover:bg-gray-50 dark:hover:bg-gray-800 group transition-all duration-200 hover:bg-opacity-40 dark:hover:bg-opacity-40">
-            <svg class="w-5 h-5 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-500 transition-all duration-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20"><path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm0 5a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm0 13a8.949 8.949 0 0 1-4.951-1.488A3.987 3.987 0 0 1 9 13h2a3.987 3.987 0 0 1 3.951 3.512A8.949 8.949 0 0 1 10 18Z"/></svg>
+        <button on:click={() => {$searchBar = !$searchBar}} class="flex flex-row gap-2 items-center px-4 py-2 transition-all rounded-full hover:bg-neutral-800">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 sm:w-8 lg:w-10 aspect-square transition-all">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+            </svg>
+            <span class="max-md:hidden">Search</span>
+        </button>
+        <a href="/dashboard" class="flex flex-row gap-2 items-center px-4 py-2 transition-all rounded-full hover:bg-neutral-800">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 sm:w-8 lg:w-10 aspect-square transition-all">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <span class="max-md:hidden">Dashboard</span>
         </a>
-        <Tooltip>Profile</Tooltip>
     </div>
 {/if}
 
@@ -62,45 +63,47 @@
 <div class="fixed top-0 left-0 w-full h-full bg-gray-600 bg-opacity-50 flex flex-col gap-2 items-start transition-opacity {$searchBar ? "opacity-100 z-40" : "opacity-0 -z-10 "}" on:click={() => {$searchBar = false;}}>
     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
     <form action="/search" method="GET" class="w-full h-14 flex flex-row items-center transition-all {$searchBar ? "translate-y-0" : "-translate-y-full"}" on:click={(e) => {e.stopPropagation();}} on:submit= {() => {$searchBar = false; goto(`/search?q=${query}`)}}>
-        <label for="q" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+        <label for="q" class="mb-2 text-sm font-medium sr-only text-neutral-100">Search</label>
         <div class="relative w-full h-full">
             <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                <svg class="w-4 h-4 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                 </svg>
             </div>
-            <input type="search" id="q" bind:value={query} name="q" class="block w-full p-4 pl-10 h-full text-sm text-gray-900 border border-gray-300 rounded-b-lg bg-gray-50 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" autocomplete="off" placeholder="Search posts or users" required bind:this={searchInput}>
-            <button type="submit" class="absolute top-1/2 right-2.5 -translate-y-1/2 button-primary">Search</button>
+            <input type="search" id="q" bind:value={query} name="q" class="block w-full p-4 pl-10 h-full text-sm border rounded-b-lg bg-gray-700 border-gray-600 placeholder-gray-400 text-neutral-100 focus:ring-primary-500 focus:border-primary-500" autocomplete="off" placeholder="Search posts or users" required bind:this={searchInput}>
+            <button type="submit" class="absolute top-1/2 right-0 -translate-y-1/2 button-primary">Search</button>
         </div>
     </form>
-    <div class="flex flex-col gap-2 w-full max-w-xl max-h-full overflow-y-auto transition-opacity mx-auto {searchHint.length > 0 ? "opacity-100" : "opacity-0"}" on:click={(e) => {e.stopPropagation();}} >
-        {#each searchHint as hint}
-            {#if hint.type == "user"}
-                <a href="/u/{hint.username}" class="w-full overflow-hidden flex flex-col justify-start dark:bg-gray-700 rounded-lg bg-gray-50">
-                    <div class="w-full relative bg-no-repeat bg-center bg-cover h-16 lg:h-24" style="background-image: url('{hint.banner}');">
-                        <!-- svelte-ignore a11y-img-redundant-alt -->
-                        <img src="{hint.profilePicture}" alt="Profile picture" class="rounded-full lg:h-20 lg:w-20 h-14 w-14 absolute bottom-0 left-5 translate-y-3/4 ring-4 ring-white">
-                    </div>
-                    <div class="h-16 lg:h-24 pl-24 lg:pl-28">
-                        <div class="h-full flex items-start">
-                            <h1 class="lg:text-4xl text-2xl font-semibold">{@html highlightSearchedText(hint.username)}</h1>
+    <div class="flex flex-col w-full max-w-md max-h-full overflow-y-auto transition-all mx-auto border-x border-border {searchHint.length > 0 ? "opacity-100" : "opacity-0"}" on:click={(e) => {e.stopPropagation();}} >
+        {#each searchHint as hint, index}
+            {#if index < 5}
+                {#if hint.type == "user"}
+                    <a href="/u/{hint.username}" class="w-full overflow-hidden flex flex-col justify-start {index === 0 ? "border-y" : "border-b"} border-border bg-neutral-900">
+                        <div class="w-full relative bg-no-repeat bg-center bg-cover h-16 lg:h-24" style="background-image: url('{hint.banner}');">
+                            <!-- svelte-ignore a11y-img-redundant-alt -->
+                            <img src="{hint.profilePicture}" alt="Profile picture" class="rounded-full lg:h-20 lg:w-20 h-14 w-14 absolute bottom-0 left-5 translate-y-3/4 ring-4 ring-neutral-800">
                         </div>
-                    </div>
-                </a>
-            {:else}
-                <a href="/post/{hint.id}" class="w-full overflow-hidden flex flex-row justify-start items-center dark:bg-gray-700 rounded-lg bg-gray-50">
-                    <!-- svelte-ignore a11y-img-redundant-alt -->
-                    <img src="{hint.user.profilePicture}" alt="Profile picture" class="rounded-full lg:h-20 lg:w-20 h-14 w-14 ring-4 ring-white">
-                    <Tooltip>{hint.username}</Tooltip>
-                    {#if hint.file}
-                        {#if fileType(hint.file) == "image"}
-                            <img src="/files/{hint.file}" alt="" class="h-24">
+                        <div class="h-16 lg:h-24 pl-24 lg:pl-28">
+                            <div class="h-full flex items-start">
+                                <h1 class="lg:text-4xl text-2xl font-semibold">{@html highlightSearchedText(hint.username)}</h1>
+                            </div>
+                        </div>
+                    </a>
+                {:else}
+                    <a href="/post/{hint.id}" class="w-full overflow-hidden flex flex-row border-border {index === 0 ? "border-y" : "border-b"} bg-neutral-900">
+                        <!-- svelte-ignore a11y-img-redundant-alt -->
+                        <img src="{hint.user.profilePicture}" alt="Profile picture" class="rounded-full lg:h-20 lg:w-20 h-14 w-14 ring-4 m-2 ring-neutral-800">
+                        <Tooltip>{hint.username}</Tooltip>
+                        {#if hint.file}
+                            {#if fileType(hint.file[0]) == "image"}
+                                <img src="/files/{hint.file[0]}" alt="" class="h-24">
+                            {/if}
                         {/if}
-                    {/if}
-                    <p class="line-clamp-3 text-ellipsis p-2">
-                        {@html highlightSearchedText(hint.text)}
-                    </p>
-                </a>
+                        <p class="line-clamp-3 text-ellipsis p-2">
+                            {@html highlightSearchedText(hint.text)}
+                        </p>
+                    </a>
+                {/if}
             {/if}
         {/each}
     </div>

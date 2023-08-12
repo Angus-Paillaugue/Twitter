@@ -1,6 +1,6 @@
 <script>
     import { Tabs, TabItem, Tooltip  } from 'flowbite-svelte';
-    import { preferences, pageMetaData } from "$lib/stores"
+    import { pageMetaData } from "$lib/stores"
     import { enhance } from '$app/forms'
 
     export let data;
@@ -8,17 +8,9 @@
 
     const { user } = data;
     let deleteAccountModal = false;
-    let theme = $preferences.theme;
-
-    function switchTheme() {
-        preferences.set({ theme: theme});
-
-        theme == "dark" ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark');
-    }
 
     $pageMetaData.title = "Settings";
     $pageMetaData.description = "Settings";
-    $pageMetaData.headerText = "Settings";
 </script>
 
 <div class="max-w-md mx-auto w-full mt-10">
@@ -48,19 +40,6 @@
                 {#if form?.err}
                     <div class="mt-2 p-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert"><strong>Error : </strong>{form?.msg ?? "An error occurred"}</div>
                 {/if}
-            </TabItem>
-            <TabItem class="w-full p-0">
-                <span slot="title">Theme</span>
-                <div class="flex flex-col gap-6">
-                    <div class="flex items-center mb-4">
-                        <input type="radio" name="lightTheme" bind:group={theme} value={"light"} on:change={switchTheme} class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                        <label for="lightTheme" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Light</label>
-                    </div>
-                    <div class="flex items-center">
-                        <input type="radio" name="darkTheme" bind:group={theme} value={"dark"} on:change={switchTheme} class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                        <label for="darkTheme" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Dark</label>
-                    </div>
-                </div>
             </TabItem>
             <TabItem class="w-full p-0">
                 <span slot="title">Danger</span>

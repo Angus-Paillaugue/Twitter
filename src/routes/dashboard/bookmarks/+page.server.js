@@ -10,6 +10,7 @@ export async function load({ locals }) {
             let postUser = await usersRef.findOne({ username:post.username });
             return { ...post, user: { ...postUser }, type:"post" }
         }else {
+            await usersRef.updateOne({ username:user.username }, { $pull: { bookmarks: { id:bookmark.id }} });
             return null;
         }
     })));

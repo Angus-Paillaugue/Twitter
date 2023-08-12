@@ -15,19 +15,29 @@ export async function load({ locals }) {
     return { posts };
 };
 
-/** @type {import('./$types').Actions} */
 export const actions = {
     default:async({ request, locals }) => {
         const { user } = locals;
-        
         if(user){
-            const formData = Object.fromEntries(await request.formData());
-            const { file, text } = formData;
-            const id = randomUUID();
-            writeFileSync(`static/files/${id+"."+file.name.split(".").at(-1)}`, Buffer.from(await file.arrayBuffer()));
-            await postsRef.insertOne({ username:user.username, text, file:file ? id+"."+file.name.split(".").at(-1) : false, id, date:new Date() });
+            const data = await request.formData();
+            const files = data.getAll('files')
+            const formData = Object.fromEntries(data)
+            let { text } = formData;
+            let fileNames = [];
+            const postId = randomUUID();
 
-            throw redirect(303, `/post/${id}`);
+            const regexExp = new RegExp(/\B@\w+/g)
+            text = text.replace(regexExp, function(match) {
+                return `<user>${match}</user>`;
+            });
+            for(const file of files){
+                let id = randomUUID();
+                writeFileSync(`static/files/${id+"."+file.name.split(".").at(-1)}`, Buffer.from(await file.arrayBuffer()));
+                fileNames.push(id+"."+file.name.split(".").at(-1));
+            }
+            await postsRef.insertOne({ username:user.username, text, file:fileNames.length > 0 ? fileNames : false, id:postId, date:new Date() });
+
+            throw redirect(303, `/post/${postId}`);
         }
     }
 };

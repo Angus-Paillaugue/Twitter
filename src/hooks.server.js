@@ -11,7 +11,7 @@ export const handle = async ({ event, resolve }) => {
             locals.user = user;
         } else {
             cookies.delete("token"); 
-            throw redirect(303, "/log-in");
+            throw redirect(303, "/");
         }
     } else {
         locals.user = false;
@@ -19,11 +19,7 @@ export const handle = async ({ event, resolve }) => {
 
     if(url.pathname.startsWith("/dashboard") && !locals.user){
         cookies.delete("token"); 
-        throw redirect(303, `/log-in?redirect=${url.pathname}`);
-    }
-
-    if((url.pathname.startsWith("/log-in") || url.pathname.startsWith("/sign-in")) && locals.user){
-        throw redirect(303, "/dashboard");
+        throw redirect(303, `/`);
     }
 
     return resolve(event);
