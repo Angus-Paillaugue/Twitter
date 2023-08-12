@@ -11,7 +11,5 @@ export async function load({ url }) {
         return{ ...post, user: await usersRef.findOne({ username:post.username })}
     })));
 
-    let usersAside = structuredClone(await usersRef.find({ username:searchQuery }).limit(20).toArray());
-
-    return { posts, usersAside };
+    return { posts };
 };

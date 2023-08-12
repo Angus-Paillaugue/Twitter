@@ -8,7 +8,7 @@ export async function load({ locals }) {
         let post = await postsRef.findOne({ id:bookmark.id });
         if(post){
             let postUser = await usersRef.findOne({ username:post.username });
-            return { ...post, user: { ...postUser }, type:"post" }
+            return { ...post, user: { ...postUser }, type:"post" };
         }else {
             await usersRef.updateOne({ username:user.username }, { $pull: { bookmarks: { id:bookmark.id }} });
             return null;
@@ -18,7 +18,7 @@ export async function load({ locals }) {
     let completedSubscriptions = structuredClone(await Promise.all(subscriptions.map(async (subscription) => {
         let user = await usersRef.findOne({ username:subscription.username });
         if(user){
-            return user
+            return user;
         }else {
             return null;
         }

@@ -11,7 +11,7 @@
     let navLinkUnderline;
     let bookmarks = data.bookmarks;
 
-    $: setActiveTab(), tabIndex
+    $: setActiveTab(), tabIndex;
 
     onMount(() => {
         sectionsList = document.querySelectorAll("section");
@@ -25,8 +25,8 @@
             if(i !== tabIndex){
                 sectionsList[i].style.display = "none";
             }else {
-                sectionsList[i].style.display = "flex"
-                let activeButton = document.querySelector("[data-section*='"+sectionsList[i].id+"']")
+                sectionsList[i].style.display = "flex";
+                let activeButton = document.querySelector("[data-section*='"+sectionsList[i].id+"']");
                 navLinkUnderline.style.left = activeButton.offsetLeft+"px";
                 navLinkUnderline.style.width = activeButton.clientWidth+"px";
             }

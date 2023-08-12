@@ -23,8 +23,6 @@ export async function load({ locals }) {
         feed = structuredClone(await Promise.all(feed.map(async (post) => {
             return{ ...post, user: await usersRef.findOne({ username:post.username })}
         })));
-        
-        // let usersAside = structuredClone(await usersRef.find({  }).limit(20).toArray());
 
         return { feed };
     }else {

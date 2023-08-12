@@ -6,7 +6,7 @@ export async function POST({ locals, request }) {
         const formData = await request.json();
         const { id } = formData;
 
-        let post = await postsRef.findOne({ id })
+        const post = await postsRef.findOne({ id });
         for(const file of post.file){
             unlinkSync(`static/files/${file}`);
         }

@@ -14,7 +14,7 @@ async function auth(token) {
             });
         }).catch((err) => {return { error: err }})
     }catch (err){
-        return { error: err }
+        return { error: err };
     }
 }
 

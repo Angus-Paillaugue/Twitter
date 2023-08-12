@@ -13,7 +13,7 @@ export async function POST({ locals, request }) {
             await usersRef.updateOne({ username:user.username }, { $push: { bookmarks: { id }} });
         }
 
-        let newUser = await usersRef.findOne({ username:user.username })
+        let newUser = await usersRef.findOne({ username:user.username });
 
         return new Response(JSON.stringify({ error:false, message:"OK", bookmarks:newUser.bookmarks }));
     }

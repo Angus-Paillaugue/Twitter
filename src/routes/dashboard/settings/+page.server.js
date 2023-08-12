@@ -8,11 +8,11 @@ export const actions = {
             const { email, bio, username } = formData;
             const { user } = locals;
 
-            if(!email || !bio) return { err:true, msg:"Fields can not be empty!", email, bio, username }
+            if(!email || !bio) return { err:true, msg:"Fields can not be empty!", email, bio, username };
     
             await usersRef.findOneAndUpdate({ username:user.username }, { $set:{ email, bio:bio.replaceAll("\n", "<br />") } });
-            return { err:false };
-        } catch (_) {}
+            return { err:false, msg:"Saved modifications" };
+        } catch (err) {return { err:true, msg:err };}
     },
     deleteAccount: async ({ locals }) => {
         const { user } = locals;

@@ -1,7 +1,7 @@
 <script>
     import { Post } from '$lib/components';
     import { onMount } from "svelte";
-    import { pageMetaData } from "$lib/stores";
+    import { pageMetaData, toasts } from "$lib/stores";
     import { fade } from 'svelte/transition';
 
     export let data;
@@ -30,7 +30,7 @@
     async function toggleSubscription(username) {
         const res = await fetch("/api/toggleSubscription", { method:"POST", body:JSON.stringify({ username }) });
         const apiRes = await res.json();
-        if(!apiRes.error)  subscriptions = apiRes.subscriptions;
+        if(!apiRes.error)  subscriptions = apiRes.subscriptions; else $toasts = [...$toasts, { type:"error", message:apiRes.message }];
     }
 
     async function loadPosts() {
@@ -39,8 +39,8 @@
             const apiRes = await res.json();
             if(!apiRes.error || !apiRes.message){
                 posts = [...posts, ...apiRes.posts];
-                isMorePosts = apiRes.morePosts
-            }
+                isMorePosts = apiRes.morePosts;
+            }else $toasts = [...$toasts, { type:"error", message:apiRes.message }];
         }
     }
     

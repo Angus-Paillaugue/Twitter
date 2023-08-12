@@ -1,16 +1,12 @@
 async function toggleBookmark(id) {
     const res = await fetch("/api/toggleBookmark", { method:"POST", body:JSON.stringify({ id }) });
     const apiRes = await res.json();
-    if(!apiRes.error){
-        return apiRes.bookmarks;
-    }
+    if(!apiRes.error) return apiRes.bookmarks;
 }
 async function toggleSubscription(username) {
     const res = await fetch("/api/toggleSubscription", { method:"POST", body:JSON.stringify({ username }) });
     const apiRes = await res.json();
-    if(!apiRes.error){
-        return apiRes.subscriptions;
-    }
+    if(!apiRes.error) return apiRes.subscriptions;
 }
 
 function formatDate(date) {

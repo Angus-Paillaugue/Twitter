@@ -1,7 +1,7 @@
 <script>
     import { onMount } from "svelte";
     import { Post } from "$lib/components";
-    import { pageMetaData } from "$lib/stores";
+    import { pageMetaData, toasts } from "$lib/stores";
     import { enhance } from '$app/forms';
 
     export let data;
@@ -38,11 +38,9 @@
             const apiRes = await res.json();
             if(!apiRes.error || !apiRes.message){
                 feed = [ ...feed, ...apiRes.feed ];
-                if(feed.length === lastNumberOfPosts){
-                    isMorePostsToLoad = false;
-                }
+                if(feed.length === lastNumberOfPosts) isMorePostsToLoad = false;
                 lastNumberOfPosts = feed.length;
-            }
+            }else $toasts = [...$toasts, { type:"error", message:apiRes.message }];
             morePostsLoading = false;
         }
     }
