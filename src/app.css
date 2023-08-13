@@ -45,7 +45,7 @@ hr {
 }
 
 h1 {
-	@apply text-6xl font-bold text-neutral-100;
+	@apply text-4xl md:text-5xl lg:text-6xl font-bold text-neutral-100;
 }
 h2 {
 	@apply text-3xl font-bold text-neutral-100;

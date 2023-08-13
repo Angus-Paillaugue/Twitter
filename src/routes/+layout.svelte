@@ -5,6 +5,8 @@
     import { toasts, searchBar, pageMetaData } from "$lib/stores";
 
     export let data;
+
+    $: user = data.user
 </script>
 
 
@@ -14,7 +16,7 @@
 </svelte:head>
 
 
-<main class="min-h-screen transition-all w-full max-sm:pb-14 flex flex-col items-center {$searchBar && "pt-16"}">
+<main class="min-h-screen transition-all w-full {user && "max-sm:pb-14"} flex flex-col items-center {$searchBar && "pt-16"}">
     <div class="w-full max-w-screen-lg max-sm:justify-center h-full flex flex-row">
         <Navbar user={data?.user}/>
         

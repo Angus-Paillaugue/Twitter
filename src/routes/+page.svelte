@@ -53,12 +53,9 @@
     }
 
     function setActiveTab() {
-        for(let i = 0;i < sectionsList.length;i++){
-            if(i !== tabIndex){
-                sectionsList[i].style.display = "none";
-            }else {
-                sectionsList[i].style.display = "block";
-                let activeButton = document.querySelector("[data-section*='"+sectionsList[i].id+"']");
+        for(let i = sectionsList.length;i > 0;i--){
+            if(i === tabIndex+1){
+                let activeButton = document.querySelector("[data-section*='"+sectionsList[sectionsList.length-i].id+"']");
                 navLinkUnderline.style.left = activeButton.offsetLeft+"px";
                 navLinkUnderline.style.width = activeButton.clientWidth+"px";
             }
@@ -71,66 +68,61 @@
 </script>
 
 {#if !user}
-    <section class="p-6 justify-between w-full grid grid-cols-1 gap-6 lg:grid-cols-2 min-h-screen items-center">
-        <svg viewBox="0 0 24 24" class="max-h-96 mx-auto fill-neutral-100"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
-        <div class="w-full max-lg:flex max-lg:items-center max-lg:flex-col">
+    <section class="justify-between w-full grid grid-cols-1 gap-6 lg:grid-cols-2 min-h-screen items-center">
+        <svg viewBox="0 0 24 24" class="lg:max-h-96 max-h-64 mx-auto fill-neutral-100"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+        <div class="w-full max-lg:flex max-lg:items-center max-lg:flex-col p-2">
             <h1>Happening now</h1>
             <h5 class="mt-16 mb-10">Join today.</h5>
             <div class="w-full max-w-md">
                 <div class="w-full font-medium text-center text-neutral-400 flex flex-row justify-between relative mb-2">
-                    <button class="inline-flex items-center justify-center p-4 border-b-2 border-transparent group w-full transition-all {tabIndex === 0 ? "rounded-t-lg text-primary-500" : "rounded-t-lg hover:border-neutral-700 hover:text-neutral-300"}" on:click={() => {tabIndex = 0}} data-section="Log-in">
-                        Log-in
-                    </button>
-                    <button class="inline-flex items-center justify-center p-4 border-b-2 border-transparent group w-full transition-all {tabIndex === 1 ? "rounded-t-lg text-primary-500" : "rounded-t-lg hover:border-neutral-700 hover:text-neutral-300"}" on:click={() => {tabIndex = 1}} data-section="Sign-in">
-                        Sign-in
-                    </button>
+                    <button class="inline-flex items-center justify-center p-4 border-b-2 border-transparent group w-full transition-all {tabIndex === 0 ? "rounded-t-lg text-primary-500" : "rounded-t-lg hover:border-neutral-700 hover:text-neutral-300"}" on:click={() => {tabIndex = 0}} data-section="Log-in">Log-in</button>
+                    <button class="inline-flex items-center justify-center p-4 border-b-2 border-transparent group w-full transition-all {tabIndex === 1 ? "rounded-t-lg text-primary-500" : "rounded-t-lg hover:border-neutral-700 hover:text-neutral-300"}" on:click={() => {tabIndex = 1}} data-section="Sign-in">Sign-in</button>
                     <span bind:this={navLinkUnderline} class="h-1 transition-all bottom-0 bg-primary-600 absolute ease-in-out duration-300"></span>
                 </div>
 
-
-                <form class="w-full no-user {tabIndex !== 0 && "hidden"}" use:enhance method="POST" action="?/login" id="Log-in">
-                    <label for="username" class="block mb-2">Username</label>
-                    <input type="text" placeholder="Username" name="username" value="{form && form.formData.username}" class="border text-sm rounded-lg block w-full p-2.5 bg-neutral-800 border-neutral-700 placeholder-neutral-400 text-white focus:ring-primary-500 focus:border-primary-500 focus:outline-none outline-none transition-all mb-4">
+                <div class="relative overflow-hidden grid grid-cols-2 w-full">
+                    <form class="w-[200%] no-user transition-all ease-in-out duration-300 p-2 {tabIndex === 1 ? "-translate-x-0" : "translate-x-full"}" use:enhance method="POST" action="?/signin" id="Sign-in">
+                        <label for="username" class="block mb-2">E-mail</label>
+                        <input type="text" placeholder="E-mail" name="email" value="{form?.formData?.email ?? ''}" class="border text-sm rounded-lg block w-full p-2.5 bg-neutral-800 border-neutral-700 placeholder-neutral-400 text-white focus:ring-primary-500 focus:border-primary-500 focus:outline-none outline-none transition-all mb-4">
     
-                    <label for="password" class="block mb-2">Password</label>
-                    <input type="password" placeholder="Password" name="password" value="{form && form.formData.password}" class="border text-sm rounded-lg block w-full p-2.5 bg-neutral-800 border-neutral-700 placeholder-neutral-400 text-white focus:ring-primary-500 focus:border-primary-500 focus:outline-none outline-none transition-all mb-4">
-            
-                    <button class="button-primary group w-full mb-4">
-                        Log-in
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 group-hover:rotate-[-360deg] transition-all duration-300 delay-100"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
-                    </button>
-            
-                    {#if form?.success == false}
-                        <div class="flex items-center p-4 text-sm border rounded-lg bg-neutral-800 text-red-400 border-red-800" role="alert">
-                            <svg class="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20"><path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/></svg>
-                            {form.message}
-                        </div>
-                    {/if}
-                </form>
-                <form class="w-full no-user {tabIndex !== 1 && "hidden"}" use:enhance method="POST" action="?/signin" id="Sign-in">
-                    <label for="username" class="block mb-2">E-mail</label>
-                    <input type="text" placeholder="E-mail" name="email" value="{form && form.formData.email}" class="border text-sm rounded-lg block w-full p-2.5 bg-neutral-800 border-neutral-700 placeholder-neutral-400 text-white focus:ring-primary-500 focus:border-primary-500 focus:outline-none outline-none transition-all mb-4">
-
-                    <label for="username" class="block mb-2">Username</label>
-                    <input type="text" placeholder="Username" name="username" value="{form && form.formData.username}" class="border text-sm rounded-lg block w-full p-2.5 bg-neutral-800 border-neutral-700 placeholder-neutral-400 text-white focus:ring-primary-500 focus:border-primary-500 focus:outline-none outline-none transition-all mb-4">
-    
-                    <label for="password" class="block mb-2">Password</label>
-                    <input type="password" placeholder="Password" name="password" value="{form && form.formData.password}" class="border text-sm rounded-lg block w-full p-2.5 bg-neutral-800 border-neutral-700 placeholder-neutral-400 text-white focus:ring-primary-500 focus:border-primary-500 focus:outline-none outline-none transition-all mb-4">
-            
-                    <button class="button-primary group w-full mb-4">
-                        Sign-in
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 group-hover:rotate-[-360deg] transition-all duration-300 delay-100"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
-                    </button>
-            
-                    {#if form?.success == false}
-                        <div class="flex items-center p-4 text-sm border rounded-lg bg-neutral-800 text-red-400 border-red-800" role="alert">
-                            <svg class="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20"><path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/></svg>
-                            {form.message}
-                        </div>
-                    {/if}
-                </form>
-
-
+                        <label for="username" class="block mb-2">Username</label>
+                        <input type="text" placeholder="Username" name="username" value="{form?.formData?.username ?? ''}" class="border text-sm rounded-lg block w-full p-2.5 bg-neutral-800 border-neutral-700 placeholder-neutral-400 text-white focus:ring-primary-500 focus:border-primary-500 focus:outline-none outline-none transition-all mb-4">
+        
+                        <label for="password" class="block mb-2">Password</label>
+                        <input type="password" placeholder="Password" name="password" value="{form?.formData?.password ?? ''}" class="border text-sm rounded-lg block w-full p-2.5 bg-neutral-800 border-neutral-700 placeholder-neutral-400 text-white focus:ring-primary-500 focus:border-primary-500 focus:outline-none outline-none transition-all mb-4">
+                
+                        <button class="button-primary group w-full mb-4">
+                            Sign-in
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 group-hover:rotate-[-360deg] transition-all duration-300 delay-100"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+                        </button>
+                
+                        {#if form?.success === false}
+                            <div class="flex items-center p-4 text-sm border rounded-lg bg-neutral-800 text-red-400 border-red-800" role="alert">
+                                <svg class="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20"><path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/></svg>
+                                {form.message}
+                            </div>
+                        {/if}
+                    </form>
+                    <form class="w-[200%] no-user transition-all ease-in-out duration-300 p-2 {tabIndex === 0 ? "-translate-x-1/2" : "-translate-x-[150%]"}" use:enhance method="POST" action="?/login" id="Log-in">
+                        <label for="username" class="block mb-2">Username</label>
+                        <input type="text" placeholder="Username" name="username" value="{form?.formData?.username ?? ''}" class="border text-sm rounded-lg block w-full p-2.5 bg-neutral-800 border-neutral-700 placeholder-neutral-400 text-white focus:ring-primary-500 focus:border-primary-500 focus:outline-none outline-none transition-all mb-4">
+        
+                        <label for="password" class="block mb-2">Password</label>
+                        <input type="password" placeholder="Password" name="password" value="{form?.formData?.password ?? ''}" class="border text-sm rounded-lg block w-full p-2.5 bg-neutral-800 border-neutral-700 placeholder-neutral-400 text-white focus:ring-primary-500 focus:border-primary-500 focus:outline-none outline-none transition-all mb-4">
+                
+                        <button class="button-primary group w-full mb-4">
+                            Log-in
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 group-hover:rotate-[-360deg] transition-all duration-300 delay-100"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+                        </button>
+                
+                        {#if form?.success === false}
+                            <div class="flex items-center p-4 text-sm border rounded-lg bg-neutral-800 text-red-400 border-red-800" role="alert">
+                                <svg class="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20"><path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/></svg>
+                                {form.message}
+                            </div>
+                        {/if}
+                    </form>
+                </div>
             </div>
         </div>
     </section>
