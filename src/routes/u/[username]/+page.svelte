@@ -74,7 +74,7 @@
             {/if}
         </div>
     
-        <p bind:this={bioP} class="w-full transition-all overflow-hidden relative pl-2 duration-500 {fullBio && "py-4"}">
+        <p bind:this={bioP} class="w-full transition-all overflow-hidden relative pl-2 duration-500 {fullBio && "py-4"}" style="max-height: 24px;">
             {@html profile.bio}
         </p>
         {#if profile.bio.includes("<br />")}

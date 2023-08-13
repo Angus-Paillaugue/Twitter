@@ -109,14 +109,8 @@
                         <!-- svelte-ignore a11y-img-redundant-alt -->
                         <img src="{hint.user.profilePicture}" alt="Profile picture" class="rounded-full lg:h-20 lg:w-20 h-14 w-14 ring-4 m-2 ring-neutral-800">
                         <Tooltip>{hint.username}</Tooltip>
-                        {#if hint.file}
-                            {#if fileType(hint.file[0]) == "image"}
-                                <!-- svelte-ignore a11y-img-redundant-alt -->
-                                <img src="/files/{hint.file[0]}" alt="Post image" class="h-24">
-                            {/if}
-                        {/if}
-                        <p class="line-clamp-3 text-ellipsis p-2">
-                            {@html highlightSearchedText(hint.text)}
+                        <p class="p-2">
+                            {@html hint.text.length > 30 ? highlightSearchedText(hint.text.slice(0,30))+"..." : highlightSearchedText(hint.text)}
                         </p>
                     </a>
                 {/if}
