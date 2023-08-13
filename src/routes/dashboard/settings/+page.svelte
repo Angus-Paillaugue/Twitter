@@ -14,8 +14,10 @@
     let tabIndex = 0;
     let sectionsList = [];
     let navLinkUnderline;
+    let profilePicture = form?.profilePicture ?? user.profilePicture
+    let banner = form?.banner ?? user.banner
 
-    $: setActiveTab(), tabIndex
+    $: setActiveTab(), tabIndex;
 
     onMount(() => {
         sectionsList = document.querySelectorAll("section");
@@ -51,7 +53,7 @@
     </div>
     <div class="w-full mt-4 p-4 bg-neutral-950 border max-w-lg mx-auto border-border rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
         <section class="w-full" id="Profile">
-            <form use:enhance={() => {return ({ update }) => update({ reset: false });}} method="POST" action="?/save" class="flex flex-col gap-6 w-full">
+            <form use:enhance={(e) => {e.formData.set("profilePicture",profilePicture);e.formData.set("banner", banner);return ({ update }) => update({ reset: false });}} method="POST" action="?/save" class="flex flex-col gap-6 w-full">
                 <div>
                     <label for="email" class="block mb-2">E-mail</label>
                     <input type="email" placeholder="E-mail" name="email" value="{form?.email ?? user.email}" class="border text-sm rounded-lg block w-full p-2.5 bg-neutral-800 border-neutral-700 placeholder-neutral-400 text-white focus:ring-primary-500 focus:border-primary-500 focus:outline-none outline-none transition-all">
@@ -61,11 +63,50 @@
                     <textarea id="bio" name="bio" rows="4" class="border text-sm rounded-lg block w-full p-2.5 bg-neutral-800 border-neutral-700 placeholder-neutral-400 text-white focus:ring-primary-500 focus:border-primary-500 focus:outline-none outline-none transition-all" placeholder="Your bio...">{(form?.bio ?? user.bio).replaceAll("<br />", "\n")}</textarea>
                 </div>
                 <div>
-                    <label for="username" class="block mb-2">Username
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 inline-block ml-1"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>
+                    <label for="username" class="block mb-2">
+                        Username
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 inline-block ml-1 cursor-pointer"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>
                         <Tooltip class="text-center">You can <b>not</b> change your username<br>You should have thought twice</Tooltip>
                     </label>
                     <input type="text" placeholder="Username" name="username" readonly value="{user.username}" class="border text-sm rounded-lg block w-full p-2.5 bg-neutral-800 border-neutral-700 placeholder-neutral-400 text-white focus:ring-primary-500 focus:border-primary-500 focus:outline-none outline-none transition-all">
+                </div>
+                <div class="flex flex-col gap-2 text-neutral-300">
+                    Profile picture
+                    <label for="profilePicture" class="cursor-pointer group relative">
+                        <img src="{profilePicture}" alt="" class="h-20 w-20 rounded-full">
+                        <input type="file" name="profilePicture" id="profilePicture" class="hidden" accept="image/*" on:change={(e) => {
+                            const reader = new FileReader();
+                            let file = e?.target?.files[0];
+                            reader.addEventListener("load", () => {
+                                profilePicture = reader.result;
+                            },false,);
+                            if (file) reader.readAsDataURL(file);
+                        }}>
+                        <div class="hover:bg-neutral-900/50 group-hover:opacity-100 opacity-0 transition-all z-10 absolute inset-0 flex flex-col items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                    </label>
+                </div>
+                <div class="flex flex-col gap-2 text-neutral-300">
+                    Banner
+                    <label for="banner" class="cursor-pointer group relative">
+                        <img src="{banner}" alt="" class="aspect-[3/1] w-full">
+                        <input type="file" name="banner" id="banner" class="hidden" accept="image/*" on:change={(e) => {
+                            const reader = new FileReader();
+                            let file = e?.target?.files[0];
+                            reader.addEventListener("load", () => {
+                                banner = reader.result;
+                            },false,);
+                            if (file) reader.readAsDataURL(file);
+                        }}>
+                        <div class="hover:bg-neutral-900/50 group-hover:opacity-100 opacity-0 transition-all z-10 absolute inset-0 flex flex-col items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                    </label>
                 </div>
                 <button class="button-primary w-full" type="submit">
                     Save
