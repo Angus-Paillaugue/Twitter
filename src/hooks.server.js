@@ -13,10 +13,8 @@ export const handle = async ({ event, resolve }) => {
             cookies.delete("token"); 
             throw redirect(303, "/");
         }
-    } else {
-        locals.user = false;
-    }
-
+    } else locals.user = false;
+    
     if(url.pathname.startsWith("/dashboard") && !locals.user){
         cookies.delete("token"); 
         throw redirect(303, `/`);

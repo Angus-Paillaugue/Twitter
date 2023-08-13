@@ -25,7 +25,7 @@ export async function load({ locals }) {
             if(!user.hidden && locals.user.admin) return{ ...post, user }
         })));
 
-        return { feed };
+        return { feed:feed.filter(n => n) };
     }else {
         return { feed:[] }
     }

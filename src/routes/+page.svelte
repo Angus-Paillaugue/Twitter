@@ -8,7 +8,7 @@
     export let form;
 
     let feed = data.feed;
-    let lastNumberOfPosts = feed.length;
+    $: lastNumberOfPosts = feed.length;
     let isMorePostsToLoad = true;
     let morePostsLoading = false;
     let bookmarks = [];

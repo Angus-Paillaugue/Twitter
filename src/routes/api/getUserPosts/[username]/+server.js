@@ -10,10 +10,11 @@ export async function GET({ locals, params, url }) {
         posts = posts.slice(offset);
 
         posts = structuredClone(await Promise.all(posts.map(async (post) => {
-            return{ ...post, user: await usersRef.findOne({ username:post.username })};
+            let user = await usersRef.findOne({ username:post.username });
+            if(!user.hidden && locals.user.admin) return{ ...post, user }
         })));
 
-        return new Response(JSON.stringify({ error:false, posts, morePosts:posts.length > 0 }));
+        return new Response(JSON.stringify({ error:false, posts:posts.filter(n => n), morePosts:posts.length > 0 }));
     }else {
         return new Response(JSON.stringify({ error:true, message:"Not logged-in!" }));
     }
