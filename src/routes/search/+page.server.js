@@ -8,7 +8,8 @@ export async function load({ url }) {
     let posts = await postsRef.find({ text: searchQuery  }).limit(20).sort({ date:-1 }).toArray();
 
     posts = structuredClone(await Promise.all(posts.map(async (post) => {
-        return{ ...post, user: await usersRef.findOne({ username:post.username })}
+        let user = await usersRef.findOne({ username:post.username });
+        if(!user.hidden) return{ ...post, user};
     })));
 
     return { posts };

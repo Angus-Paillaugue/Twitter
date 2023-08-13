@@ -41,8 +41,8 @@
 </script>
 
 {#if display}
-    <div class="h-screen border-r border-border md:mr-4 sticky top-0 flex flex-col gap-4 text-neutral-100 text-lg p-2 sm:p-4">
-        <a href="/" class="hover:bg-neutral-800 p-2 ml-2 rounded-full w-fit">
+    <div class="sm:h-screen max-sm:w-full h-14 sm:border-r sm:border-border max-sm:bg-neutral-900/80 backdrop-blur md:mr-4 max-sm:z-40 fixed sm:sticky max-sm:left-0 bottom-0 sm:top-0 flex flex-row max-sm:justify-between sm:flex-col gap-4 text-neutral-100 text-lg p-2 sm:p-4">
+        <a href="/" class="hover:bg-neutral-800 p-2 ml-2 rounded-full w-fit max-sm:hidden">
             <svg viewBox="0 0 24 24" class="fill-neutral-100 w-6 sm:w-8 lg:w-10"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
         </a>
         <a href="/" class="flex flex-row gap-2 items-center px-4 py-2 transition-all rounded-full hover:bg-neutral-800" data-navbar-section="Home">
@@ -63,7 +63,7 @@
             </svg>
             <span class="max-md:hidden">Bookmarks</span>
         </a>
-        <a href="/dashboard" class="flex flex-row gap-2 items-center px-4 py-2 transition-all rounded-full hover:bg-neutral-800 mt-auto" data-navbar-section="Dashboard">
+        <a href="/dashboard" class="flex flex-row gap-2 items-center px-4 py-2 transition-all rounded-full hover:bg-neutral-800 sm:mt-auto" data-navbar-section="Dashboard">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 sm:w-8 lg:w-10 aspect-square transition-all">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>

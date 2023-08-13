@@ -51,7 +51,7 @@
         <button class="inline-flex items-center justify-center p-4 border-b-2 border-transparent group w-full transition-all {tabIndex === 1 ? "rounded-t-lg text-red-500" : "rounded-t-lg hover:border-neutral-700 hover:text-neutral-300"}" on:click={() => {tabIndex = 1}} data-section="Danger">Danger</button>
         <span bind:this={navLinkUnderline} class="h-1 transition-all bottom-0 bg-primary-600 absolute ease-in-out duration-300"></span>
     </div>
-    <div class="w-full mt-4 p-4 bg-neutral-950 border max-w-lg mx-auto border-border rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+    <div class="w-full mt-4 p-4 bg-neutral-950 border border-border rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
         <section class="w-full" id="Profile">
             <form use:enhance={(e) => {e.formData.set("profilePicture",profilePicture);e.formData.set("banner", banner);return ({ update }) => update({ reset: false });}} method="POST" action="?/save" class="flex flex-col gap-6 w-full">
                 <div>
@@ -72,8 +72,8 @@
                 </div>
                 <div class="flex flex-col gap-2 text-neutral-300">
                     Profile picture
-                    <label for="profilePicture" class="cursor-pointer group relative">
-                        <img src="{profilePicture}" alt="" class="h-20 w-20 rounded-full">
+                    <label for="profilePicture" class="cursor-pointer group relative h-20 w-20 rounded-full overflow-hidden">
+                        <img src="{profilePicture}" alt="" class="w-full h-full">
                         <input type="file" name="profilePicture" id="profilePicture" class="hidden" accept="image/*" on:change={(e) => {
                             const reader = new FileReader();
                             let file = e?.target?.files[0];

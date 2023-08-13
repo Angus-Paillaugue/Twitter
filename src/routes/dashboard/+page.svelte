@@ -86,7 +86,7 @@
 </div>
 
 <section class="w-full">
-    <section class="max-w-lg w-full max-sm:p-2">
+    <section class="w-full p-2">
         <h1 class="mt-4">{data.user.username}</h1>
         <hr>
         <div class="grid sm:grid-cols-2 grid-cols-1 gap-4">

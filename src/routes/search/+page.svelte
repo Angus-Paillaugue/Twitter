@@ -13,9 +13,9 @@
     $pageMetaData.currentPageName = "Search";
 </script>
 
-<main class="flex flex-col">
+<main class="flex flex-col max-w-md w-full">
     {#if posts.length > 0}
-        <section class="w-full flex flex-col max-w-lg mx-auto border-x border-border h-full">
+        <section class="w-full flex flex-col border-x border-border h-full">
             {#each posts as post, index}
                 <Post post={post} bookmarks={bookmarks} borderTop={index === 0} />
             {/each}

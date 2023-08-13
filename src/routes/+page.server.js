@@ -21,7 +21,8 @@ export async function load({ locals }) {
         }
 
         feed = structuredClone(await Promise.all(feed.map(async (post) => {
-            return{ ...post, user: await usersRef.findOne({ username:post.username })}
+            let user = await usersRef.findOne({ username:post.username });
+            if(!user.hidden) return{ ...post, user }
         })));
 
         return { feed };

@@ -49,7 +49,7 @@
     $pageMetaData.currentPageName = "Profile";
 </script>
 
-<section class="w-full">
+<main class="w-full">
     <section class="border-b border-border">
         <div class="w-full relative bg-no-repeat bg-center bg-cover max-h-64 lg:max-h-80" style="height: 25vw; background-image: url('{profile.banner}');">
             <!-- svelte-ignore a11y-img-redundant-alt -->
@@ -82,9 +82,9 @@
         {/if}
     </section>
     
-    <section class="flex flex-col max-w-lg mx-auto w-full border-x border-border">
+    <section class="flex flex-col max-w-md mx-auto w-full border-x border-border">
         {#each posts as post}
             <Post post={post} bookmarks={bookmarks} />
         {/each}
     </section>
-</section>
+</main>
