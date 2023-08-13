@@ -9,7 +9,7 @@ export async function load({ url }) {
 
     posts = structuredClone(await Promise.all(posts.map(async (post) => {
         let user = await usersRef.findOne({ username:post.username });
-        if(!user.hidden) return{ ...post, user};
+        if(!user.hidden || locals.user.admin) return{ ...post, user};
     })));
 
     return { posts };

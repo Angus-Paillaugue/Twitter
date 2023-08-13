@@ -11,8 +11,9 @@
     let posts = data.posts;
     let subscriptions = user.subscriptions;
     let fullBio = false;
+    let morePostsLoading = false;
+    let isMorePostsToLoad = true;
     let offset = 0;
-    let isMorePosts = true;
     let bioP;
     $: isSubscribed = subscriptions.filter(el => el.username == profile.username).length > 0;
 
@@ -34,13 +35,15 @@
     }
 
     async function loadPosts() {
-        if(isMorePosts){
+        if(isMorePostsToLoad && !morePostsLoading){
+            morePostsLoading = true;
             const res = await fetch(`/api/getUserPosts/${profile.username}?offset=${offset}`, { method:"GET" });
             const apiRes = await res.json();
             if(!apiRes.error || !apiRes.message){
                 posts = [...posts, ...apiRes.posts];
-                isMorePosts = apiRes.morePosts;
+                isMorePostsToLoad = apiRes.morePosts;
             }else $toasts = [...$toasts, { type:"error", message:apiRes.message }];
+            morePostsLoading = false;
         }
     }
     

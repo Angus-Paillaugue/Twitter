@@ -59,7 +59,6 @@
             }else {
                 sectionsList[i].style.display = "block";
                 let activeButton = document.querySelector("[data-section*='"+sectionsList[i].id+"']");
-                console.log(activeButton);
                 navLinkUnderline.style.left = activeButton.offsetLeft+"px";
                 navLinkUnderline.style.width = activeButton.clientWidth+"px";
             }

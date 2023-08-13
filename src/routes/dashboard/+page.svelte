@@ -3,7 +3,7 @@
     import { enhance } from "$app/forms"
     import { Post } from '$lib/components';
     import { onMount } from "svelte";
-    import { pageMetaData } from "$lib/stores"
+    import { pageMetaData } from "$lib/stores";
 
     export let data;
 
@@ -12,9 +12,12 @@
     let posts = data.posts
     let offset = 0;
     let newPostModal = false;
+    let morePostsLoading = false;
     let files;
 
     $: offset = posts.length;
+    // Limit file size to 3
+    $: if(files?.length > 3) files = [files[0], files[1], files[2]];
 
     onMount(() => {
         window.addEventListener("scroll", () => {
@@ -30,9 +33,6 @@
         const apiRes = await res.json();
         if(!apiRes.error || !apiRes.message) posts = [ ...posts, ...apiRes.posts ];
     }
-
-    // Limit file size to 3
-    $: if(files?.length > 3) files = [files[0], files[1], files[2]];
 
     $pageMetaData.title = "Dashboard";
     $pageMetaData.description = "Dashboard";
@@ -58,7 +58,7 @@
                             <span class="sr-only">Upload image</span>
                         </label>
                         <Tooltip type="dark">Add image/video</Tooltip>
-                        <input type="file" name="files" id="files" bind:files class="hidden" multiple/>
+                        <input type="file" name="files" id="files" accept="image/*,video/*" bind:files class="hidden" multiple/>
                     </div>
                 </div>
             </div>

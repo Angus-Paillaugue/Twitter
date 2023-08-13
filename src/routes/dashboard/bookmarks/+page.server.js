@@ -24,6 +24,5 @@ export async function load({ locals }) {
         }
     })));
 
-
     return { bookmarks:completedBookmarks.filter(n => n).reverse(), subscriptions:completedSubscriptions.filter(n => n).reverse() };
 };
