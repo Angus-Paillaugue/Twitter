@@ -8,3 +8,12 @@
  - [ ] Be able to delete file in new post creation
  - [x] Add possibility to change avatar and banner
  - [x] Fix search autocomplete
+ - [ ] Messages
+     - [ ] Add possibility to block users
+     - [x] Add mentioning to messages
+     - [x] Add link parsing to messages
+     - [ ] *Add possibility to delete message
+
+---
+
+"*" = optional

@@ -9,6 +9,7 @@ export async function POST({ locals, request }) {
     usernames = usernames.users;
 
     await messagesRef.insertOne({ conversation:id, sender:locals.user.username, receiver:usernames.filter(username => username !== locals.user.username)[0], message, date:new Date() });
+    await conversationsRef.updateOne({ id }, { $set:{ lastMessage:new Date() } });
 
     return new Response({ error:false, message:"Message saved!" });
 };

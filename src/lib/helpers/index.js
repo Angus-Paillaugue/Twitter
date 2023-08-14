@@ -40,5 +40,20 @@ function fileType(fileName) {
     const videoExtensions = ["3g2","3gp","aaf","asf","avchd","avi","drc","flv","m2v","m3u8","m4p","m4v","mkv","mng","mov","mp2","mp4","mpe","mpeg","mpg","mpv","mxf","nsv","ogg","ogv","qt","rm","rmvb","roq","svi","vob","webm","wmv","yuv"];
     return imageExtensions.includes(fileName.split('.').at(-1)) ? "image" : videoExtensions.includes(fileName.split('.').at(-1)) ? "video" : "unknown"
 }
+const parseMentionsOnReceive = (text) => {
+    const regexExp = new RegExp(/(?=(<user>))(\w|\W)*(?<=<\/user>)/, "gm")
+    return text.replace(regexExp, function(match) {
+        return `<a href="/u/${match.trim().slice(7, -7)}" class="link">${match}</a> `;
+    });
+}
+const parseMentionsOnSend = (text) => {
+    const regexExp = new RegExp(/\B@\w+/g)
+    return text.replace(regexExp, function(match) {
+        return `<user>${match}</user> `;
+    });
+}
+function parseLink(text) {
+    return text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" class="link" target="_blank">$1</a>')
+  }
 
-export { toggleBookmark, toggleSubscription, formatDate, parseMentions, fileType }
+export { toggleBookmark, toggleSubscription, formatDate, parseMentions, fileType, parseMentionsOnReceive, parseMentionsOnSend, parseLink }
