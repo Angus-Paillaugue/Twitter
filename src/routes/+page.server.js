@@ -27,7 +27,7 @@ export async function load({ locals }) {
 
         return { feed:feed.filter(n => n) };
     }else {
-        return { feed:[] }
+        return { feed:[] };
     }
 };
 
@@ -38,13 +38,13 @@ export const actions = {
             const { username, password } = formData;
             
             const userExists = await usersRef.findOne({ username:username });
-            if(!userExists) return { success:false, formData:formData, message:"No account with this username!" };
+            if(!userExists) return { logIn:{success:false, formData, message:"No account with this username!"} };
             const compare = await bcrypt.compare(password, userExists.password);
             if(compare){
                 cookies.set("token", generateAccessToken(username), { path:"/", httpOnly: true, sameSite:"strict", maxAge: 60 * 60 * 24 });
                 throw redirect(303, "/dashboard");
             }
-            return { success:false, formData:formData, message:"Incorrect password!" };
+            return { logIn:{success:false, formData, message:"Incorrect password!"} };
         }catch(err){
             console.log(err);
         }
@@ -54,10 +54,10 @@ export const actions = {
         const { email, username, password } = formData;
 
         const userExists = await usersRef.findOne({ email:email });
-        if(userExists) return { success:false, formData:formData, message:"This email is already in use in another account!" };
+        if(userExists) return { signIn:{success:false, formData, message:"This email is already in use in another account!"} };
 
         const usernameIsTaken = await usersRef.findOne({ username:username });
-        if(usernameIsTaken) return { success:false, formData:formData, message:"This username is already taken!" };
+        if(usernameIsTaken) return { signIn:{success:false, formData, message:"This username is already taken!"} };
 
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(password, salt);

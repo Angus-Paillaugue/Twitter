@@ -36,8 +36,11 @@ body {
 	@apply inline-flex flex-row items-center justify-center gap-2 px-5 py-2 sm:py-3 sm:px-8 text-sm sm:text-base font-semibold transition-all duration-75 bg-red-600/20 border border-red-800 text-neutral-100 hover:rounded-lg rounded-3xl focus:outline-none disabled:cursor-not-allowed disabled:bg-red-300;
 }
 
-.link {
+.link:not(.no-anim) {
 	@apply bg-gradient-to-l bg-left-bottom from-primary-500/70 to-primary-500/70 font-normal text-primary-600 cursor-pointer h-fit bg-[length:0_2px] bg-no-repeat transition-[background-size] duration-300 ease-in hover:bg-[length:100%_2px] hover:bg-right-bottom;
+}
+.link.no-anim {
+	@apply font-normal text-primary-600 cursor-pointer h-fit;
 }
 
 hr {

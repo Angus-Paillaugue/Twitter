@@ -1,5 +1,5 @@
 <script>
-    import { formatDate, parseMentions, fileType } from "$lib/helpers"
+    import { formatDate, parseMentions, fileType, parseLink } from "$lib/helpers"
     import { toasts } from "$lib/stores"
     import { page } from "$app/stores"
 
@@ -49,7 +49,7 @@
         </div>
         <div class="w-full sm:pl-12 flex flex-col gap-2">
             {#if post.text}
-                <p class="leading-6">{@html parseMentions(post.text.replaceAll("\n", "<br>"))}</p>
+                <p class="leading-6">{@html parseMentions(parseLink(post.text.replaceAll("\n", "<br>")))}</p>
             {/if}
             {#if post.file}
                 <div class="mx-auto grid {post.file.length === 1 ? "grid-cols-1" :  post.file.length === 2 ? "grid-cols-2" : "grid-cols-3"}">

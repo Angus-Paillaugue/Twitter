@@ -11,6 +11,7 @@
     let newConversationRadio;
 
     async function newConversationInputHandle() {
+        if(newConversationInput.value.length === 0) return newConversationUsers = []
         const res = await fetch(`/api/getMentionUser?query=${newConversationInput.value}`, { method:"GET" });
         const users = await res.json();
         newConversationUsers = users.filter(el => el.username !== user.username);
@@ -44,17 +45,19 @@
         <form method="POST" use:enhance action="?/newConversation" class="p-6 flex flex-col gap-2">
             <h4>New conversation</h4>
             <input type="text" placeholder="Username" class="border text-sm rounded-lg block w-full p-2.5 bg-neutral-800 border-neutral-700 placeholder-neutral-400 text-white focus:ring-primary-500 focus:border-primary-500 focus:outline-none outline-none transition-all" on:keyup={newConversationInputHandle} bind:this={newConversationInput}>
-            <div class="flex flex-row flex-wrap gap-2">
-                {#each newConversationUsers as user}
-                    <div>
-                        <input type="radio" bind:group={newConversationRadio} name="newConversationRadioInputs" value={user.username} id="newConversationWith{user.username}" class="hidden peer" />
-                        <label for="newConversationWith{user.username}" class="p-2 flex flex-row items-center gap-4 bg-neutral-900 hover:bg-neutral-800 border border-border text-neutral-100 w-fit rounded-xl transition-all peer-checked:border-primary-600 cursor-pointer">
-                            <img src="{user.profilePicture}" alt="Avatar" class="h-8 w-8 rounded-full flex-shrink-0"/>
-                            <div class="flex flex-col"><h6>{ user.username }</h6></div>
-                        </label>
-                    </div>
-                {/each}
-            </div>
+            {#if newConversationUsers.length > 0}
+                <div class="flex flex-row flex-wrap gap-2">
+                    {#each newConversationUsers as user}
+                        <div>
+                            <input type="radio" bind:group={newConversationRadio} name="newConversationRadioInputs" value={user.username} id="newConversationWith{user.username}" class="hidden peer" />
+                            <label for="newConversationWith{user.username}" class="p-2 flex flex-row items-center gap-4 bg-neutral-900 hover:bg-neutral-800 border border-border text-neutral-100 w-fit rounded-xl transition-all peer-checked:border-primary-600 cursor-pointer">
+                                <img src="{user.profilePicture}" alt="Avatar" class="h-8 w-8 rounded-full flex-shrink-0"/>
+                                <div class="flex flex-col"><h6>{ user.username }</h6></div>
+                            </label>
+                        </div>
+                    {/each}
+                </div>
+            {/if}
             <div class="flex flex-row justify-center gap-2">
                 <button type="button" class="button-secondary" on:click={() => {newConversationModal = false;}}>No, cancel</button>
                 <button type="submit" class="button-primary" disabled="{!newConversationRadio}">Start chatting</button>

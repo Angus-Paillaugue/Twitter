@@ -43,7 +43,7 @@ function fileType(fileName) {
 const parseMentionsOnReceive = (text) => {
     const regexExp = new RegExp(/(?=(<user>))(\w|\W)*(?<=<\/user>)/, "gm")
     return text.replace(regexExp, function(match) {
-        return `<a href="/u/${match.trim().slice(7, -7)}" class="link">${match}</a> `;
+        return `<a href="/u/${match.trim().slice(7, -7)}" class="link no-anim">${match}</a> `;
     });
 }
 const parseMentionsOnSend = (text) => {
@@ -53,7 +53,7 @@ const parseMentionsOnSend = (text) => {
     });
 }
 function parseLink(text) {
-    return text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" class="link" target="_blank">$1</a>')
+    return text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" class="link no-anim" target="_blank">$1</a>')
   }
 
 export { toggleBookmark, toggleSubscription, formatDate, parseMentions, fileType, parseMentionsOnReceive, parseMentionsOnSend, parseLink }
