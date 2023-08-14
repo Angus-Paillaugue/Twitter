@@ -22,7 +22,7 @@ export async function load({ locals }) {
 
         feed = structuredClone(await Promise.all(feed.map(async (post) => {
             let user = await usersRef.findOne({ username:post.username });
-            if(!user.hidden || locals.user.admin) return{ ...post, user }
+            if(!user?.hidden || locals.user.admin) return{ ...post, user }
         })));
 
         return { feed:feed.filter(n => n) };

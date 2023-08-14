@@ -18,7 +18,7 @@
     $: isSubscribed = subscriptions.filter(el => el.username == profile.username).length > 0;
 
     $: offset = posts.length;
-    $: if(fullBio){bioP.style.maxHeight = bioP.scrollHeight+16+"px";}else if(bioP){bioP.style.maxHeight = "24px";}
+    $: if(fullBio){bioP.style.maxHeight = bioP.scrollHeight+24+"px";}else if(bioP){bioP.style.maxHeight = "24px";}
 
     onMount(() => {
         window.addEventListener("scroll", () => {
@@ -74,7 +74,7 @@
             {/if}
         </div>
     
-        <p bind:this={bioP} class="w-full transition-all overflow-hidden relative pl-2 duration-500 {fullBio && "py-4"}" style="max-height: 24px;">
+        <p bind:this={bioP} class="w-full transition-all overflow-hidden relative px-2 duration-500 {fullBio && "py-4"}" style="max-height: 24px;">
             {@html profile.bio}
         </p>
         {#if profile.bio.includes("<br />")}

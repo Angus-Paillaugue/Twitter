@@ -17,11 +17,7 @@ export async function load({ locals }) {
 
     let completedSubscriptions = structuredClone(await Promise.all(subscriptions.map(async (subscription) => {
         let user = await usersRef.findOne({ username:subscription.username });
-        if(user){
-            return user;
-        }else {
-            return null;
-        }
+        if(user) return user;
     })));
 
     return { bookmarks:completedBookmarks.filter(n => n).reverse(), subscriptions:completedSubscriptions.filter(n => n).reverse() };

@@ -5,7 +5,7 @@ export async function load({ params, locals }) {
     const { username } = params;
     
     const profile = (({ password, email, bookmarks, subscriptions, ...o }) => o)(structuredClone(await usersRef.findOne({ username:username })));
-    if(profile.hidden && !locals.user.admin) throw error(404)
+    if(profile?.hidden && !locals?.user?.admin) throw error(404)
 
     let posts = await postsRef.find({ username:profile.username }).sort({ date:-1 }).limit(20).project({ _id:0 }).toArray();
 

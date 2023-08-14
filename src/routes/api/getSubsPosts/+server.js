@@ -20,7 +20,7 @@ export async function GET({ locals, url }) {
     }
     feed = structuredClone(await Promise.all(feed.map(async (post) => {
         let user = await usersRef.findOne({ username:post.username });
-        if(!user.hidden && locals.user.admin) return{ ...post, user }
+        if(!user.hidden || locals.user.admin) return{ ...post, user }
     })));
 
     return new Response(JSON.stringify({ error:false, feed:feed.filter(n => n) }));

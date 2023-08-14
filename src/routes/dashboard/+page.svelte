@@ -57,7 +57,7 @@
         const keystrokeTriggered = maybeTrigger === '@';
         if(!keystrokeTriggered) { 
             atMenuDisplay = false; 
-            return 
+            return ;
         }
         const query = textBeforeCaret.slice(triggerIdx+1);
 
@@ -122,17 +122,13 @@
             <div class="px-4 py-2 bg-neutral-800">
                 <textarea name="text" rows="1" class="block w-full px-0 text-sm border-0 bg-neutral-800 focus:ring-0 text-neutral-100 placeholder-neutral-400" placeholder="Write your new post..." bind:this={textarea} on:keyup={oninput}></textarea>
                 {#if atMenuDisplay}
-                    <div class="w-full p-4">
-                        <div class="flex flex-row flex-wrap gap-4">
-                            {#each mentionUsers as user}
-                                <button class="p-2 flex flex-row justify-start gap-4 bg-neutral-900 hover:bg-neutral-950 border border-border text-neutral-100 w-fit rounded-xl transition-all" data-username="{user.username}" on:click={() => {identifyUser(user.username)}}>
-                                    <div class="p-2 flex flex-row justify-start items-center gap-4 w-fit">
-                                        <img src="{user.profilePicture}" alt="Avatar" class="h-8 w-8 rounded-full flex-shrink-0"/>
-                                        <div class="flex flex-col"><h6>{ user.username }</h6></div>
-                                    </div>
-                                </button>
-                            {/each}
-                        </div>
+                    <div class="flex flex-row flex-wrap gap-2">
+                        {#each mentionUsers as user}
+                            <button class="p-2 flex flex-row items-center gap-4 bg-neutral-900 hover:bg-neutral-950 border border-border text-neutral-100 w-fit rounded-xl transition-all" data-username="{user.username}" on:click={() => {identifyUser(user.username)}}>
+                                <img src="{user.profilePicture}" alt="Avatar" class="h-8 w-8 rounded-full flex-shrink-0"/>
+                                <div class="flex flex-col"><h6>{ user.username }</h6></div>
+                            </button>
+                        {/each}
                     </div>
                 {/if}
             </div>

@@ -11,7 +11,7 @@ export async function GET({ locals, params, url }) {
 
         posts = structuredClone(await Promise.all(posts.map(async (post) => {
             let user = await usersRef.findOne({ username:post.username });
-            if(!user.hidden && locals.user.admin) return{ ...post, user }
+            if(!user.hidden || locals.user.admin) return{ ...post, user }
         })));
 
         return new Response(JSON.stringify({ error:false, posts:posts.filter(n => n), morePosts:posts.length > 0 }));
