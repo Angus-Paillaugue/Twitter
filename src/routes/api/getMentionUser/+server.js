@@ -1,4 +1,4 @@
-import { usersRef } from "$lib/server/db"
+import { usersRef } from "$lib/server/db";
 
 export async function GET({ url, locals }) {
     let query = new RegExp( url.searchParams.get("query") || ".*", 'i' );

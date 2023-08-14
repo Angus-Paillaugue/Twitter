@@ -8,5 +8,7 @@ const database = client.db('onlyfans');
 
 const usersRef = database.collection("users");
 const postsRef = database.collection("posts");
+const messagesRef = database.collection("messages");
+const conversationsRef = database.collection("conversations");
 
-export { usersRef, postsRef }
+export { usersRef, postsRef, messagesRef, conversationsRef }

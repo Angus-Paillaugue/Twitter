@@ -3,11 +3,12 @@ import { vitePreprocess } from '@sveltejs/kit/vite';
 
 const config = {
   kit: {
-    adapter: adapter()
+    adapter: adapter(),
   },
   preprocess: vitePreprocess(),
   vitePlugin: {
 		inspector: true,
 	},
 };
+
 export default config;

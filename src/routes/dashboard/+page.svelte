@@ -9,13 +9,13 @@
 
     const { user } = data;
     const { bookmarks } = user;
-    let posts = data.posts
+    let posts = data.posts;
     let offset = 0;
     let newPostModal = false;
     let morePostsLoading = false;
     let isMorePostsToLoad = true;
     let atMenuDisplay = false;
-    let mentionUsers = []
+    let mentionUsers = [];
     let files;
     let textarea;
     
@@ -86,7 +86,7 @@
 </svelte:head>
 
 <div class="fixed top-0 left-0 bg-neutral-600 bg-opacity-50 w-full h-full flex flex-col justify-center items-center transition-all p-4 {newPostModal ? "z-40 opacity-100" : "-z-10 opacity-0"}">
-    <form method="POST" enctype="multipart/form-data" use:enhance class="flex flex-col w-full max-w-md relative max-h-full">
+    <form method="POST" enctype="multipart/form-data" use:enhance class="flex flex-col w-full max-w-md relative max-h-full" action="?/newPost">
         <button type="button" on:click={() => {newPostModal = false;}} class="absolute top-2.5 right-2.5 text-neutral-400 bg-transparent rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center hover:bg-neutral-600 hover:text-neutral-100 group">
             <svg class="w-3 h-3 group-hover:rotate-90 transition-all" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/></svg>
             <span class="sr-only">Close modal</span>
@@ -148,8 +148,13 @@
                 <span class="bg-primary-100 text-primary-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-primary-900 dark:text-primary-300 absolute top-2 sm:top-0 right-2 sm:right-0 sm:-translate-y-1/2 sm:translate-x-1/2">{bookmarks.length}</span>
             </a>
     
-            <button on:click={() => {newPostModal=true}} class="card-button">
+            <a href="/dashboard/conversations" class="card-button">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" /></svg>
+                Messages
+            </a>
+
+            <button on:click={() => {newPostModal=true}} class="card-button">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" /></svg>
                 New post
             </button>
     
@@ -164,7 +169,7 @@
             </a>
         </div>
     </section>
-    
+
     <section class="flex flex-col max-w-lg mx-auto border-x border-border mt-4">
         {#each posts as post, index}
             <Post post={post} bookmarks={bookmarks} borderTop={index === 0} />

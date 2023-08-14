@@ -1,4 +1,4 @@
-import { postsRef, usersRef } from "$lib/server/db"
+import { postsRef, usersRef, conversationsRef } from "$lib/server/db"
 import { randomUUID } from "crypto"
 import { redirect } from "@sveltejs/kit";
 import { writeFileSync } from 'fs';
@@ -16,12 +16,12 @@ export async function load({ locals }) {
 };
 
 export const actions = {
-    default:async({ request, locals }) => {
+    newPost:async({ request, locals }) => {
         const { user } = locals;
         if(user){
             const data = await request.formData();
             const files = data.getAll('files')
-            const formData = Object.fromEntries(data)
+            const formData = Object.fromEntries(data);
             let { text } = formData;
             let fileNames = [];
             const postId = randomUUID();
