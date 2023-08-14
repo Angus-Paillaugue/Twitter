@@ -16,16 +16,17 @@
         let messageText = parseMentionsOnSend(textarea.value.trim());
         if(messageText.length === 0) return;
 
-        const message = { message:messageText, conversation, sender:user.username, receiver:chattingWithUser.username };
+        const message = { message:messageText, messageId:(Date.now()+Math.floor(Math.random() * 10000)).toString(), conversation, sender:user.username, receiver:chattingWithUser.username };
         
         io.emit("message", message);
-        const res = await fetch("/api/newMessage", { method:"POST", body:JSON.stringify({message:messageText, id:conversation}) })
+        await fetch("/api/newMessage", { method:"POST", body:JSON.stringify({message:messageText, id:conversation}) });
         messages = [...messages, message];
         textarea.value = "";
     }
 
     onMount(() => {
-        io.on("message", message => {
+        io.on("message", async(message) => {
+            await fetch("/api/seenMessage", { method:"POST", body:JSON.stringify({ id:message.id }) })
             messages = [...messages, message];
         });
         io.emit("register", user.username);
@@ -72,7 +73,8 @@
 <div class="h-screen mx-auto w-full">
     <div class="flex flex-col h-full justify-between w-full">
         <div>
-            <header class="p-4 pb-0">
+            <header class="p-4 pb-0 flex flex-row gap-2 items-center">
+                <img src="{chattingWithUser.profilePicture}" alt="Avatar" class="h-8 w-8 rounded-full"/>
                 <h4>@{chattingWithUser.username}</h4>
             </header>
             <div class="grid grid-cols-12 gap-y-2 p-4 overflow-y-auto">

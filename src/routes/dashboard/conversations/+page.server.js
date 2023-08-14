@@ -1,5 +1,5 @@
-import { usersRef, conversationsRef, messagesRef } from "$lib/server/db"
-import { randomUUID } from "crypto"
+import { usersRef, conversationsRef, messagesRef } from "$lib/server/db";
+import { randomUUID } from "crypto";
 import { redirect } from "@sveltejs/kit";
 
 export async function load({ locals }) {
@@ -10,9 +10,10 @@ export async function load({ locals }) {
 
     conversationsWithMe = structuredClone(await Promise.all(conversationsWithMe.map(async (conversation) => {
         let lastMessage = await messagesRef.find({ conversation:conversation.id }).sort({ date:-1 }).limit(1).project({ _id:0 }).toArray();
+        lastMessage = lastMessage[0]
         const parseMention = (text) => {return text.replace(new RegExp(/(?=(<user>))(\w|\W)*(?<=<\/user>)/, "gm"), function(match) {return match.slice(6, -7);});}
-        lastMessage[0].message = parseMention(lastMessage[0].message);
-        return { id:conversation.id, lastMessage:lastMessage[0], user:(({ password, email, bookmarks, subscriptions, ...o }) => o)(await usersRef.findOne({ username:conversation.user })) };
+        lastMessage.message = parseMention(lastMessage.message);
+        return { id:conversation.id, lastMessage:lastMessage, user:(({ password, email, bookmarks, subscriptions, ...o }) => o)(await usersRef.findOne({ username:conversation.user })) };
     })));
 
     return { conversationsWithMe };
