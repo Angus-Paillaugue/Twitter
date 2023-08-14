@@ -45,7 +45,7 @@
         }
     }
 
-    const  calcHeight = (value) => {return Math.min((value.match(/\n/g) || []).length+1, 10) * 20 + 16;}
+    const  calcHeight = (value) => {return Math.min((value.match(/\n/g) || []).length+4, 10) * 20 + 16;}
     async function oninput(){
         textarea.style.height = calcHeight(textarea.value) + "px";
         const positionIndex = textarea.selectionStart;
@@ -70,7 +70,7 @@
         atMenuDisplay = false; 
         const positionIndex = textarea.selectionStart;
         const textBeforeCaret = textarea.value.slice(0, positionIndex);
-        let start = textBeforeCaret.split("@")
+        let start = textBeforeCaret.split("@");
         start.pop();
         textarea.value = start.join("@") + `@${username}`;
         textarea.focus();
@@ -120,7 +120,7 @@
                 </div>
             {/if}
             <div class="px-4 py-2 bg-neutral-800">
-                <textarea name="text" rows="1" class="block w-full px-0 text-sm border-0 bg-neutral-800 focus:ring-0 text-neutral-100 placeholder-neutral-400" placeholder="Write your new post..." bind:this={textarea} on:keyup={oninput}></textarea>
+                <textarea name="text" rows="4" class="block w-full px-0 text-sm border-0 bg-neutral-800 focus:ring-0 text-neutral-100 placeholder-neutral-400" placeholder="Write your new post..." bind:this={textarea} on:keyup={oninput}></textarea>
                 {#if atMenuDisplay}
                     <div class="flex flex-row flex-wrap gap-2">
                         {#each mentionUsers as user}

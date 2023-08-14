@@ -87,7 +87,7 @@
     
     <section class="flex flex-col max-w-md mx-auto w-full border-x border-border">
         {#each posts as post}
-            <Post post={post} bookmarks={bookmarks} />
+            <Post post={post} bookmarks={bookmarks} borderTop={false} />
         {/each}
     </section>
 </main>

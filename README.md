@@ -9,6 +9,7 @@
  - [x] Add possibility to change avatar and banner
  - [x] Fix search autocomplete
  - [ ] Find a solution for hosting files of posts
+ - [ ] Make page transitions work again
  - [ ] Messages
      - [ ] Add possibility to block users
      - [x] Add mentioning to messages

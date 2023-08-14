@@ -6,10 +6,11 @@
     export let data;
 
     const { subscriptions } = data;
+    let bookmarks = data.bookmarks;
     let tabIndex = 0;
     let sectionsList = [];
     let navLinkUnderline;
-    let bookmarks = data.bookmarks;
+    let activeButton;
 
     $: setActiveTab(), tabIndex;
 
@@ -26,9 +27,11 @@
                 sectionsList[i].style.display = "none";
             }else {
                 sectionsList[i].style.display = "flex";
-                let activeButton = document.querySelector("[data-section*='"+sectionsList[i].id+"']");
-                navLinkUnderline.style.left = activeButton.offsetLeft+"px";
-                navLinkUnderline.style.width = activeButton.clientWidth+"px";
+                activeButton = document.querySelector("[data-section*='"+sectionsList[i].id+"']");
+                if(navLinkUnderline){
+                    navLinkUnderline.style.left = activeButton.offsetLeft +"px";
+                    navLinkUnderline.style.width = activeButton.clientWidth +"px";
+                }
             }
         }
     }

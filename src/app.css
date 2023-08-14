@@ -6,7 +6,7 @@
 @tailwind utilities;
 
 ::-webkit-scrollbar {
-	@apply w-2;
+	@apply w-1 max-sm:hidden transition-all;
 }
 ::-webkit-scrollbar-track {
 	@apply bg-neutral-900;

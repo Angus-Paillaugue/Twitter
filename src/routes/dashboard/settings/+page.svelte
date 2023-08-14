@@ -31,11 +31,13 @@
             if(i !== tabIndex){
                 sectionsList[i].style.display = "none";
             }else {
-                sectionsList[i].style.display = "flex"
-                let activeButton = document.querySelector("[data-section*="+sectionsList[i].id+"]");
-                if(activeButton.getAttribute("data-section") === "Danger") navLinkUnderline.classList.add("bg-red-500"); else navLinkUnderline.classList.remove("bg-red-500")
-                navLinkUnderline.style.left = activeButton.offsetLeft+"px";
-                navLinkUnderline.style.width = activeButton.clientWidth+"px";
+                sectionsList[i].style.display = "";
+                let activeButton = document.querySelector("[data-section*='"+sectionsList[i].id+"']");
+                if(navLinkUnderline && activeButton){
+                    if(activeButton.getAttribute("data-section") === "Danger") navLinkUnderline.classList.add("bg-red-500"); else navLinkUnderline.classList.remove("bg-red-500");
+                    navLinkUnderline.style.left = activeButton.offsetLeft +"px";
+                    navLinkUnderline.style.width = activeButton.clientWidth +"px";
+                }
             }
         }
     }

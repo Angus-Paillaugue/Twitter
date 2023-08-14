@@ -17,7 +17,7 @@
         if(messageText.length === 0) return;
 
         const message = { message:messageText, messageId:(Date.now()+Math.floor(Math.random() * 10000)).toString(), conversation, sender:user.username, receiver:chattingWithUser.username };
-        
+
         io.emit("message", message);
         await fetch("/api/newMessage", { method:"POST", body:JSON.stringify({message:messageText, id:conversation}) });
         messages = [...messages, message];
@@ -45,7 +45,7 @@
         const keystrokeTriggered = maybeTrigger === '@';
         if(!keystrokeTriggered) { 
             atMenuDisplay = false; 
-            return ;
+            return;
         }
         const query = textBeforeCaret.slice(triggerIdx+1);
 

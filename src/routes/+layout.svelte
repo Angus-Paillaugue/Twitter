@@ -3,10 +3,11 @@
     import { Navbar } from "$lib/components";
     import { Toast } from 'flowbite-svelte';
     import { toasts, searchBar, pageMetaData } from "$lib/stores";
+    import { fade } from 'svelte/transition';
 
     export let data;
 
-    $: user = data.user
+    $: user = data.user;
 </script>
 
 
@@ -15,15 +16,15 @@
     <meta name="description" content="{$pageMetaData.description}">
 </svelte:head>
 
-
-<main class="min-h-screen transition-all w-full {user && "max-sm:pb-14"} flex flex-col items-center {$searchBar && "pt-14"}">
-    <div class="w-full max-w-screen-lg max-sm:justify-center h-full flex flex-row">
-        <Navbar user={data?.user}/>
-        
-        <slot />
-    </div>
-</main>
-
+<!-- {#key data.url} -->
+    <main class="min-h-screen transition-all w-full {user && "max-sm:pb-14"} flex flex-col items-center {$searchBar && "pt-14"}" in:fade={{ duration: 200, delay: 200 }} out:fade={{ duration: 200 }}>
+        <div class="w-full max-w-screen-lg max-sm:justify-center h-full flex flex-row">
+            <Navbar user={data?.user}/>
+            
+            <slot />
+        </div>
+    </main>
+<!-- {/key} -->
 
 <div class="fixed top-2 right-2 flex flex-col gap-2 z-50">
     {#each $toasts as toast}
