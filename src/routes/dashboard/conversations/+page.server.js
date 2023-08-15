@@ -10,9 +10,11 @@ export async function load({ locals }) {
 
     conversationsWithMe = structuredClone(await Promise.all(conversationsWithMe.map(async (conversation) => {
         let lastMessage = await messagesRef.find({ conversation:conversation.id }).sort({ date:-1 }).limit(1).project({ _id:0 }).toArray();
-        lastMessage = lastMessage[0]
-        const parseMention = (text) => {return text.replace(new RegExp(/(?=(<user>))(\w|\W)*(?<=<\/user>)/, "gm"), function(match) {return match.slice(6, -7);});}
-        lastMessage.message = parseMention(lastMessage.message);
+        if(lastMessage.length > 0){
+            lastMessage = lastMessage[0];
+            const parseMention = (text) => {return text.replace(new RegExp(/(?=(<user>))(\w|\W)*(?<=<\/user>)/, "gm"), function(match) {return match.slice(6, -7);});}
+            lastMessage.message = parseMention(lastMessage.message);
+        }
         return { id:conversation.id, lastMessage:lastMessage, user:(({ password, email, bookmarks, subscriptions, ...o }) => o)(await usersRef.findOne({ username:conversation.user })) };
     })));
 

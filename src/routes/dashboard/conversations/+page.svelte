@@ -34,7 +34,7 @@
                 <img src="{conversation.user.profilePicture}" alt="Profile picture" class="w-12 h-12 rounded-full">
                 <div class="flex flex-col gap-1">
                     <h6>{conversation.user.username}</h6>
-                    {#if conversation.lastMessage}
+                    {#if Object.keys(conversation.lastMessage).length > 0}
                         <p class="text-neutral-600 line-clamp-1 text-ellipsis"><b>{conversation.lastMessage.sender === user.username ? "You" : conversation.lastMessage.sender}</b> : {conversation.lastMessage.message}</p>
                     {/if}
                 </div>
@@ -54,7 +54,7 @@
                     {#each newConversationUsers as user}
                         <div>
                             <input type="radio" bind:group={newConversationRadio} name="newConversationRadioInputs" value={user.username} id="newConversationWith{user.username}" class="hidden peer" />
-                            <label for="newConversationWith{user.username}" class="p-2 flex flex-row items-center gap-4 bg-neutral-900 hover:bg-neutral-800 border border-border text-neutral-100 w-fit rounded-xl transition-all peer-checked:border-primary-600 cursor-pointer">
+                            <label for="newConversationWith{user.username}" class="p-2 flex flex-row items-center gap-4 bg-neutral-900 hover:bg-neutral-800 border border-border text-neutral-100 w-fit transition-all rounded-xl peer-checked:border-primary-600 peer-checked:rounded-3xl cursor-pointer hover:rounded-3xl">
                                 <img src="{user.profilePicture}" alt="Avatar" class="h-8 w-8 rounded-full flex-shrink-0"/>
                                 <div class="flex flex-col"><h6>{ user.username }</h6></div>
                             </label>
