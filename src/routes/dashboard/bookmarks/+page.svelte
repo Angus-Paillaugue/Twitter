@@ -1,5 +1,5 @@
 <script>
-    import { PostWrapper } from '$lib/components';
+    import { Post } from '$lib/components';
     import { onMount } from "svelte";
     import { pageMetaData } from "$lib/stores"
 
@@ -7,10 +7,12 @@
 
     const { subscriptions } = data;
     let bookmarks = data.bookmarks;
-    let tabIndex = 0;
     let sectionsList = [];
+    let childrenMap = [];
+    let tabIndex = 0;
     let navLinkUnderline;
     let activeButton;
+    let postsContainer;
 
     $: setActiveTab(), tabIndex;
 
@@ -19,6 +21,27 @@
 
         setActiveTab();
         window.onresize = setActiveTab;
+
+        for(const el of postsContainer.children){
+            if(el.nodeName === "ARTICLE") childrenMap = [...childrenMap, { el, top:el.offsetTop, height:el.clientHeight }];
+        }
+        window.addEventListener("scroll", () => {
+            let bottomTrigger = window.scrollY + window.innerHeight/2;
+            let isVideoPlaying = false;
+            for(const post of childrenMap){
+                if((post.top + post.height) > bottomTrigger){
+                    if(post.el.querySelector("video")){
+                        if(!isVideoPlaying){
+                            post.el.querySelector("video").play();
+                            isVideoPlaying = true;
+                            continue;
+                        }
+                    }
+                }else if(post.el.querySelector("video")){
+                    post.el.querySelector("video").pause();
+                }
+            }
+        });
     });
 
     function setActiveTab() {
@@ -55,7 +78,11 @@
     </div>
 
     <section class="flex flex-col w-full max-w-md mx-auto" id="Posts">
-        <PostWrapper bookmarks={bookmarks} loadMorePosts={() => {return}} posts={bookmarks} borderTop={true}/>
+        <div class="w-full flex flex-col h-full border-x border-border" bind:this={postsContainer}>
+            {#each bookmarks as post, index}
+                <Post post={post} bookmarks={bookmarks} borderTop={index === 0} />
+            {/each}
+        </div>
     </section>
     <section class="flex flex-col w-full max-w-md mx-auto" style="display: none;" id="Users">
         {#each subscriptions as user}

@@ -1,7 +1,8 @@
 <script>
+    import { onMount } from "svelte";
     import { Tooltip } from 'flowbite-svelte';
     import { enhance } from "$app/forms"
-    import { PostWrapper } from '$lib/components';
+    import { Post } from '$lib/components';
     import { pageMetaData } from "$lib/stores";
 
     export let data;
@@ -9,19 +10,50 @@
     const { user } = data;
     const { bookmarks } = user;
     let posts = data.posts;
-    let offset = 0;
     let newPostModal = false;
     let morePostsLoading = false;
     let isMorePostsToLoad = true;
     let atMenuDisplay = false;
     let mentionUsers = [];
+    let childrenMap = [];
+    let offset = 0;
     let files;
     let textarea;
+    let postsContainer;
     
     $: offset = posts.length;
     $: lastNumberOfPosts = posts.length;
     // Limit file size to 3
     $: if(files?.length > 3) files = [files[0], files[1], files[2]];
+
+    onMount(() => {
+        for(const el of postsContainer.children){
+            if(el.nodeName === "ARTICLE") childrenMap = [...childrenMap, { el, top:el.offsetTop, height:el.clientHeight }];
+        }
+        window.addEventListener("scroll", () => {
+            let documentHeight = document.body.scrollHeight;
+            let currentScroll = window.scrollY + window.innerHeight;
+            // When the user is [modifier]px from the bottom, fire the event.
+            let modifier = 500; 
+            if(currentScroll + modifier > documentHeight) loadUserPosts();
+
+            let bottomTrigger = window.scrollY + window.innerHeight/2;
+            let isVideoPlaying = false;
+            for(const post of childrenMap){
+                if((post.top + post.height) > bottomTrigger){
+                    if(post.el.querySelector("video")){
+                        if(!isVideoPlaying){
+                            post.el.querySelector("video").play();
+                            isVideoPlaying = true;
+                            continue;
+                        }
+                    }
+                }else if(post.el.querySelector("video")){
+                    post.el.querySelector("video").pause();
+                }
+            }
+        });
+    });
 
     async function loadUserPosts() {
         if(isMorePostsToLoad && !morePostsLoading){
@@ -161,6 +193,10 @@
     </section>
 
     <section class="flex flex-col max-w-lg mx-auto mt-4">
-        <PostWrapper bookmarks={bookmarks} loadMorePosts={loadUserPosts} posts={posts} borderTop={true}/>
+        <div class="w-full flex flex-col h-full border-x border-border" bind:this={postsContainer}>
+            {#each posts as post, index}
+                <Post post={post} bookmarks={bookmarks} borderTop={index === 0} />
+            {/each}
+        </div>
     </section>
 </section>

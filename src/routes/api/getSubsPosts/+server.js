@@ -4,24 +4,24 @@ export async function GET({ locals, url }) {
     const { user } = locals;
     let offset = Number(url.searchParams.get('offset') || 0);
 
-    let feed = [];
+    let posts = [];
     if(!locals.user) return new Response(JSON.stringify({ error:true, message:"Not logged-in!" }));
 
     if(user.subscriptions.length === 0){
-        feed = await postsRef.find({  }).sort({date:-1}).limit(offset+20).toArray();
+        posts = await postsRef.find({  }).sort({date:-1}).limit(offset+20).toArray();
     }else {
-        feed = await postsRef.find({ username:{ $in:[...user.subscriptions.map(sub => sub.subscriptions)] } }).sort({date:-1}).limit(offset+20).toArray();
+        posts = await postsRef.find({ username:{ $in:[...user.subscriptions.map(sub => sub.subscriptions)] } }).sort({date:-1}).limit(offset+20).toArray();
     }
     
-    feed = feed.slice(offset);
-    if(feed.length < 20){
-        let temp = await postsRef.find({  }).limit(20-feed.length).toArray();
-        feed.push(...temp);
+    posts = posts.slice(offset);
+    if(posts.length < 20){
+        let temp = await postsRef.find({  }).limit(20-posts.length).toArray();
+        posts.push(...temp);
     }
-    feed = structuredClone(await Promise.all(feed.map(async (post) => {
+    posts = structuredClone(await Promise.all(posts.map(async (post) => {
         let user = await usersRef.findOne({ username:post.username });
         if(!user.hidden || locals.user.admin) return{ ...post, user }
     })));
 
-    return new Response(JSON.stringify({ error:false, feed:feed.filter(n => n) }));
+    return new Response(JSON.stringify({ error:false, posts:posts.filter(n => n) }));
 };

@@ -2,7 +2,7 @@ import { postsRef, usersRef } from "$lib/server/db"
 
 export const ssr = false;
 
-export async function load({ url }) {
+export async function load({ url, locals }) {
     const searchQuery = new RegExp( url.searchParams.get("q") || ".*", 'i' );
 
     let posts = await postsRef.find({ text: searchQuery  }).limit(20).sort({ date:-1 }).toArray();

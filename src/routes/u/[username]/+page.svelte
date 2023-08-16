@@ -1,5 +1,6 @@
 <script>
-    import { PostWrapper } from "$lib/components";
+    import { onMount } from "svelte";
+    import { Post } from "$lib/components";
     import { pageMetaData, toasts } from "$lib/stores";
     import { fade } from 'svelte/transition';
 
@@ -12,19 +13,46 @@
     let fullBio = false;
     let morePostsLoading = false;
     let isMorePostsToLoad = true;
+    let childrenMap = [];
     let offset = 0;
     let bioP;
+    let postsContainer;
     $: isSubscribed = subscriptions.filter(el => el.username == profile.username).length > 0;
-
     $: offset = posts.length;
     $: if(fullBio){bioP.style.maxHeight = bioP.scrollHeight+24+"px";}else if(bioP){bioP.style.maxHeight = "24px";}
+    $: offset = posts.length;
 
-    async function toggleSubscription(username) {
-        const res = await fetch("/api/toggleSubscription", { method:"POST", body:JSON.stringify({ username }) });
-        const apiRes = await res.json();
-        if(!apiRes.error)  subscriptions = apiRes.subscriptions; else $toasts = [...$toasts, { type:"error", message:apiRes.message }];
-    }
 
+
+    onMount(() => {
+        for(const el of postsContainer.children){
+            if(el.nodeName === "ARTICLE") childrenMap = [...childrenMap, { el, top:el.offsetTop, height:el.clientHeight }];
+        }
+        window.addEventListener("scroll", () => {
+            let documentHeight = document.body.scrollHeight;
+            let currentScroll = window.scrollY + window.innerHeight;
+            // When the user is [modifier]px from the bottom, fire the event.
+            let modifier = 500; 
+            if(currentScroll + modifier > documentHeight) loadPosts();
+
+            let bottomTrigger = window.scrollY + window.innerHeight/2;
+            let isVideoPlaying = false;
+            for(const post of childrenMap){
+                if((post.top + post.height) > bottomTrigger){
+                    if(post.el.querySelector("video")){
+                        if(!isVideoPlaying){
+                            post.el.querySelector("video").play();
+                            isVideoPlaying = true;
+                            continue;
+                        }
+                    }
+                }else if(post.el.querySelector("video")){
+                    post.el.querySelector("video").pause();
+                }
+            }
+        });
+    });
+    
     async function loadPosts() {
         if(isMorePostsToLoad && !morePostsLoading){
             morePostsLoading = true;
@@ -38,6 +66,12 @@
         }
     }
     
+    async function toggleSubscription(username) {
+        const res = await fetch("/api/toggleSubscription", { method:"POST", body:JSON.stringify({ username }) });
+        const apiRes = await res.json();
+        if(!apiRes.error)  subscriptions = apiRes.subscriptions; else $toasts = [...$toasts, { type:"error", message:apiRes.message }];
+    }
+
     $pageMetaData.title = `${profile.username}'s profile.`;
     $pageMetaData.description = `${profile.username}'s profile.`;
     $pageMetaData.currentPageName = "Profile";
@@ -77,6 +111,10 @@
     </section>
     
     <section class="flex flex-col max-w-md mx-auto w-full">
-        <PostWrapper bookmarks={bookmarks} loadMorePosts={loadPosts} posts={posts} borderTop={false}/>
+        <div class="w-full flex flex-col h-full border-x border-border" bind:this={postsContainer}>
+            {#each posts as post, index}
+                <Post post={post} bookmarks={bookmarks} borderTop={index === 0} />
+            {/each}
+        </div>
     </section>
 </main>
