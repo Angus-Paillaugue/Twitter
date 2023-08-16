@@ -5,7 +5,7 @@
  - [ ] Truncate long post text
  - [ ] Make page transitions work again
  - [ ] Find a solution for hosting files of posts
- - [ ] *Add a display name
+ - [x] *Add a display name
  - [x] Make video play when in view
  - [x] Fix the read more/less animation on profile view
  - [x] Add animation to the follow button

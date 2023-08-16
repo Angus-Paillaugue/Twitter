@@ -103,10 +103,9 @@
                             <!-- svelte-ignore a11y-img-redundant-alt -->
                             <img src="{hint.profilePicture}" alt="Profile picture" class="rounded-full lg:h-20 lg:w-20 h-14 w-14 absolute bottom-0 left-5 translate-y-3/4 ring-4 ring-neutral-800">
                         </div>
-                        <div class="h-16 lg:h-24 pl-24 lg:pl-28">
-                            <div class="h-full flex items-start">
-                                <h1 class="lg:text-4xl text-2xl font-semibold">{@html highlightSearchedText(hint.username)}</h1>
-                            </div>
+                        <div class="h-20 pl-24 lg:pl-28 flex items-start flex-col">
+                            <h5>{@html highlightSearchedText(hint.displayName)}</h5>
+                            <p class="text-xs">@{@html highlightSearchedText(hint.username)}</p>
                         </div>
                     </a>
                 {:else}

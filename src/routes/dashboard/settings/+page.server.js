@@ -1,16 +1,16 @@
 import { redirect } from "@sveltejs/kit";
-import { usersRef, postsRef } from "$lib/server/db"
+import { usersRef, postsRef } from "$lib/server/db";
 
 export const actions = {
     save: async ({ request, locals }) => {
         try {
             const formData = Object.fromEntries(await request.formData());
-            const { email, bio, username, profilePicture, banner } = formData;
+            const { email, bio, profilePicture, banner, displayName } = formData;
             const { user } = locals;
 
-            if(!email || !bio) return { err:true, msg:"Fields can not be empty!", email, bio, username };
+            if(!email || !bio || !displayName) return { err:true, msg:"Fields can not be empty!", email, bio, displayName };
     
-            await usersRef.findOneAndUpdate({ username:user.username }, { $set:{ email, bio:bio.replaceAll("\n", "<br />"), profilePicture, banner } });
+            await usersRef.findOneAndUpdate({ username:user.username }, { $set:{ email, bio:bio.replaceAll("\n", "<br />"), profilePicture, banner, displayName } });
             return { err:false, msg:"Saved modifications" };
         } catch (err) {return { err:true, msg:err };}
     },

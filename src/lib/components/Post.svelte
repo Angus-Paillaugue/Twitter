@@ -40,10 +40,13 @@
 {#if !isDeleted && post?.user}
     <article class="postCard {borderTop ? "border-y" : "border-b"}">
         <div class="flex flex-row justify-between items-center gap-2 w-full">
-            <div class="flex flex-row gap-2">
+            <div class="flex flex-row gap-2 items-center">
                 <!-- svelte-ignore a11y-img-redundant-alt -->
-                <a href="/u/{post.user.username}"><img src="{post.user.profilePicture}" class="rounded-full h-10 w-10" alt="Profile picture"></a>
-                <h4>{post.user.username}</h4>
+                <a href="/u/{post.user.username}"><img src="{post.user.profilePicture}" class="rounded-full h-12 w-12" alt="Profile picture"></a>
+                <div class="flex flex-col">
+                    <h5>{post.user.displayName}</h5>
+                    <p class="text-xs">@{post.user.username}</p>
+                </div>
             </div>
             <p>{formatDate(post.date)}</p>
         </div>

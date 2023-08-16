@@ -12,7 +12,7 @@ export async function POST({ request, locals }) {
         if(!user.hidden || locals.user.admin) return{ ...post, user};
     })));
 
-    let users = structuredClone(await usersRef.find({ username:searchQuery }).limit(20).toArray());
+    let users = structuredClone(await usersRef.find({ $or:[ { username:searchQuery }, { displayName:searchQuery } ] }).limit(20).toArray());
     users = users.map(user => {if(!user.hidden || locals.user.admin)return{ ...user, type:"user" }});
 
     let results = [ ...posts, ...users ].filter(el => el).sort((a, b) => 0.5 - Math.random());

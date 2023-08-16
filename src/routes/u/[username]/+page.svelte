@@ -83,12 +83,13 @@
             <!-- svelte-ignore a11y-img-redundant-alt -->
             <img src="{profile.profilePicture}" alt="Profile picture" class="rounded-full lg:h-36 transition-all lg:w-36 md:h-24 md:w-24 w-16 h-16 absolute bottom-0 left-2 md:left-5 translate-y-3/4 ring-4 ring-neutral-800">
         </div>
-        <div class="lg:h-[108px] md:h-[70px] mb-2 flex flex-col sm:flex-row justify-between md:items-center gap-2 lg:p-4 p-2 lg:pl-44 md:pl-32 pl-20">
-            <div class="h-full flex items-start">
-                <h1 class="lg:text-4xl text-2xl">{profile.username}</h1>
+        <div class="lg:h-[108px] md:h-[70px] mb-2 flex flex-col sm:flex-row items-start md:items-center gap-2 lg:p-4 p-2 max-sm:pt-14 lg:pl-44 md:pl-32 pl-2">
+            <div class="h-full flex flex-col items-start">
+                <h2>{profile.displayName}</h2>
+                <p class="text-sm">@{profile.username}</p>
             </div>
             {#if user}
-                <button class="button-primary" on:click={() => {toggleSubscription(profile.username)}}>
+                <button class="button-primary ml-auto" on:click={() => {toggleSubscription(profile.username)}}>
                     {#if isSubscribed}
                         Followed
                         <svg in:fade xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" class="transition-all" style="stroke-dasharray: 100;animation: dash 4s;" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
