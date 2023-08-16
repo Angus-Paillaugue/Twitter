@@ -13,5 +13,5 @@
 </script>
 
 <section class="flex flex-col max-w-lg w-full border border-b-0 border-border h-full">
-    <Post post={post} bookmarks={bookmarks} />
+    <Post post={post} bookmarks={bookmarks} borderTop={false} />
 </section>

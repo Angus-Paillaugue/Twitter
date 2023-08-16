@@ -97,7 +97,7 @@
     <div class="flex flex-col w-full max-w-md max-h-full overflow-y-auto transition-all mx-auto border-x border-border {searchHint.length > 0 ? "opacity-100" : "opacity-0"}" on:click={(e) => {e.stopPropagation();}} >
         {#each searchHint as hint, index}
             {#if index < 5}
-                {#if hint.type == "user"}
+                {#if hint.type === "user"}
                     <a href="/u/{hint.username}" class="w-full overflow-hidden flex flex-col justify-start {index === 0 ? "border-y" : "border-b"} border-border bg-neutral-900">
                         <div class="w-full relative bg-no-repeat bg-center bg-cover h-16 lg:h-24" style="background-image: url('{hint.banner}');">
                             <!-- svelte-ignore a11y-img-redundant-alt -->
