@@ -1,6 +1,6 @@
 <script>
     import { onMount } from "svelte";
-    import { Post } from "$lib/components";
+    import { PostWrapper } from "$lib/components";
     import { pageMetaData, toasts } from "$lib/stores";
     import { enhance } from '$app/forms';
 
@@ -13,12 +13,10 @@
     let morePostsLoading = false;
     let bookmarks = [];
     let sectionsList = [];
-    let childrenMap = [];
     let offset = 0;
     let tabIndex = 0;
     let user;
     let navLinkUnderline;
-    let postsContainer;
 
     $: user = data.user;
     $: if(user) bookmarks = user.bookmarks;
@@ -26,34 +24,6 @@
     $: setActiveTab(), tabIndex;
 
     onMount(() => {
-        for(const el of postsContainer.children){
-            if(el.nodeName === "ARTICLE"){
-                childrenMap = [...childrenMap, { el, top:el.offsetTop, height:el.clientHeight }];
-            }
-        }
-        window.addEventListener("scroll", () => {
-            let documentHeight = document.body.scrollHeight;
-            let currentScroll = window.scrollY + window.innerHeight;
-            // When the user is [modifier]px from the bottom, fire the event.
-            let modifier = 500; 
-            if(currentScroll + modifier > documentHeight) loadSubsPosts();
-
-            let bottomTrigger = window.scrollY + window.innerHeight/2;
-            let isVideoPlaying = false;
-            for(const post of childrenMap){
-                if((post.top + post.height) > bottomTrigger){
-                    if(post.el.querySelector("video")){
-                        if(!isVideoPlaying){
-                            post.el.querySelector("video").play();
-                            isVideoPlaying = true;
-                            continue;
-                        }
-                    }
-                }else if(post.el.querySelector("video")){
-                    post.el.querySelector("video").pause();
-                }
-            }
-        });
         if(!user){
             sectionsList = document.querySelectorAll("form.no-user");
             setActiveTab();
@@ -152,10 +122,6 @@
 {:else}
 
     <main class="flex md:flex-row flex-col-reverse justify-between md:items-start items-center h-full w-full max-w-md">
-        <section class="w-full flex flex-col h-full border-x border-border" bind:this={postsContainer}>
-            {#each feed as post, index}
-                <Post post={post} bookmarks={bookmarks} borderTop={index === 0} />
-            {/each}
-        </section>
+        <PostWrapper bookmarks={bookmarks} loadMorePosts={loadSubsPosts} posts={feed} />
     </main>
 {/if}

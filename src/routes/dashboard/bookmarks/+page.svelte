@@ -1,5 +1,5 @@
 <script>
-    import { Post } from '$lib/components';
+    import { PostWrapper } from '$lib/components';
     import { onMount } from "svelte";
     import { pageMetaData } from "$lib/stores"
 
@@ -54,10 +54,8 @@
         <span bind:this={navLinkUnderline} class="h-1 transition-all bottom-0 bg-primary-600 absolute ease-in-out duration-300"></span>
     </div>
 
-    <section class="flex flex-col w-full border-x border-border max-w-md mx-auto" id="Posts">
-        {#each bookmarks as post, index}
-            <Post post={post} bookmarks={bookmarks} borderTop={index === 0} />
-        {/each}
+    <section class="flex flex-col w-full max-w-md mx-auto" id="Posts">
+        <PostWrapper bookmarks={bookmarks} loadMorePosts={() => {return}} posts={bookmarks} borderTop={true}/>
     </section>
     <section class="flex flex-col w-full max-w-md mx-auto" style="display: none;" id="Users">
         {#each subscriptions as user}

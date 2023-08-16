@@ -1,6 +1,5 @@
 <script>
-    import { Post } from '$lib/components';
-    import { onMount } from "svelte";
+    import { PostWrapper } from "$lib/components";
     import { pageMetaData, toasts } from "$lib/stores";
     import { fade } from 'svelte/transition';
 
@@ -19,14 +18,6 @@
 
     $: offset = posts.length;
     $: if(fullBio){bioP.style.maxHeight = bioP.scrollHeight+24+"px";}else if(bioP){bioP.style.maxHeight = "24px";}
-
-    onMount(() => {
-        window.addEventListener("scroll", () => {
-            let documentHeight = document.body.scrollHeight;
-            let currentScroll = window.scrollY + window.innerHeight;
-            if(currentScroll + 500 > documentHeight) loadPosts();
-        });
-    });
 
     async function toggleSubscription(username) {
         const res = await fetch("/api/toggleSubscription", { method:"POST", body:JSON.stringify({ username }) });
@@ -85,9 +76,7 @@
         {/if}
     </section>
     
-    <section class="flex flex-col max-w-md mx-auto w-full border-x border-border">
-        {#each posts as post}
-            <Post post={post} bookmarks={bookmarks} borderTop={false} />
-        {/each}
+    <section class="flex flex-col max-w-md mx-auto w-full">
+        <PostWrapper bookmarks={bookmarks} loadMorePosts={loadPosts} posts={posts} borderTop={false}/>
     </section>
 </main>

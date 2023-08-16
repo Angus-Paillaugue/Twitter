@@ -1,5 +1,5 @@
 <script>
-    import { Post } from '$lib/components';
+    import { PostWrapper } from "$lib/components";
     import { pageMetaData } from "$lib/stores"
     
     export let data;
@@ -15,10 +15,6 @@
 
 <main class="flex flex-col max-w-md w-full">
     {#if posts.length > 0}
-        <section class="w-full flex flex-col border-x border-border h-full">
-            {#each posts as post, index}
-                <Post post={post} bookmarks={bookmarks} borderTop={index === 0} />
-            {/each}
-        </section>
+        <PostWrapper bookmarks={bookmarks} loadMorePosts={() => {return}} posts={posts} borderTop={true}/>
     {/if}
 </main>

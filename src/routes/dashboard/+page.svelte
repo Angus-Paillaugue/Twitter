@@ -1,8 +1,7 @@
 <script>
     import { Tooltip } from 'flowbite-svelte';
     import { enhance } from "$app/forms"
-    import { Post } from '$lib/components';
-    import { onMount } from "svelte";
+    import { PostWrapper } from '$lib/components';
     import { pageMetaData } from "$lib/stores";
 
     export let data;
@@ -23,15 +22,6 @@
     $: lastNumberOfPosts = posts.length;
     // Limit file size to 3
     $: if(files?.length > 3) files = [files[0], files[1], files[2]];
-
-    onMount(() => {
-        window.addEventListener("scroll", () => {
-            let documentHeight = document.body.scrollHeight;
-            let currentScroll = window.scrollY + window.innerHeight;
-            let modifier = 500; 
-            if(currentScroll + modifier > documentHeight) loadUserPosts();
-        });
-    });
 
     async function loadUserPosts() {
         if(isMorePostsToLoad && !morePostsLoading){
@@ -170,9 +160,7 @@
         </div>
     </section>
 
-    <section class="flex flex-col max-w-lg mx-auto border-x border-border mt-4">
-        {#each posts as post, index}
-            <Post post={post} bookmarks={bookmarks} borderTop={index === 0} />
-        {/each}
+    <section class="flex flex-col max-w-lg mx-auto mt-4">
+        <PostWrapper bookmarks={bookmarks} loadMorePosts={loadUserPosts} posts={posts} borderTop={true}/>
     </section>
 </section>
