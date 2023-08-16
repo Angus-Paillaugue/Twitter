@@ -7,10 +7,17 @@
     export let bookmarks;
     export let borderTop;
 
+    let mediaModalSrc = {type:"", src:""};
     let isFullScreen = false;
     let isDeleted = false;
     let deletePostModal = false;
-    let mediaModalSrc = {type:"", src:""};
+    let readMoreToggle = false;
+    let isReadMore = false;
+    let postText;
+    
+    $: if(readMoreToggle){postText.style.maxHeight = postText.scrollHeight+24+"px";}else if(postText){postText.style.maxHeight = 14*24+"px";}
+
+    $: if(postText?.clientHeight >= 14*24){isReadMore = true;}
 
     async function toggleBookmark() {
         const res = await fetch("/api/toggleBookmark", { method:"POST", body:JSON.stringify({ id:post.id }) });
@@ -52,7 +59,13 @@
         </div>
         <div class="w-full sm:pl-12 flex flex-col gap-2">
             {#if post.text}
-                <p class="leading-6">{@html parseMentions(parseLink(post.text.replaceAll("\n", "<br>")))}</p>
+                <p class="leading-6 overflow-hidden transition-all duration-500 {readMoreToggle && "py-4"}" bind:this={postText}>{@html parseMentions(parseLink(post.text.replaceAll("\n", "<br>")))}</p>
+                {#if isReadMore}
+                    <button class="link w-fit" on:click={() => {readMoreToggle = !readMoreToggle}}>
+                        Read {readMoreToggle ? "less" : "more"}
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 inline-block transition-all duration-500 {!readMoreToggle && "rotate-180"}"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" /></svg>
+                    </button>
+                {/if}
             {/if}
             {#if post.file}
                 <div class="mx-auto grid {post.file.length === 1 ? "grid-cols-1" :  "grid-cols-2"} gap-2">
