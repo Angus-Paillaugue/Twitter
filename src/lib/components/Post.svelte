@@ -55,7 +55,7 @@
                 <p class="leading-6">{@html parseMentions(parseLink(post.text.replaceAll("\n", "<br>")))}</p>
             {/if}
             {#if post.file}
-                <div class="mx-auto grid {post.file.length === 1 ? "grid-cols-1" :  post.file.length === 2 ? "grid-cols-2" : "grid-cols-3"}">
+                <div class="mx-auto grid {post.file.length === 1 ? "grid-cols-1" :  "grid-cols-2"} gap-2">
                     {#each post.file as file, index}
                         {#if fileType(file) === "video"}
                             <!-- svelte-ignore a11y-media-has-caption -->

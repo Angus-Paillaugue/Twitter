@@ -1,7 +1,7 @@
 
 # TODO
 
- - [ ] Be able to delete file in new post creation
+ - [x] Be able to delete file in new post creation
  - [ ] Truncate long post text
  - [ ] Make page transitions work again
  - [ ] Find a solution for hosting files of posts
