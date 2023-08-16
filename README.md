@@ -17,7 +17,7 @@
      - [x] Add mentioning to messages
      - [x] Add link parsing to messages
      - [ ] *Add possibility to delete message
-     - [ ] Add the possibility to send small files (maybe base64 encode them)
+     - [x] Add the possibility to send small files (maybe base64 encode them)
      - [x] Add message seen 
 
 ---

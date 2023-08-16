@@ -23,7 +23,7 @@
 }
 
 body {
-	@apply overflow-x-hidden text-gray-600 bg-neutral-900;
+	@apply overflow-x-hidden text-neutral-600 bg-neutral-900;
 }
 
 .button-primary {
