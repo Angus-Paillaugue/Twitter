@@ -1,7 +1,10 @@
 import { postsRef, usersRef } from "$lib/server/db"
 import { randomUUID } from "crypto"
 import { redirect } from "@sveltejs/kit";
-import { writeFileSync } from 'fs';
+import { writeFileSync, unlinkSync } from 'fs';
+import sharp from "sharp";
+import { fileType } from "$lib/helpers";
+import ffmpeg from 'fluent-ffmpeg';
 
 export async function load({ locals }) {
     const { user } = locals;
@@ -14,6 +17,7 @@ export async function load({ locals }) {
             let user = await usersRef.findOne({ username:replie.username });
             if(!user?.hidden || locals.user.admin) return{ ...replie, user }
         })));
+        post.replies = post.replies.sort(function(a,b){return new Date(b.date) - new Date(a.date);});
         if(!user?.hidden || locals.user.admin) return{ ...post, user }
     })));
 
@@ -34,7 +38,7 @@ export const actions = {
                 newData[k] = formData[k];
                 return newData;
             }, {});
-            files = Object.values(files)
+            files = Object.values(files);
             let fileNames = [];
             const postId = randomUUID();
 
@@ -42,12 +46,23 @@ export const actions = {
             text = text.replace(regexExp, function(match) {
                 return `<user>${match}</user>`;
             });
-            for(const file of files){
+            for await (const file of files){
                 let id = randomUUID();
-                writeFileSync(`static/files/${id+"."+file.name.split(".").at(-1)}`, Buffer.from(await file.arrayBuffer()));
-                fileNames.push(id+"."+file.name.split(".").at(-1));
+                let fileName = file.name;
+                let ext = fileName.split(".").at(-1);
+                fileNames.push(id+"."+ext);
+                if(fileType(fileName) === "image"){
+                    await sharp(Buffer.from(await file.arrayBuffer())).webp({ quality: 20 }).toFile(`static/files/${id+"."+ext}`);
+                }else if(fileType(fileName) === "video"){
+                    writeFileSync(`static/files/${id+"-temp."+ext}`, Buffer.from(await file.arrayBuffer()));
+                    ffmpeg(`static/files/${id+"-temp."+ext}`).output(`static/files/${id+"."+ext}`).videoCodec("libx264").audioCodec('aac').videoBitrate(1500).autopad().on("end", () => {
+                        unlinkSync(`static/files/${id+"-temp."+ext}`);
+                    }).run();
+                }else {
+                    writeFileSync(`static/files/${id+"."+ext}`, Buffer.from(await file.arrayBuffer()));
+                }
             }
-            await postsRef.insertOne({ username:user.username, text, file:fileNames.length > 0 ? fileNames : false, id:postId, date:new Date() });
+            await postsRef.insertOne({ username:user.username, text, file:fileNames.length > 0 ? fileNames : false, id:postId, date:new Date(), replies:[] });
 
             throw redirect(303, `/post/${postId}`);
         }

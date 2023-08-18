@@ -12,6 +12,7 @@ export async function load({ locals }) {
                 let user = await usersRef.findOne({ username:replie.username });
                 if(!user?.hidden || locals.user.admin) return{ ...replie, user }
             })));
+            post.replies = post.replies.sort(function(a,b){return new Date(b.date) - new Date(a.date);});
             if(!postUser?.hidden || locals.user.admin) return{ ...post, user:postUser, type:"post" }
         }else {
             await usersRef.updateOne({ username:user.username }, { $pull: { bookmarks: { id:bookmark.id }} });

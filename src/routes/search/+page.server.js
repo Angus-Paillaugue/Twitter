@@ -13,6 +13,7 @@ export async function load({ url, locals }) {
             let user = await usersRef.findOne({ username:replie.username });
             if(!user?.hidden || locals.user.admin) return{ ...replie, user }
         })));
+        post.replies = post.replies.sort(function(a,b){return new Date(b.date) - new Date(a.date);});
         if(!user?.hidden || locals.user.admin) return{ ...post, user }
     })));
 
