@@ -3,10 +3,10 @@ import { usersRef, postsRef } from "$lib/server/db";
 
 export async function load({ locals }) {
     const { user } = locals;
-    user.blockedUsers = structuredClone(await Promise.all(user.blockedUsers.map(async (username) => {
-        let user = await usersRef.findOne({ username:username });
+    user.blockedUsers = await Promise.all(user.blockedUsers.map(async (username) => {
+        let user = (({ password, email, bookmarks, subscriptions, blockedUsers, _id, ...o }) => o)(await usersRef.findOne({ username:username }));
         if(!user?.hidden || locals.user.admin) return user;
-    })));
+    }));
 
     return user
 }
@@ -31,7 +31,7 @@ export const actions = {
 
         await usersRef.updateOne({ username:user.username }, { $pull: { blockedUsers: username } });
         user.blockedUsers = user.blockedUsers.filter(el => el !== username);
-        
+
         return { user }
     },
     deleteAccount: async ({ locals }) => {

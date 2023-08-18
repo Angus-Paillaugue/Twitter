@@ -7,9 +7,9 @@ export async function load({ locals }) {
     let completedBookmarks = structuredClone(await Promise.all(bookmarks.map(async (bookmark) => {
         let post = await postsRef.findOne({ id:bookmark.id });
         if(post){
-            let postUser = await usersRef.findOne({ username:post.username });
+            let postUser = (({ password, email, bookmarks, subscriptions, blockedUsers, _id, ...o }) => o)(await usersRef.findOne({ username:post.username }));
             post.replies = structuredClone(await Promise.all(post.replies.map(async (replie) => {
-                let user = await usersRef.findOne({ username:replie.username });
+                let user = (({ password, email, bookmarks, subscriptions, blockedUsers, _id, ...o }) => o)(await usersRef.findOne({ username:replie.username }));
                 if(!user?.hidden || locals.user.admin) return{ ...replie, user }
             })));
             post.replies = post.replies.sort(function(a,b){return new Date(b.date) - new Date(a.date);});
@@ -21,7 +21,7 @@ export async function load({ locals }) {
     })));
 
     let completedSubscriptions = structuredClone(await Promise.all(subscriptions.map(async (subscription) => {
-        let user = await usersRef.findOne({ username:subscription.username });
+        let user = (({ password, email, bookmarks, subscriptions, blockedUsers, _id, ...o }) => o)(await usersRef.findOne({ username:subscription.username }));
         if(user) return user;
     })));
 

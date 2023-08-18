@@ -4,7 +4,7 @@
  - [ ] Make page transitions work again
  - [ ] Find a solution for hosting files of posts
  - [ ] Fix the autoplay of videos
- - [ ] Delete confidential infos like passwords and subscriptions sent to the +page.svelte by the +page.server.js
+ - [x] Delete confidential infos like passwords and subscriptions sent to the +page.svelte by the +page.server.js
  - [x] Truncate long post text
  - [x] Be able to delete file in new post creation
  - [x] *Add a display name

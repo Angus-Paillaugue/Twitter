@@ -8,7 +8,7 @@ export async function load({ params, locals }) {
     if(!conversation.users.includes(locals.user.username)) throw redirect(303, "/dashboard");
     const messages = await messagesRef.find({ conversation:id }).project({ _id:0 }).toArray();
     
-    const chattingWithUser = structuredClone(await usersRef.findOne({ username:conversation.users.filter(username => username !== locals.user.username)[0] }));
+    const chattingWithUser = (({ password, email, bookmarks, subscriptions, _id, ...o }) => o)(await usersRef.findOne({ username:conversation.users.filter(username => username !== locals.user.username)[0] }));
     await messagesRef.updateMany({ conversation:id, receiver:locals.user.username }, { $set:{ seen:true } });
 
     return { messages, conversation:id, chattingWithUser };
