@@ -1,4 +1,4 @@
-import { postsRef, usersRef } from "$lib/server/db"
+import { postsRef, usersRef, repliesRef } from "$lib/server/db"
 import { randomUUID } from "crypto"
 import { redirect } from "@sveltejs/kit";
 import { writeFileSync } from 'fs';
@@ -9,7 +9,13 @@ export async function load({ locals }) {
     let posts = await postsRef.find({ username:user.username }).sort({ date:-1 }).project({ _id:0 }).toArray();
 
     posts = structuredClone(await Promise.all(posts.map(async (post) => {
-        return{ ...post, user: await usersRef.findOne({ username:post.username })}
+        let user = await usersRef.findOne({ username:post.username });
+        let replies = await repliesRef.find({ post:post.id }).toArray();
+        replies = structuredClone(await Promise.all(replies.map(async (replie) => {
+            let user = await usersRef.findOne({ username:replie.username });
+            if(!user?.hidden || locals.user.admin) return{ ...replie, user }
+        })));
+        if(!user?.hidden || locals.user.admin) return{ ...post, user, replies }
     })));
 
     return { posts };

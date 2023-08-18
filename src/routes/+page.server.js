@@ -1,4 +1,4 @@
-import { postsRef, usersRef } from "$lib/server/db"
+import { postsRef, usersRef, repliesRef } from "$lib/server/db"
 import { redirect } from "@sveltejs/kit";
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
@@ -22,7 +22,12 @@ export async function load({ locals }) {
 
         feed = structuredClone(await Promise.all(feed.map(async (post) => {
             let user = await usersRef.findOne({ username:post.username });
-            if(!user?.hidden || locals.user.admin) return{ ...post, user }
+            let replies = await repliesRef.find({ post:post.id }).toArray();
+            replies = structuredClone(await Promise.all(replies.map(async (replie) => {
+                let user = await usersRef.findOne({ username:replie.username });
+                if(!user?.hidden || locals.user.admin) return{ ...replie, user }
+            })));
+            if(!user?.hidden || locals.user.admin) return{ ...post, user, replies }
         })));
 
         return { feed:feed.filter(n => n) };

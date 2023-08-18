@@ -1,4 +1,4 @@
-import { postsRef, usersRef } from "$lib/server/db"
+import { postsRef, usersRef, repliesRef } from "$lib/server/db"
 import { error } from "@sveltejs/kit";
 
 export async function load({ params, locals }) {
@@ -6,5 +6,10 @@ export async function load({ params, locals }) {
 
     let post = structuredClone(await postsRef.findOne({ id }));
     let user = structuredClone(await usersRef.findOne({ username:post.username }));
-    if(!user.hidden || locals.user.admin) return { post:{ ...post, user:{ ...user } } }; else throw error(404)
+    let replies = await repliesRef.find({ post:post.id }).toArray();
+    replies = structuredClone(await Promise.all(replies.map(async (replie) => {
+        let user = await usersRef.findOne({ username:replie.username });
+        if(!user?.hidden || locals.user.admin) return{ ...replie, user }
+    })));
+    if(!user.hidden || locals.user.admin) return { post:{ ...post, user:{ ...user }, replies } }; else throw error(404)
 };

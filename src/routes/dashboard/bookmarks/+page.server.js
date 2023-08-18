@@ -1,4 +1,4 @@
-import { postsRef, usersRef } from "$lib/server/db"
+import { postsRef, usersRef, repliesRef } from "$lib/server/db"
 
 export async function load({ locals }) {
     const { user } = locals;
@@ -8,7 +8,12 @@ export async function load({ locals }) {
         let post = await postsRef.findOne({ id:bookmark.id });
         if(post){
             let postUser = await usersRef.findOne({ username:post.username });
-            return { ...post, user: { ...postUser }, type:"post" };
+            let replies = await repliesRef.find({ post:post.id }).toArray();
+            replies = structuredClone(await Promise.all(replies.map(async (replie) => {
+                let replieUser = await usersRef.findOne({ username:replie.username });
+                if(!user?.hidden || locals.user.admin) return{ ...replie, user:replieUser }
+            })));
+            if(!postUser?.hidden || locals.user.admin) return{ ...post, user:postUser, replies, type:"post" }
         }else {
             await usersRef.updateOne({ username:user.username }, { $pull: { bookmarks: { id:bookmark.id }} });
             return null;

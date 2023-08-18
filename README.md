@@ -19,6 +19,10 @@
      - [ ] *Add possibility to delete message
      - [x] Add the possibility to send small files (maybe base64 encode them)
      - [x] Add message seen 
+ - [ ] Replies
+     - [x] Add replies to post 
+     - [ ] Add possibility to delete replie
+     - [ ] * Add replies to replies
 
 ---
 
