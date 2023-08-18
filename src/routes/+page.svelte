@@ -105,7 +105,7 @@
                 <div class="relative overflow-hidden grid grid-cols-2 w-full">
                     <form class="w-[200%] no-user transition-all ease-in-out duration-300 p-2 {tabIndex === 0 ? "translate-x-0" : "translate-x-full"}" use:enhance method="POST" action="?/login" id="Log-in">
                         <label for="username" class="block mb-2">Username</label>
-                        <input type="text" placeholder="Username" name="username" value="{form?.logIn?.formData?.username ?? ''}" class="border text-sm rounded-lg block w-full p-2.5 bg-neutral-800 border-neutral-700 placeholder-neutral-400 text-white focus:ring-primary-500 focus:border-primary-500 focus:outline-none outline-none transition-all mb-4">
+                        <input type="text" placeholder="Username" name="username" value="{form?.logIn?.formData?.username ?? ''}" class="border text-sm rounded-lg block w-full p-2.5 bg-neutral-800 border-neutral-700 placeholder-neutral-400 text-white focus:ring-primary-500 focus:border-primary-500 focus:outline-none outline-none transition-all mb-4" maxlength="10">
         
                         <label for="password" class="block mb-2">Password</label>
                         <input type="password" placeholder="Password" name="password" value="{form?.logIn?.formData?.password ?? ''}" class="border text-sm rounded-lg block w-full p-2.5 bg-neutral-800 border-neutral-700 placeholder-neutral-400 text-white focus:ring-primary-500 focus:border-primary-500 focus:outline-none outline-none transition-all mb-4">

@@ -17,7 +17,7 @@
 </svelte:head>
 
 <!-- {#key data.url} -->
-    <main class="min-h-screen transition-all w-full {user && "max-sm:pb-14"} flex flex-col items-center" in:fade={{ duration: 200, delay: 200 }} out:fade={{ duration: 200 }}>
+    <main class="min-h-screen transition-all w-full {user && "max-sm:pb-14"} flex flex-col items-center {$searchBar && "pt-14"}" in:fade={{ duration: 200, delay: 200 }} out:fade={{ duration: 200 }}>
         <div class="w-full max-w-screen-lg max-sm:justify-center h-full flex flex-row">
             <Navbar user={data?.user}/>
             

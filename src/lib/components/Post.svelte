@@ -63,7 +63,7 @@
                     <p class="text-xs">@{post.user.username}</p>
                 </div>
             </div>
-            <p>{formatDate(post.date)}</p>
+            <p class="text-xs">{formatDate(post.date)}</p>
         </div>
         <div class="w-full sm:pl-12 flex flex-col gap-2">
             {#if post.text}

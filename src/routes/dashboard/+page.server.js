@@ -50,10 +50,11 @@ export const actions = {
                 let id = randomUUID();
                 let fileName = file.name;
                 let ext = fileName.split(".").at(-1);
-                fileNames.push(id+"."+ext);
                 if(fileType(fileName) === "image"){
-                    await sharp(Buffer.from(await file.arrayBuffer())).webp({ quality: 20 }).toFile(`static/files/${id+"."+ext}`);
+                    fileNames.push(id+".webp");
+                    await sharp(Buffer.from(await file.arrayBuffer())).webp({ quality: 50 }).toFile(`static/files/${id+".webp"}`);
                 }else if(fileType(fileName) === "video"){
+                    fileNames.push(id+"."+ext);
                     writeFileSync(`static/files/${id+"-temp."+ext}`, Buffer.from(await file.arrayBuffer()));
                     ffmpeg(`static/files/${id+"-temp."+ext}`).output(`static/files/${id+"."+ext}`).videoCodec("libx264").audioCodec('aac').videoBitrate(1500).autopad().on("end", () => {
                         unlinkSync(`static/files/${id+"-temp."+ext}`);
