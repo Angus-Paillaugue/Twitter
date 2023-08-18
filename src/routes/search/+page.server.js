@@ -1,4 +1,4 @@
-import { postsRef, usersRef, repliesRef } from "$lib/server/db"
+import { postsRef, usersRef } from "$lib/server/db"
 
 export const ssr = false;
 
@@ -9,12 +9,11 @@ export async function load({ url, locals }) {
     posts = posts.map(post => {return{ ...post, type:"post" }});
     posts = structuredClone(await Promise.all(posts.map(async (post) => {
         let user = await usersRef.findOne({ username:post.username });
-        let replies = await repliesRef.find({ post:post.id }).toArray();
-        replies = structuredClone(await Promise.all(replies.map(async (replie) => {
+        post.replies = structuredClone(await Promise.all(post.replies.map(async (replie) => {
             let user = await usersRef.findOne({ username:replie.username });
             if(!user?.hidden || locals.user.admin) return{ ...replie, user }
         })));
-        if(!user?.hidden || locals.user.admin) return{ ...post, user, replies }
+        if(!user?.hidden || locals.user.admin) return{ ...post, user }
     })));
 
     let users = structuredClone(await usersRef.find({ $or:[ { username:searchQuery }, { displayName:searchQuery } ] }).limit(20).toArray());

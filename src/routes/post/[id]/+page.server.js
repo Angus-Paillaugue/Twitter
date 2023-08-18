@@ -6,8 +6,7 @@ export async function load({ params, locals }) {
 
     let post = structuredClone(await postsRef.findOne({ id }));
     let user = structuredClone(await usersRef.findOne({ username:post.username }));
-    let replies = await repliesRef.find({ post:post.id }).toArray();
-    replies = structuredClone(await Promise.all(replies.map(async (replie) => {
+    let replies = structuredClone(await Promise.all(post.replies.map(async (replie) => {
         let user = await usersRef.findOne({ username:replie.username });
         if(!user?.hidden || locals.user.admin) return{ ...replie, user }
     })));

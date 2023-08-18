@@ -92,14 +92,14 @@
                 </div>
             {/if}
             <div class="w-full flex flex-row justify-between items-center">
-                <button on:click={() => {replieModal = true}} class="flex flex-row gap-1 items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <button on:click={() => {replieModal = true}} class="flex flex-row gap-1 items-center transition-all hover:text-primary-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 rounded-full">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z" />
                     </svg>
                     {post.replies.length}
                 </button>
                 {#if bookmarks}
-                    <button on:click={() => {toggleBookmark(post.id)}}>
+                    <button on:click={() => {toggleBookmark(post.id)}} class="transition-all hover:text-green-600">
                         {#if bookmarks.filter(bookmark => bookmark.id == post.id).length === 1}
                             <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-6 h-6" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z"/><path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/></svg>
                         {:else}
@@ -108,7 +108,7 @@
                     </button>
                 {/if}
                 {#if $page.data.user.username === post.username}
-                    <button on:click={() => {deletePostModal = true;}}>
+                    <button on:click={() => {deletePostModal = true;}} class="transition-all hover:text-red-600">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" /></svg>                          
                     </button>
                 {/if}
@@ -134,7 +134,7 @@
                 <svg class="w-3 h-3 group-hover:rotate-90 transition-all" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/></svg>
                 <span class="sr-only">Close modal</span>
             </button>
-            <h6>Replies to @{post.username}</h6>
+            <h6>Replies to @{post.user.username}</h6>
             <div class="text-center mt-4">
                 <textarea name="text" rows="6" class="block w-full p-2 rounded-t-lg text-sm border-0 bg-neutral-800 focus:ring-0 text-neutral-100 placeholder-neutral-400" placeholder="Write your replie..." bind:value={newReplieText}></textarea>
                 <button type="submit" class="focus:outline-none text-neutral-100 bg-primary-600 hover:bg-primary-700 font-medium text-sm px-5 py-2.5 flex flex-row gap-2 items-center justify-center disabled:bg-primary-400 disabled:cursor-not-allowed shadow-primary-700 dark:shadow-primary-500 hover:shadow-lg hover:dark:shadow-sm transition-all rounded-b-lg w-full" on:click={publishReplie}>Publish replie</button>
@@ -144,11 +144,16 @@
                     {#each post.replies as replie, index}
                         <div class="{index === 0 ? "border-y" : "border-b"} border-border py-2 flex flex-col gap-2">
                             <div class="flex flex-row gap-2">
-                                <img src="{replie.user.profilePicture}" alt="" class="h-10 w-10 rounded-full">
+                                <a href="/u/{replie.user.username}">
+                                    <img src="{replie.user.profilePicture}" alt="" class="h-10 w-10 rounded-full">
+                                </a>
                                 <div class="flex flex-col">
                                     <h5>{replie.user.displayName}</h5>
                                     <p class="text-xs">@{replie.user.username}</p>
                                 </div>
+                                <p class="ml-auto">
+                                    {formatDate(post.date)}
+                                </p>
                             </div>
                             <p>{replie.text}</p>
                         </div>

@@ -17,7 +17,7 @@ function formatDate(date) {
     }else if(isBeforeThisYear(new Date(date))){
         return new Date(date).toLocaleDateString("en-GB", { month:"short", day:"numeric", year:"numeric" });
     }else{
-        return new Date(date).toLocaleDateString("en-GB", { month:"long", day:"numeric" });
+        return new Date(date).toLocaleDateString("en-GB", { month:"short", day:"numeric" });
     }
 }
 function isYesterday(date) {

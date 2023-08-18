@@ -22,6 +22,7 @@
  - [ ] Replies
      - [x] Add replies to post 
      - [ ] Add possibility to delete replie
+     - [x] Move replies inside post document inside an array
      - [ ] * Add replies to replies
 
 ---
