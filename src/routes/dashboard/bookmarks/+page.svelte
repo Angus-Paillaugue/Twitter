@@ -8,7 +8,7 @@
     const { subscriptions } = data;
     let bookmarks = data.bookmarks;
     let sectionsList = [];
-    let childrenMap = [];
+    // let childrenMap = [];
     let tabIndex = 0;
     let navLinkUnderline;
     let activeButton;
@@ -22,26 +22,26 @@
         setActiveTab();
         window.onresize = setActiveTab;
 
-        for(const el of postsContainer.children){
-            if(el.nodeName === "ARTICLE") childrenMap = [...childrenMap, { el, top:el.offsetTop, height:el.clientHeight }];
-        }
-        window.addEventListener("scroll", () => {
-            let bottomTrigger = window.scrollY + window.innerHeight/2;
-            let isVideoPlaying = false;
-            for(const post of childrenMap){
-                if((post.top + post.height) > bottomTrigger){
-                    if(post.el.querySelector("video")){
-                        if(!isVideoPlaying){
-                            post.el.querySelector("video").play();
-                            isVideoPlaying = true;
-                            continue;
-                        }
-                    }
-                }else if(post.el.querySelector("video")){
-                    post.el.querySelector("video").pause();
-                }
-            }
-        });
+        // for(const el of postsContainer.children){
+        //     if(el.nodeName === "ARTICLE") childrenMap = [...childrenMap, { el, top:el.offsetTop, height:el.clientHeight }];
+        // }
+        // window.addEventListener("scroll", () => {
+        //     let bottomTrigger = window.scrollY + window.innerHeight/2;
+        //     let isVideoPlaying = false;
+        //     for(const post of childrenMap){
+        //         if((post.top + post.height) > bottomTrigger){
+        //             if(post.el.querySelector("video")){
+        //                 if(!isVideoPlaying){
+        //                     post.el.querySelector("video").play();
+        //                     isVideoPlaying = true;
+        //                     continue;
+        //                 }
+        //             }
+        //         }else if(post.el.querySelector("video")){
+        //             post.el.querySelector("video").pause();
+        //         }
+        //     }
+        // });
     });
 
     function setActiveTab() {

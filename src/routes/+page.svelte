@@ -12,7 +12,7 @@
     let morePostsLoading = false;
     let bookmarks = [];
     let sectionsList = [];
-    let childrenMap = [];
+    // let childrenMap = [];
     let offset = 0;
     let tabIndex = 0;
     let user;
@@ -31,9 +31,9 @@
             setActiveTab();
             window.onresize = setActiveTab;
         }else {
-            for(const el of postsContainer.children){
-                if(el.nodeName === "ARTICLE") childrenMap = [...childrenMap, { el, top:el.offsetTop, height:el.clientHeight }];
-            }
+            // for(const el of postsContainer.children){
+            //     if(el.nodeName === "ARTICLE") childrenMap = [...childrenMap, { el, top:el.offsetTop, height:el.clientHeight }];
+            // }
             window.addEventListener("scroll", () => {
                 let documentHeight = document.body.scrollHeight;
                 let currentScroll = window.scrollY + window.innerHeight;
@@ -41,21 +41,21 @@
                 let modifier = 500; 
                 if(currentScroll + modifier > documentHeight) loadMorePosts();
 
-                let bottomTrigger = window.scrollY + window.innerHeight/2;
-                let isVideoPlaying = false;
-                for(const post of childrenMap){
-                    if((post.top + post.height) > bottomTrigger){
-                        if(post.el.querySelector("video")){
-                            if(!isVideoPlaying){
-                                post.el.querySelector("video").play();
-                                isVideoPlaying = true;
-                                continue;
-                            }
-                        }
-                    }else if(post.el.querySelector("video")){
-                        post.el.querySelector("video").pause();
-                    }
-                }
+                // let bottomTrigger = window.scrollY + window.innerHeight/2;
+                // let topTrigger = window.scrollY;
+                // let isVideoPlaying = false;
+                // for(const post of childrenMap){
+                //     if((post.top + post.height + post.offsetTop) > bottomTrigger){
+                //         if(post.el.querySelector("video")){
+                //             if(!isVideoPlaying){
+                //                 post.el.querySelector("video").play();
+                //                 isVideoPlaying = true;
+                //             }
+                //         }
+                //     }else if(post.el.querySelector("video")){
+                //         post.el.querySelector("video").pause();
+                //     }
+                // }
             });
         }
     });

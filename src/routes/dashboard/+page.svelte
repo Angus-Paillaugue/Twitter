@@ -1,5 +1,5 @@
 <script>
-    import { onMount } from "svelte";
+    // import { onMount } from "svelte";
     import { Tooltip } from 'flowbite-svelte';
     import { enhance } from "$app/forms"
     import { Post } from '$lib/components';
@@ -16,7 +16,7 @@
     let atMenuDisplay = false;
     let isNewPostLoading = false;
     let mentionUsers = [];
-    let childrenMap = [];
+    // let childrenMap = [];
     let newPostFiles = [];
     let offset = 0;
     let files;
@@ -28,34 +28,34 @@
     // Limit file size to 3
     $: if(newPostFiles.length > 3) newPostFiles = newPostFiles.slice(0, 3);
 
-    onMount(() => {
-        for(const el of postsContainer.children){
-            if(el.nodeName === "ARTICLE") childrenMap = [...childrenMap, { el, top:el.offsetTop, height:el.clientHeight }];
-        }
-        window.addEventListener("scroll", () => {
-            let documentHeight = document.body.scrollHeight;
-            let currentScroll = window.scrollY + window.innerHeight;
-            // When the user is [modifier]px from the bottom, fire the event.
-            let modifier = 500; 
-            if(currentScroll + modifier > documentHeight) loadUserPosts();
+    // onMount(() => {
+    //     for(const el of postsContainer.children){
+    //         if(el.nodeName === "ARTICLE") childrenMap = [...childrenMap, { el, top:el.offsetTop, height:el.clientHeight }];
+    //     }
+    //     window.addEventListener("scroll", () => {
+    //         let documentHeight = document.body.scrollHeight;
+    //         let currentScroll = window.scrollY + window.innerHeight;
+    //         // When the user is [modifier]px from the bottom, fire the event.
+    //         let modifier = 500; 
+    //         if(currentScroll + modifier > documentHeight) loadUserPosts();
 
-            let bottomTrigger = window.scrollY + window.innerHeight/2;
-            let isVideoPlaying = false;
-            for(const post of childrenMap){
-                if((post.top + post.height) > bottomTrigger){
-                    if(post.el.querySelector("video")){
-                        if(!isVideoPlaying){
-                            post.el.querySelector("video").play();
-                            isVideoPlaying = true;
-                            continue;
-                        }
-                    }
-                }else if(post.el.querySelector("video")){
-                    post.el.querySelector("video").pause();
-                }
-            }
-        });
-    });
+    //         let bottomTrigger = window.scrollY + window.innerHeight/2;
+    //         let isVideoPlaying = false;
+    //         for(const post of childrenMap){
+    //             if((post.top + post.height) > bottomTrigger){
+    //                 if(post.el.querySelector("video")){
+    //                     if(!isVideoPlaying){
+    //                         post.el.querySelector("video").play();
+    //                         isVideoPlaying = true;
+    //                         continue;
+    //                     }
+    //                 }
+    //             }else if(post.el.querySelector("video")){
+    //                 post.el.querySelector("video").pause();
+    //             }
+    //         }
+    //     });
+    // });
 
     function newPostFileHandle(e) {
         newPostFiles = [...newPostFiles, ...e.target.files];

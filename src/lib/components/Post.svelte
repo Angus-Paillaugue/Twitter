@@ -19,7 +19,6 @@
     let newReplieText;
     
     $: if(readMoreToggle){postText.style.maxHeight = postText.scrollHeight+24+"px";}else if(postText){postText.style.maxHeight = 14*24+"px";}
-
     $: if(postText?.clientHeight >= 14*24){isReadMore = true;}
 
     async function toggleBookmark() {

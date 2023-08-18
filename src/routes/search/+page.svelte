@@ -1,5 +1,5 @@
 <script>
-    import { onMount } from "svelte";
+    // import { onMount } from "svelte";
     import { Post } from "$lib/components";
     import { pageMetaData } from "$lib/stores"
     
@@ -8,28 +8,28 @@
     const { results } = data;
     let bookmarks = data?.user?.bookmarks;
     let postsContainer;
-    let childrenMap = [];
+    // let childrenMap = [];
 
-    onMount(() => {
-        if(results.length > 0) {
-            for(const el of postsContainer.children){
-                if(el.nodeName === "ARTICLE") childrenMap = [...childrenMap, { el, top:el.offsetTop, height:el.clientHeight }];
-            }
-            window.addEventListener("scroll", () => {
-                let bottomTrigger = window.scrollY + window.innerHeight/2;
-                let isVideoPlaying = false;
-                for(const post of childrenMap){
-                    if((post.top + post.height) > bottomTrigger && post.el.querySelector("video") && !isVideoPlaying){
-                        post.el.querySelector("video").play();
-                        isVideoPlaying = true;
-                        continue;
-                    }else if(post.el.querySelector("video")){
-                        post.el.querySelector("video").pause();
-                    }
-                }
-            });
-        }
-    });
+    // onMount(() => {
+    //     if(results.length > 0) {
+    //         for(const el of postsContainer.children){
+    //             if(el.nodeName === "ARTICLE") childrenMap = [...childrenMap, { el, top:el.offsetTop, height:el.clientHeight }];
+    //         }
+    //         window.addEventListener("scroll", () => {
+    //             let bottomTrigger = window.scrollY + window.innerHeight/2;
+    //             let isVideoPlaying = false;
+    //             for(const post of childrenMap){
+    //                 if((post.top + post.height) > bottomTrigger && post.el.querySelector("video") && !isVideoPlaying){
+    //                     post.el.querySelector("video").play();
+    //                     isVideoPlaying = true;
+    //                     continue;
+    //                 }else if(post.el.querySelector("video")){
+    //                     post.el.querySelector("video").pause();
+    //                 }
+    //             }
+    //         });
+    //     }
+    // });
 
     $pageMetaData.title = "Search";
     $pageMetaData.description = "Search";
