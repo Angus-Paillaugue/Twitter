@@ -70,7 +70,7 @@ export const actions = {
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(password, salt);
 
-        await usersRef.insertOne({ username: username, displayName:username, email:email, password:hash, profilePicture:"/defaultProfilePicture.png", banner:"/defaultBanner.jpg", bookmarks:[], subscriptions:[], joined:new Date(), bio:"No bio for now" });
+        await usersRef.insertOne({ username: username, displayName:username, email:email, password:hash, profilePicture:"/defaultProfilePicture.png", banner:"/defaultBanner.jpg", bookmarks:[], subscriptions:[], joined:new Date(), bio:"No bio for now", blockedUsers: [] });
 
         cookies.set("token", generateAccessToken(username), { path:"/", httpOnly: true, sameSite:"strict", maxAge: 60 * 60 * 24 });
         throw redirect(301, "/dashboard/settings");

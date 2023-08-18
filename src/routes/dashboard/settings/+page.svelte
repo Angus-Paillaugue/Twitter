@@ -7,9 +7,10 @@
     export let data;
     export let form;
 
-    $: if(form) $toasts = [...$toasts, { type:form.err ? "error" : "success", message:form.msg }];
+    $: if(form?.err) $toasts = [...$toasts, { type:form.err ? "error" : "success", message:form.msg }];
 
-    const { user } = data;
+    let user = form?.user ?? data.user;
+    $: user = form?.user ?? data.user;
     let deleteAccountModal = false;
     let tabIndex = 0;
     let sectionsList = [];
@@ -76,6 +77,28 @@
                     </label>
                     <input type="text" placeholder="Username" name="username" readonly value="{user.username}" class="border text-sm rounded-lg block w-full p-2.5 bg-neutral-800 border-neutral-700 placeholder-neutral-400 text-white focus:ring-primary-500 focus:border-primary-500 focus:outline-none outline-none transition-all">
                 </div>
+                {#if user.blockedUsers.length > 0}
+                    <div>
+                        <p class="mb-2">Blocked users</p>
+                        {#each user.blockedUsers as user}
+                            <div class="flex flex-row items-center gap-2 group relative w-fit pr-10">
+                                <img src="{user.profilePicture}" alt="" class="w-10 h-10 rounded-full">
+                                <div class="flex flex-col">
+                                    <h5>{user.displayName}</h5>
+                                    <p class="text-xs">@{user.username}</p>
+                                </div>
+                                <form use:enhance method="POST" action="?/unblockUser" class="absolute top-0 left-0 w-full h-full group-hover:opacity-100 opacity-0 bg-neutral-800/50 flex items-center justify-end rounded-full transition-all pr-2">
+                                    <input type="text" value="{user.username}" name="username" class="hidden"/>
+                                    <button type="submit" class="text-neutral-100">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </form>
+                            </div>
+                        {/each}
+                    </div>
+                {/if}
                 <div class="flex flex-col gap-2 text-neutral-300">
                     Profile picture
                     <label for="profilePicture" class="cursor-pointer group relative h-20 w-20 rounded-full overflow-hidden">

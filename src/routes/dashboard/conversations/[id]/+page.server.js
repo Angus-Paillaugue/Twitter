@@ -13,3 +13,18 @@ export async function load({ params, locals }) {
 
     return { messages, conversation:id, chattingWithUser };
 };
+
+export const actions = {
+    blockUser: async({ params, locals }) => {
+        const { id } = params;
+        const { user } = locals;
+        const conversation = await conversationsRef.findOne({ id });
+        const usernameToBlock = conversation.users.filter(username => username !== locals.user.username)[0];
+
+        if(user.blockedUsers.includes(usernameToBlock)){
+            await usersRef.updateOne({ username:user.username }, { $pull: { blockedUsers: usernameToBlock } });
+        }else {
+            await usersRef.updateOne({ username:user.username }, { $push: { blockedUsers: usernameToBlock } });
+        }
+    }
+};

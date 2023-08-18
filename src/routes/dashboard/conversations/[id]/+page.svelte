@@ -1,18 +1,22 @@
 <script>
     import { io } from "$lib/socket";
     import { onMount } from "svelte";
+    import { enhance } from "$app/forms"
     import { pageMetaData, toasts } from "$lib/stores";
     import { parseMentionsOnReceive, parseMentionsOnSend, parseLink } from "$lib/helpers";
     import { Tooltip } from "flowbite-svelte";
 
     export let data;
+    export let form;
 
     const { conversation, chattingWithUser, user } = data;
     const maxFileSizeMo = 4.4;
+    user.blockedUsers = form?.blockedUsers ?? user.blockedUsers;
     let messages = data.messages ?? [];
     let mentionUsers = [];
     let encodedFiles = [];
     let atMenuDisplay = false;
+    let moreModal = false
     let textarea;
     let fileInput;
 
@@ -37,7 +41,7 @@
         let messageText = parseMentionsOnSend(textarea.value.trim());
         if(messageText.length === 0) return;
 
-        const message = { message:messageText, messageId:(Date.now()+Math.floor(Math.random() * 10000)).toString(), conversation, sender:user.username, receiver:chattingWithUser.username, files:encodedFiles };
+        const message = { message:messageText, messageId:(Date.now()+Math.floor(Math.random() * 10000)).toString(), conversation, sender:user.username, receiver:chattingWithUser, files:encodedFiles };
 
         io.emit("message", message);
         await fetch("/api/newMessage", { method:"POST", body:JSON.stringify({message, id:conversation}) });
@@ -120,6 +124,11 @@
             <header class="p-4 pb-0 flex flex-row gap-2 items-center">
                 <img src="{chattingWithUser.profilePicture}" alt="Avatar" class="h-8 w-8 rounded-full"/>
                 <h4>@{chattingWithUser.username}</h4>
+                <button class="ml-auto text-neutral-100" on:click={() => {moreModal = true;}}>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
+                    </svg>
+                </button>
             </header>
             <div class="grid grid-cols-12 gap-y-2 p-4 overflow-y-auto">
                 {#each messages as message}
@@ -151,6 +160,11 @@
                     </div>
                 {/each}
             </div>
+            {#if chattingWithUser.blockedUsers.includes(user.username)}
+                <div class="w-full p-2 bg-neutral-800 text-center">
+                    <p>You have been blocked by this user</p>
+                </div>
+            {/if}
         </div>
           
         <form on:submit|preventDefault={sendMessage} class="w-full sticky bottom-0 z-20">
@@ -177,11 +191,11 @@
                 <Tooltip type="dark">Add a file</Tooltip>
                 {#if encodedFiles.length > 0}
                     <div class="absolute top-0 left-0 w-fit flex flex-row gap-4 -translate-y-full">
-                        {#each encodedFiles as file}
+                        {#each encodedFiles as file, index}
                             <div class="relative group px-2 bg-neutral-800 transition-all hover:bg-neutral-950/50 rounded-full">
                                 <p class="pr-4">{file.name.length > 20 ? file.name.slice(0, 17)+"..."+file.name.split(".").at(-2).slice(-3)+"."+file.name.split(".").at(-1) : file.name}</p>
                                 <div class="w-full h-full rounded-full absolute top-0 left-0 opacity-0 group-hover:opacity-100 transition-all flex flex-row justify-end items-center">
-                                    <button class="pr-2" type="button" on:click={() => {encodedFiles = []}}>
+                                    <button class="pr-2" type="button" on:click={() => {encodedFiles = encodedFiles.filter((_, i) => i!==index)}}>
                                         <svg class="w-3 h-3 transition-all text-neutral-100" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/></svg>
                                     </button>
                                 </div>
@@ -197,6 +211,31 @@
                     <span class="sr-only">Send message</span>
                 </button>
             </div>
+        </form>
+    </div>
+</div>
+
+<div class="fixed top-0 left-0 w-full h-full bg-neutral-600/50 transition-opacity flex flex-col justify-center items-center {moreModal ? "z-40 opacity-100": "-z-10 opacity-0"}">
+    <div class="relative rounded-lg shadow bg-neutral-900 max-w-md max-h-full w-full">
+        <button type="button" on:click={() => {moreModal = false;}} class="absolute top-2.5 right-2.5 text-neutral-400 bg-transparent rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center hover:bg-neutral-800 hover:text-neutral-100 group">
+            <svg class="w-3 h-3 group-hover:rotate-90 transition-all" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/></svg>
+            <span class="sr-only">Close modal</span>
+        </button>
+        <form use:enhance action="?/blockUser" method="POST" class="p-6 flex flex-col gap-2 mt-6">
+            <button class="button-danger w-full" on:click={() => {
+                if(user.blockedUsers.includes(chattingWithUser.username)){
+                    user.blockedUsers = user.blockedUsers.filter(username => username !==chattingWithUser.username);
+                }else {
+                    user.blockedUsers = [...user.blockedUsers, chattingWithUser.username];
+                }
+            }}>
+                {#if user.blockedUsers.includes(chattingWithUser.username)}
+                    Unblock
+                {:else}
+                    Block
+                {/if}
+                 user
+            </button>
         </form>
     </div>
 </div>

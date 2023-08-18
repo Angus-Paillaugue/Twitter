@@ -1,7 +1,7 @@
 <script>
     import { onMount } from "svelte";
     import { Tooltip } from 'flowbite-svelte';
-    import { enhance } from "$app/forms"
+    import { enhance } from "$app/forms";
     import { Post } from '$lib/components';
     import { pageMetaData } from "$lib/stores";
 
@@ -26,7 +26,6 @@
     $: lastNumberOfPosts = posts.length;
     // Limit file size to 3
     $: if(newPostFiles.length > 3) newPostFiles = newPostFiles.slice(0, 3);
-    $: console.log(newPostFiles);
 
     onMount(() => {
         // for(const el of postsContainer.children){
