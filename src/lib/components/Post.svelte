@@ -67,7 +67,7 @@
         </div>
         <div class="w-full sm:pl-12 flex flex-col gap-2">
             {#if post.text}
-                <p class="leading-6 overflow-hidden transition-all duration-500 {readMoreToggle && "py-4"}" bind:this={postText}>{@html parseMentions(parseLink(post.text.replaceAll("\n", "<br>")))}</p>
+                <p class="leading-6 overflow-hidden transition-all duration-500 {readMoreToggle && "py-4"}" style="max-height: {14*24}px;" bind:this={postText}>{@html parseMentions(parseLink(post.text.replaceAll("\n", "<br>")))}</p>
                 {#if isReadMore}
                     <button class="link w-fit" on:click={() => {readMoreToggle = !readMoreToggle}}>
                         Read {readMoreToggle ? "less" : "more"}

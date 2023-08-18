@@ -1,0 +1,27 @@
+{
+  "name": "Twitter",
+  "short_name": "Twitter",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "background_color": "#171717",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#1d9bf0",
+  "shortcuts": [
+    {
+      "name": "Home",
+      "short_name": "Home",
+      "description": "The Twitter home page",
+      "url": "/",
+      "icons": [{ "src": "/logo.png", "sizes": "192x192" }]
+    }
+  ],
+  "description": "Twitter app"
+}

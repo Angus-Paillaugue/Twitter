@@ -12,10 +12,10 @@ const webSocketServer = {
 
 		io.on('connection', async(socket) => {
 			socket.on('message', (data) => {
-				const to = data.receiver, message = data.message;
+				const { receiver, message } = data
 
-				if(connectedUsers.hasOwnProperty(to)){
-					connectedUsers[to].emit('message',{
+				if(connectedUsers.hasOwnProperty(receiver)){
+					connectedUsers[receiver].emit('message',{
 						conversation: data.conversation,
 						message
 					});
