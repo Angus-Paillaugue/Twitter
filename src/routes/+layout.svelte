@@ -1,14 +1,15 @@
 <script>
     import "../app.css";
-    import { Navbar } from "$lib/components";
+    import { Navbar, PageLoader } from "$lib/components";
     import { Toast } from 'flowbite-svelte';
     import { toasts, searchBar, pageMetaData } from "$lib/stores";
-    // import { fade } from 'svelte/transition';
+    import { navigating } from '$app/stores';
+    import { fade } from 'svelte/transition';
 
     export let data;
 
     $: user = data.user;
-    $: if($toasts.length > 5) {$toasts = $toasts.slice(0, 5)} 
+    $: if($toasts.length > 5) {$toasts = $toasts.slice(0, 5)};
 </script>
 
 
@@ -20,12 +21,15 @@
 <main class="min-h-screen transition-all w-full {user && "max-sm:pb-14"} flex flex-col items-center {$searchBar && "pt-14"}">
     <div class="w-full max-w-screen-lg max-sm:justify-center h-full flex flex-row">
         <Navbar user={data?.user}/>
-        
+    
         <!-- {#key data.url}
-            <div in:fade={{ duration: 200, delay: 200 }} out:fade={{ duration: 200 }} class="w-full"> -->
-                <slot />
-            <!-- </div>
+            <div in:fade={{ duration: 200, delay: 200 }} out:fade={{ duration: 200 }} class="w-full">
         {/key} -->
+        {#if $navigating}
+            <PageLoader />
+        {:else}
+            <slot />
+        {/if} 
     </div>
 </main>
 

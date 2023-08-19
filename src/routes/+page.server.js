@@ -6,6 +6,7 @@ import { AUTH_TOKEN_SECRET } from "$env/static/private"
 
 export async function load({ locals }) {
     let feed;
+
     if(locals.user){
         const { user } = locals;
         

@@ -3,6 +3,7 @@ import { usersRef, postsRef } from "$lib/server/db";
 
 export async function load({ locals }) {
     const { user } = locals;
+    
     user.blockedUsers = await Promise.all(user.blockedUsers.map(async (username) => {
         let user = (({ password, email, bookmarks, subscriptions, blockedUsers, _id, ...o }) => o)(await usersRef.findOne({ username:username }));
         if(!user?.hidden || locals.user.admin) return user;

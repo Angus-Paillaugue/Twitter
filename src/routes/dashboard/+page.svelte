@@ -179,7 +179,7 @@
 </div>
 
 <section class="w-full">
-    <div class="flex flec-row gap-2 items-center mt-4">
+    <div class="flex flex-row gap-2 items-center mt-4">
         <a href="/u/{user.username}" name="yourProfile">
             <img src="{user.profilePicture}" alt="" class="w-14 h-14 rounded-full">
         </a>

@@ -157,7 +157,6 @@
         </div>
     </section>
 {:else}
-
     <main class="flex md:flex-row flex-col-reverse justify-between md:items-start items-center h-full w-full max-w-md">
         <div class="w-full flex flex-col h-full border-x border-border" bind:this={postsContainer}>
             {#each feed as post, index}
