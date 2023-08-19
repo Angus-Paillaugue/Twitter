@@ -47,7 +47,7 @@
 
 {#if display}
     <div class="{$searchBar ? "sm:h-[calc(100vh-3.5rem)] sm:top-14" : "sm:h-screen sm:top-0"} transition-all max-sm:w-full h-14 sm:border-r sm:border-border max-sm:bg-neutral-900/80 backdrop-blur md:mr-4 max-sm:z-40 fixed sm:sticky max-sm:left-0 bottom-0 flex flex-row max-sm:justify-between sm:flex-col gap-4 text-neutral-100 text-lg p-2 sm:p-4">
-        <a href="/" class="hover:bg-neutral-800 p-2 ml-2 rounded-full w-fit max-sm:hidden">
+        <a href="/" name="Home" class="hover:bg-neutral-800 p-2 ml-2 rounded-full w-fit max-sm:hidden">
             <svg viewBox="0 0 24 24" class="fill-neutral-100 w-6 sm:w-8"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
         </a>
         <a href="/" class="flex flex-row gap-2 items-center px-4 py-2 transition-all rounded-full border border-transparent hover:border-border" data-navbar-section="Home">

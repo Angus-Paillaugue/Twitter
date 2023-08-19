@@ -27,5 +27,11 @@ const webSocketServer = {
 }
 
 export default defineConfig({
-	plugins: [sveltekit(), webSocketServer]
+	server: {
+		port: 5173,
+	},
+	preview: {
+		port: 80,
+	},
+	plugins: [sveltekit(), webSocketServer],
 });

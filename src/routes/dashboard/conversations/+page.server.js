@@ -15,8 +15,14 @@ export async function load({ locals }) {
             const parseMention = (text) => {return text.replace(new RegExp(/(?=(<user>))(\w|\W)*(?<=<\/user>)/, "gm"), function(match) {return match.slice(6, -7);});}
             lastMessage.message = parseMention(lastMessage.message);
         }
-        return { id:conversation.id, lastMessage:lastMessage, user:(({ password, email, bookmarks, subscriptions, ...o }) => o)(await usersRef.findOne({ username:conversation.user })) };
+        if(Object.keys(lastMessage).length > 0) {
+            return { id:conversation.id, lastMessage:lastMessage, user:(({ password, email, bookmarks, subscriptions, ...o }) => o)(await usersRef.findOne({ username:conversation.user })) };
+        }else {
+            await conversationsRef.deleteOne({ id:conversation.id });
+            return false;
+        }
     })));
+    conversationsWithMe = conversationsWithMe.filter(n => n);
 
     return { conversationsWithMe };
 };

@@ -130,9 +130,9 @@
                     </svg>
                 </button>
             </header>
-            <div class="grid grid-cols-12 gap-y-2 p-4 overflow-y-auto">
+            <div class="grid grid-cols-12 gap-y-2 md:p-4 p-1 overflow-y-auto">
                 {#each messages as message}
-                    <div class="{message.sender === user.username ? "col-start-5 col-end-13" : "col-start-1 col-end-9"} p-3 rounded-lg">
+                    <div class="{message.sender === user.username ? "col-start-5 col-end-13" : "col-start-1 col-end-9"} md:p-3 p-1 rounded-lg">
                         <div class="flex {message.sender === user.username ? "flex-row-reverse" : "flex-row"} items-end">
                             {#if message.sender !== user.username}
                                 <a href="/u/{chattingWithUser.username}">
@@ -216,12 +216,13 @@
 </div>
 
 <div class="fixed top-0 left-0 w-full h-full bg-neutral-600/50 transition-opacity flex flex-col justify-center items-center {moreModal ? "z-40 opacity-100": "-z-10 opacity-0"}">
-    <div class="relative rounded-lg shadow bg-neutral-900 max-w-md max-h-full w-full">
+    <div class="relative rounded-lg shadow bg-neutral-900 max-w-md max-h-full w-full p-4">
         <button type="button" on:click={() => {moreModal = false;}} class="absolute top-2.5 right-2.5 text-neutral-400 bg-transparent rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center hover:bg-neutral-800 hover:text-neutral-100 group">
             <svg class="w-3 h-3 group-hover:rotate-90 transition-all" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/></svg>
             <span class="sr-only">Close modal</span>
         </button>
-        <form use:enhance action="?/blockUser" method="POST" class="p-6 flex flex-col gap-2 mt-6">
+        <h4>Details</h4>
+        <form use:enhance action="?/blockUser" method="POST" class="flex flex-col gap-2 mt-6">
             <button class="button-danger w-full" on:click={() => {
                 if(user.blockedUsers.includes(chattingWithUser.username)){
                     user.blockedUsers = user.blockedUsers.filter(username => username !==chattingWithUser.username);

@@ -82,7 +82,8 @@
                         <p class="mb-2">Blocked users</p>
                         {#each user.blockedUsers as user}
                             <div class="flex flex-row items-center gap-2 group relative w-fit pr-10">
-                                <img src="{user.profilePicture}" alt="" class="w-10 h-10 rounded-full">
+                                <!-- svelte-ignore a11y-img-redundant-alt -->
+                                <img src="{user.profilePicture}" alt="Profile picture" class="w-12 h-12 rounded-full">
                                 <div class="flex flex-col">
                                     <h5>{user.displayName}</h5>
                                     <p class="text-xs">@{user.username}</p>

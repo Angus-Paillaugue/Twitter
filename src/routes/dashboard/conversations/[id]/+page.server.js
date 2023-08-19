@@ -25,6 +25,7 @@ export const actions = {
             await usersRef.updateOne({ username:user.username }, { $pull: { blockedUsers: usernameToBlock } });
         }else {
             await usersRef.updateOne({ username:user.username }, { $push: { blockedUsers: usernameToBlock } });
+            throw redirect(303, "/dashboard/conversations");
         }
     }
 };

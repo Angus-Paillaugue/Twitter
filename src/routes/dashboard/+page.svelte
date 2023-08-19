@@ -4,6 +4,7 @@
     import { enhance } from "$app/forms";
     import { Post } from '$lib/components';
     import { pageMetaData } from "$lib/stores";
+    // import { isElementInViewPort } from "$lib/helpers";
 
     export let data;
 
@@ -24,13 +25,12 @@
     
     $: offset = posts.length;
     $: lastNumberOfPosts = posts.length;
+    // $: lastNumberOfPosts, setChildrenMap();
     // Limit file size to 3
     $: if(newPostFiles.length > 3) newPostFiles = newPostFiles.slice(0, 3);
 
     onMount(() => {
-        // for(const el of postsContainer.children){
-        //     if(el.nodeName === "ARTICLE") childrenMap = [...childrenMap, { el, top:el.offsetTop, height:el.clientHeight }];
-        // }
+        // setChildrenMap();
         window.addEventListener("scroll", () => {
             let documentHeight = document.body.scrollHeight;
             let currentScroll = window.scrollY + window.innerHeight;
@@ -38,23 +38,24 @@
             let modifier = 500; 
             if(currentScroll + modifier > documentHeight) loadUserPosts();
 
-    //         let bottomTrigger = window.scrollY + window.innerHeight/2;
-    //         let isVideoPlaying = false;
-    //         for(const post of childrenMap){
-    //             if((post.top + post.height) > bottomTrigger){
-    //                 if(post.el.querySelector("video")){
-    //                     if(!isVideoPlaying){
-    //                         post.el.querySelector("video").play();
-    //                         isVideoPlaying = true;
-    //                         continue;
-    //                     }
-    //                 }
-    //             }else if(post.el.querySelector("video")){
-    //                 post.el.querySelector("video").pause();
-    //             }
-    //         }
+            // let isVideoPlaying = false;
+            // for(const post of childrenMap.reverse()){
+            //     if(isElementInViewPort(post.el) && !isVideoPlaying && post.el.querySelector("video")) {
+            //         isVideoPlaying = true;
+            //         post.el.querySelector("video").play()
+            //     }else if(post.el.querySelector("video")){
+            //         post.el.querySelector("video").pause();
+            //     }
+            // }
         });
     });
+
+    // const setChildrenMap = () => {
+    //     if(!postsContainer) return
+    //     for(const el of postsContainer.children){
+    //         if(el.nodeName === "ARTICLE") childrenMap = [...childrenMap, { el, top:el.offsetTop, height:el.clientHeight }];
+    //     }
+    // }
 
     function newPostFileHandle(e) {
         newPostFiles = [...newPostFiles, ...e.target.files];
@@ -113,7 +114,7 @@
 	<title>Dashboard</title>
 </svelte:head>
 
-<div class="fixed top-0 left-0 bg-neutral-600 bg-opacity-50 w-full h-full flex flex-col justify-center items-center transition-all p-4 {newPostModal ? "z-40 opacity-100" : "-z-10 opacity-0"}">
+<div class="fixed top-0 left-0 bg-neutral-600 bg-opacity-50 w-full h-full flex flex-col justify-center items-center transition-all md:p-4 p-1 {newPostModal ? "z-40 opacity-100" : "-z-10 opacity-0"}">
     <form method="POST" enctype="multipart/form-data" use:enhance={(e) => {isNewPostLoading = true;for(let i=0;i <newPostFiles.length;i++){e.formData.set(`file-${i}`, newPostFiles[i], newPostFiles[i].name);}return ({ update }) => {isNewPostLoading = false;update({ reset: false });}}} class="flex flex-col w-full max-w-md relative max-h-full" action="?/newPost">
         <button type="button" on:click={() => {newPostModal = false;}} class="absolute top-2.5 right-2.5 text-neutral-400 bg-transparent rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center hover:bg-neutral-800 hover:text-neutral-100 group">
             <svg class="w-3 h-3 group-hover:rotate-90 transition-all" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/></svg>
@@ -148,7 +149,7 @@
                 </div>
             {/if}
             <div class="px-4 py-2 bg-neutral-800">
-                <textarea name="text" rows="4" class="block w-full px-0 text-sm border-0 bg-neutral-800 focus:ring-0 text-neutral-100 placeholder-neutral-400" placeholder="Write your new post..." bind:this={textarea} on:keyup={oninput}></textarea>
+                <textarea name="text" rows="4" class="block w-full px-0 text-sm border-0 bg-neutral-800 focus:ring-0 text-neutral-100 placeholder-neutral-400 max-h-80 min-h-[96px]" placeholder="Write your new post..." bind:this={textarea} on:keyup={oninput}></textarea>
                 {#if atMenuDisplay}
                     <div class="flex flex-row flex-wrap gap-2">
                         {#each mentionUsers as user}
@@ -178,9 +179,14 @@
 </div>
 
 <section class="w-full">
-    <div class="flex flex-col mt-4">
-        <h2>{user.displayName}</h2>
-        <p class="text-sm">@{user.username}</p>
+    <div class="flex flec-row gap-2 items-center mt-4">
+        <a href="/u/{user.username}" name="yourProfile">
+            <img src="{user.profilePicture}" alt="" class="w-14 h-14 rounded-full">
+        </a>
+        <div class="flex flex-col">
+            <h2>{user.displayName}</h2>
+            <p class="text-sm">@{user.username}</p>
+        </div>
     </div>
     <hr>
     <div class="grid sm:grid-cols-2 grid-cols-1 gap-4">

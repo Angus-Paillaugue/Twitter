@@ -27,7 +27,7 @@
     <div class="mt-6 flex flex-col gap-4">
         {#each conversationsWithMe as conversation}
             {#if !user.blockedUsers.includes(conversation.user.username)}
-                <a href="/dashboard/conversations/{conversation.id}" class="flex flex-row items-center gap-2 w-full transition-all hover:bg-neutral-800 rounded p-2 relative {!conversation.lastMessage.seen && "bg-neutral-800"}">
+                <a href="/dashboard/conversations/{conversation.id}" class="flex flex-row items-center gap-2 w-full transition-all hover:bg-neutral-800 rounded p-2 relative {(!conversation.lastMessage.seen && Object.keys(conversation.lastMessage).length > 0) && "bg-neutral-800"}">
                     {#if !conversation.lastMessage.seen && conversation.lastMessage.receiver === user.username}
                         <div class="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 bg-red-600 w-4 h-4 rounded-full"></div>
                     {/if}
@@ -36,7 +36,7 @@
                     <div class="flex flex-col gap-1">
                         <h6>{conversation.user.username}</h6>
                         {#if Object.keys(conversation.lastMessage).length > 0}
-                            <p class="text-neutral-600 line-clamp-1 text-ellipsis"><b>{conversation.lastMessage.sender === user.username ? "You" : conversation.lastMessage.sender}</b> : {conversation.lastMessage.message}</p>
+                            <p class="text-neutral-600 line-clamp-1 text-ellipsis w-full"><b>{conversation.lastMessage.sender === user.username ? "You" : conversation.lastMessage.sender}</b> : {conversation.lastMessage.message}</p>
                         {/if}
                     </div>
                 </a>

@@ -24,6 +24,7 @@
     $: offset = feed.length;
     $: setActiveTab(), tabIndex;
     $: lastNumberOfPosts = feed.length;
+    $: lastNumberOfPosts, setChildrenMap();
 
     onMount(() => {
         if(!user){
@@ -31,9 +32,7 @@
             setActiveTab();
             window.onresize = setActiveTab;
         }else {
-            // for(const el of postsContainer.children){
-            //     if(el.nodeName === "ARTICLE") childrenMap = [...childrenMap, { el, top:el.offsetTop, height:el.clientHeight }];
-            // }
+            // setChildrenMap();
             window.addEventListener("scroll", () => {
                 let documentHeight = document.body.scrollHeight;
                 let currentScroll = window.scrollY + window.innerHeight;
@@ -41,17 +40,13 @@
                 let modifier = 500; 
                 if(currentScroll + modifier > documentHeight) loadMorePosts();
 
-                // let bottomTrigger = window.scrollY + window.innerHeight/2;
-                // let topTrigger = window.scrollY;
                 // let isVideoPlaying = false;
                 // for(const post of childrenMap){
-                //     if((post.top + post.height + post.offsetTop) > bottomTrigger){
-                //         if(post.el.querySelector("video")){
-                //             if(!isVideoPlaying){
-                //                 post.el.querySelector("video").play();
-                //                 isVideoPlaying = true;
-                //             }
-                //         }
+                //     console.log(isElementInViewPort(post.el), !isVideoPlaying, post.el.querySelector("video"));
+                //     if(isElementInViewPort(post.el) && !isVideoPlaying && post.el.querySelector("video")) {
+                //         isVideoPlaying = true;
+                //         post.el.querySelector("video").play();
+                //         break;
                 //     }else if(post.el.querySelector("video")){
                 //         post.el.querySelector("video").pause();
                 //     }
@@ -59,6 +54,19 @@
             });
         }
     });
+
+    // function isElementInViewPort(element){
+    //     let rect = element.getBoundingClientRect();
+
+    //     return (rect.top >= 0 && rect.left >= 0 && rect.bottom <= window.innerHeight || document.documentElement.clientHeight && rect.right <= window.innerWidth || document.documentElement.clientWidth);
+    // }
+
+    const setChildrenMap = () => {
+        if(!postsContainer) return
+        for(const el of postsContainer.children){
+            if(el.nodeName === "ARTICLE") childrenMap = [...childrenMap, { el, top:el.offsetTop, height:el.clientHeight }];
+        }
+    }
     
     async function loadMorePosts() {
         if(isMorePostsToLoad && !morePostsLoading){
