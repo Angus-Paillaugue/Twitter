@@ -47,7 +47,7 @@ export const actions = {
             if(!userExists) return { logIn:{success:false, formData, message:"No account with this username!"} };
             const compare = await bcrypt.compare(password, userExists.password);
             if(compare){
-                cookies.set("token", generateAccessToken(username), { path:"/", httpOnly: true, sameSite:"strict", maxAge: 60 * 60 * 24 * 10 });
+                cookies.set("token", generateAccessToken(username), { path:"/", maxAge: 60 * 60 * 24 * 10 });
                 throw redirect(303, "/dashboard");
             }
             return { logIn:{success:false, formData, message:"Incorrect password!"} };
@@ -73,7 +73,7 @@ export const actions = {
 
         await usersRef.insertOne({ username: username, displayName:username, email:email, password:hash, profilePicture:"/defaultProfilePicture.png", banner:"/defaultBanner.jpg", bookmarks:[], subscriptions:[], joined:new Date(), bio:"No bio for now", blockedUsers: [] });
 
-        cookies.set("token", generateAccessToken(username), { path:"/", httpOnly: true, sameSite:"strict", maxAge: 60 * 60 * 24 * 10 });
+        cookies.set("token", generateAccessToken(username), { path:"/", maxAge: 60 * 60 * 24 * 10 });
         throw redirect(301, "/dashboard/settings");
     }
 };
