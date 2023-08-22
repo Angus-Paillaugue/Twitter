@@ -112,7 +112,7 @@
     <section class="flex flex-col max-w-md mx-auto w-full">
         <div class="w-full flex flex-col h-full border-x border-border" bind:this={postsContainer}>
             {#each posts as post, index}
-                <Post post={post} bookmarks={bookmarks} borderTop={index === 0} />
+                <Post post={post} bookmarks={bookmarks} borderTop={false} />
             {/each}
         </div>
     </section>
