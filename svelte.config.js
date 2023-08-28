@@ -1,4 +1,4 @@
-import adapter from '@sveltejs/adapter-node';
+import adapter from '@sveltejs/adapter-vercel';
 import { vitePreprocess } from '@sveltejs/kit/vite';
 
 const config = {
@@ -6,9 +6,6 @@ const config = {
     adapter: adapter(),
   },
   preprocess: vitePreprocess(),
-  vitePlugin: {
-		inspector: true,
-	},
 };
 
 export default config;
