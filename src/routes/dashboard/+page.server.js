@@ -5,6 +5,9 @@ import { writeFileSync, unlinkSync } from 'fs';
 import sharp from "sharp";
 import { fileType } from "$lib/helpers";
 import ffmpeg from 'fluent-ffmpeg';
+import { Storage } from '@google-cloud/storage';
+
+const bucketName = "hellkeeperbucket";
 
 export async function load({ locals }) {
     const { user } = locals;
@@ -27,6 +30,7 @@ export async function load({ locals }) {
 export const actions = {
     newPost:async({ request, locals }) => {
         const { user } = locals;
+        const storage = new Storage();
         if(user){
             const data = await request.formData();
             const formData = Object.fromEntries(data);
@@ -50,18 +54,16 @@ export const actions = {
                 let id = randomUUID();
                 let fileName = file.name;
                 let ext = fileName.split(".").at(-1);
+                const filePath = fileType(fileName) === "image" ? `static/files/${id+"-temp.webp"}` : `static/files/${id+"-temp."+ext}`;
+                const options = { destination: id+"."+ext };
                 if(fileType(fileName) === "image"){
-                    fileNames.push(id+".webp");
-                    await sharp(Buffer.from(await file.arrayBuffer())).webp({ quality: 50 }).toFile(`static/files/${id+".webp"}`);
-                }else if(fileType(fileName) === "video"){
-                    fileNames.push(id+"."+ext);
-                    writeFileSync(`static/files/${id+"-temp."+ext}`, Buffer.from(await file.arrayBuffer()));
-                    ffmpeg(`static/files/${id+"-temp."+ext}`).output(`static/files/${id+"."+ext}`).videoCodec("libx264").audioCodec('aac').videoBitrate(1500).autopad().on("end", () => {
-                        unlinkSync(`static/files/${id+"-temp."+ext}`);
-                    }).run();
+                    await sharp(Buffer.from(await file.arrayBuffer())).webp({ quality: 50 }).toFile(filePath);
                 }else {
-                    writeFileSync(`static/files/${id+"."+ext}`, Buffer.from(await file.arrayBuffer()));
+                    writeFileSync(filePath, Buffer.from(await file.arrayBuffer()));
                 }
+                await storage.bucket(bucketName).upload(filePath, options);
+                unlinkSync(filePath);
+                fileNames.push(id+"."+ext);
             }
             await postsRef.insertOne({ username:user.username, text, file:fileNames.length > 0 ? fileNames : false, id:postId, date:new Date(), replies:[] });
 

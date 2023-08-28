@@ -1,9 +1,10 @@
 
 # TODO
 
- - [ ] Find a solution for hosting files of posts
  - [ ] Fix the autoplay of videos
  - [ ] *Make page transitions work again
+ - [ ] Find solution for hiding the messages in console for legacy files stored locally
+ - [*] Find a solution for hosting files of posts
  - [x] Add some wow factor
  - [x] Delete confidential infos like passwords and subscriptions sent to the +page.svelte by the +page.server.js
  - [x] Truncate long post text

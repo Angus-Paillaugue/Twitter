@@ -1,5 +1,9 @@
-import { postsRef } from "$lib/server/db"
-import { unlinkSync } from "fs"
+import { postsRef } from "$lib/server/db";
+import { unlinkSync, existsSync } from "fs";
+import { Storage } from '@google-cloud/storage';
+
+const bucketName = "hellkeeperbucket";
+const storage = new Storage();
 
 export async function POST({ locals, request }) {
     if(locals.user){
@@ -9,7 +13,11 @@ export async function POST({ locals, request }) {
         const post = await postsRef.findOne({ id });
         if(post.file.length > 0){
             for(const file of post.file){
-                unlinkSync(`static/files/${file}`);
+                if (existsSync(`static/files/${file}`)) {
+                    unlinkSync(`static/files/${file}`);
+                }else {
+                    await storage.bucket(bucketName).file(file).delete();
+                }
             }
         }
 

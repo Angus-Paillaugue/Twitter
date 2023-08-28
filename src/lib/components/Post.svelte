@@ -3,6 +3,10 @@
     import { toasts } from "$lib/stores";
     import { page } from "$app/stores";
     import { goto } from "$app/navigation";
+  import { onMount } from "svelte";
+
+    // ! Change this if needed
+    const gcpBucketBaseUrl = "https://storage.googleapis.com/hellkeeperbucket/";
 
     export let post;
     export let bookmarks;
@@ -50,6 +54,16 @@
         const data = await res.json()
         if(!data.error) goto(`/post/${post.id}`);
     }
+
+    onMount(() => {
+        const elements = document.querySelectorAll("img, video");
+        for(const el of elements) {
+            el.addEventListener("error", (e) => {
+                // For legacy files stored locally
+                e.target.src = "/files/"+e.target.src.split("/").at(-1);
+            });
+        }
+    })
 </script>
 
 {#if !isDeleted && post?.user}
@@ -80,12 +94,12 @@
                     {#each post.file as file, index}
                         {#if fileType(file) === "video"}
                             <!-- svelte-ignore a11y-media-has-caption -->
-                            <video src="/files/{file}" loop controls playsinline class="rounded-lg cursor-pointer mx-auto"></video>
+                            <video src={gcpBucketBaseUrl+file} loop controls playsinline class="rounded-lg cursor-pointer mx-auto"></video>
                         {:else if fileType(file) === "image"}
                             <!-- svelte-ignore a11y-img-redundant-alt -->
                             <!-- svelte-ignore a11y-click-events-have-key-events -->
                             <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                            <img class="rounded-lg w-full cursor-pointer mx-auto" src="/files/{file}" alt="Post image" on:click={() => {showMediaFS(index);}}>
+                            <img class="rounded-lg w-full cursor-pointer mx-auto" src={gcpBucketBaseUrl+file} alt="Post image" on:click={() => {showMediaFS(index);}}>
                         {/if}
                     {/each}
                 </div>
@@ -167,9 +181,9 @@
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="bg-neutral-800/50 fixed top-0 left-0 w-full h-full transition-all flex flex-col items-center justify-center {isFullScreen ? "opacity-100 z-50" : "opacity-0 -z-10"}" on:click={() => isFullScreen = false}>
     {#if mediaModalSrc.type === "image"}
-        <img src="/files/{mediaModalSrc.src}" alt="" class="rounded-lg max-h-full max-w-full">
+        <img src={gcpBucketBaseUrl+mediaModalSrc.src} alt="" class="rounded-lg max-h-full max-w-full">
     {:else if mediaModalSrc.type === "video"}
         <!-- svelte-ignore a11y-media-has-caption -->
-        <video src="/files/{mediaModalSrc.src}" class="max-h-full max-w-full"></video>
+        <video src={gcpBucketBaseUrl+mediaModalSrc.src} class="max-h-full max-w-full"></video>
     {/if}
 </div>
