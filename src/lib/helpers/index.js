@@ -59,8 +59,39 @@ const parseMentionsOnSend = (text) => {
 }
 
 function parseLink(text) {
-    return text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" class="link no-anim" target="_blank">$1</a>')
+    var urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig
+    return text.replace(urlRegex,function(url){
+        if (parseUri(url).file.match(/\.(jpg|png|gif|bmp)$/i))
+            return `<img src='${url}' class="max-w-full block rounded cursor-pointer" onclick="['opacity-0','-z-10','z-40','opacity-100'].map(v=> this.nextElementSibling.classList.toggle(v) )" /><div class="w-full fixed top-0 left-0 h-full bg-neutral-800/50 transition-all flex flex-col items-center justify-center opacity-0 -z-10" onclick="['opacity-0','-z-10','z-40','opacity-100'].map(v=> this.classList.toggle(v) )"><img src="${url}" class="max-w-full block rounded cursor-pointer" /></div>`
+        return '<a href="'+url+'" class="link no-anim" target="_blank">'+url+'</a>';
+    });
 }
+function parseUri (str) {
+    let o = {
+        strictMode: false,
+        key: ["source","protocol","authority","userInfo","user","password","host","port","relative","path","directory","file","query","anchor"],
+        q:   {
+            name:   "queryKey",
+            parser: /(?:^|&)([^&=]*)=?([^&]*)/g
+        },
+        parser: {
+            strict: /^(?:([^:\/?#]+):)?(?:\/\/((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?))?((((?:[^?#\/]*\/)*)([^?#]*))(?:\?([^#]*))?(?:#(.*))?)/,
+            loose:  /^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/
+        }
+    }
+    let m   = o.parser[o.strictMode ? "strict" : "loose"].exec(str),
+        uri = {},
+        i   = 14;
+
+    while (i--) uri[o.key[i]] = m[i] || "";
+
+    uri[o.q.name] = {};
+    uri[o.key[12]].replace(o.q.parser, function ($0, $1, $2) {
+        if ($1) uri[o.q.name][$1] = $2;
+    });
+
+    return uri;
+};
 
 function isElementInViewPort(element){
     let rect = element.getBoundingClientRect();
