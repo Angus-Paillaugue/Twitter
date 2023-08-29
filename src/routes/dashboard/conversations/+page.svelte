@@ -5,16 +5,16 @@
     export let data;
 
     const { user, conversationsWithMe } = data;
+    let followedUsers = data.followedUsers;
     let newConversationModal = false;
     let newConversationUsers = [];
     let newConversationInput;
     let newConversationRadio;
 
     async function newConversationInputHandle() {
-        if(newConversationInput.value.length === 0) return newConversationUsers = []
-        const res = await fetch(`/api/getMentionUser?query=${newConversationInput.value}`, { method:"GET" });
-        const users = await res.json();
-        newConversationUsers = users.filter(el => el.username !== user.username);
+        if(newConversationInput.value.length === 0) return newConversationUsers = [];
+        let query = new RegExp( newConversationInput.value, 'i' );
+        newConversationUsers = followedUsers.filter(el => el.username.match(query) && el);
     }
 
     $pageMetaData.title = "Messages";

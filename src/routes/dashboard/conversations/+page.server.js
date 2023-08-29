@@ -24,7 +24,9 @@ export async function load({ locals }) {
     })));
     conversationsWithMe = conversationsWithMe.filter(n => n);
 
-    return { conversationsWithMe };
+    const followedUsers = await usersRef.find({ username: { $in:user.subscriptions.map(el => el.username) } }).project({ _id:0, password:0, email:0, bookmarks:0, blockedUsers:0 }).toArray();
+
+    return { conversationsWithMe, followedUsers };
 };
 
 export const actions = {

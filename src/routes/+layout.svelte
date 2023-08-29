@@ -4,7 +4,7 @@
     import { Toast } from 'flowbite-svelte';
     import { toasts, searchBar, pageMetaData } from "$lib/stores";
     import { navigating } from '$app/stores';
-    import { fade } from 'svelte/transition';
+    // import { fade } from 'svelte/transition';
 
     export let data;
 
@@ -19,9 +19,9 @@
 </svelte:head>
 
 <main class="min-h-screen transition-all w-full {user && "max-sm:pb-14"} flex flex-col items-center {$searchBar && "pt-14"}">
-    <div class="w-full max-w-screen-lg max-sm:justify-center h-full flex flex-row">
+    <div class="w-full max-w-screen-lg max-sm:justify-center h-full flex flex-row pr-4">
         <Navbar user={data?.user}/>
-    
+
         <!-- {#key data.url}
             <div in:fade={{ duration: 200, delay: 200 }} out:fade={{ duration: 200 }} class="w-full">
         {/key} -->

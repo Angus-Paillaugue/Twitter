@@ -84,7 +84,7 @@
         atMenuDisplay = false; 
         const positionIndex = textarea.selectionStart;
         const textBeforeCaret = textarea.value.slice(0, positionIndex);
-        let start = textBeforeCaret.split("@")
+        let start = textBeforeCaret.split("@");
         start.pop();
         textarea.value = start.join("@") + `@${username}`;
         textarea.focus();

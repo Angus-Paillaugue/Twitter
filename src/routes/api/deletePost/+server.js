@@ -11,12 +11,16 @@ export async function POST({ locals, request }) {
         const { id } = formData;
 
         const post = await postsRef.findOne({ id });
-        if(post.file.length > 0){
+        if(post?.file?.length > 0){
             for(const file of post.file){
-                if (existsSync(`static/files/${file}`)) {
-                    unlinkSync(`static/files/${file}`);
-                }else {
-                    await storage.bucket(bucketName).file(file).delete();
+                try {
+                    if (existsSync(`static/files/${file}`)) {
+                        unlinkSync(`static/files/${file}`);
+                    }else {
+                        await storage.bucket(bucketName).file(file).delete();
+                    }
+                }catch(err) {
+                    console.error(err);
                 }
             }
         }

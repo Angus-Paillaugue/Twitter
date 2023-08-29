@@ -1,13 +1,10 @@
 import { postsRef, usersRef } from "$lib/server/db"
 import { randomUUID } from "crypto"
 import { redirect } from "@sveltejs/kit";
-import { writeFileSync, unlinkSync } from 'fs';
+import { writeFileSync, unlinkSync, existsSync } from 'fs';
 import sharp from "sharp";
 import { fileType } from "$lib/helpers";
-import ffmpeg from 'fluent-ffmpeg';
 import { Storage } from '@google-cloud/storage';
-
-const bucketName = "hellkeeperbucket";
 
 export async function load({ locals }) {
     const { user } = locals;
@@ -61,8 +58,11 @@ export const actions = {
                 }else {
                     writeFileSync(filePath, Buffer.from(await file.arrayBuffer()));
                 }
-                await storage.bucket(bucketName).upload(filePath, options);
+                await storage.bucket("hellkeeperbucket").upload(filePath, options);
                 unlinkSync(filePath);
+                if(existsSync(filePath)) {
+                    console.warn(fileType(fileName) === "image" ? id+"-temp.webp" : id+"-temp."+ext, "was not deleted !");
+                }
                 fileNames.push(id+"."+ext);
             }
             await postsRef.insertOne({ username:user.username, text, file:fileNames.length > 0 ? fileNames : false, id:postId, date:new Date(), replies:[] });
