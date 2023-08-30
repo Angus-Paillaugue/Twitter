@@ -9,8 +9,10 @@ export async function POST({ locals, request }) {
 
         if(user.subscriptions.filter(subscription => subscription.username == username).length >= 1){
             await usersRef.updateOne({ username:user.username }, { $pull: { subscriptions: { username }} });
+            await usersRef.updateOne({ username }, { $inc: { noFollowers: -1} });
         }else{
             await usersRef.updateOne({ username:user.username }, { $push: { subscriptions: { username }} });
+            await usersRef.updateOne({ username }, { $inc: { noFollowers: 1} });
         }
         
         let newUser = await usersRef.findOne({ username:user.username });

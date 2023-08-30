@@ -62,7 +62,7 @@ function parseLink(text) {
     var urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig
     return text.replace(urlRegex,function(url){
         if (parseUri(url).file.match(/\.(jpg|png|gif|bmp)$/i))
-            return `<img src='${url}' class="max-w-full block rounded cursor-pointer" onclick="['opacity-0','-z-10','z-40','opacity-100'].map(v=> this.nextElementSibling.classList.toggle(v) )" /><div class="w-full fixed top-0 left-0 h-full bg-neutral-800/50 transition-all flex flex-col items-center justify-center opacity-0 -z-10" onclick="['opacity-0','-z-10','z-40','opacity-100'].map(v=> this.classList.toggle(v) )"><img src="${url}" class="max-w-full block rounded cursor-pointer" /></div>`
+            return `<img src='${url}' class="max-w-full block rounded cursor-pointer" onclick="['opacity-0','-z-10','z-40','opacity-100'].map(v=> this.nextElementSibling.classList.toggle(v) )" /><div class="w-full fixed top-0 left-0 h-full bg-neutral-800/50 transition-all flex flex-col items-center justify-center opacity-0 -z-10" onclick="['opacity-0','-z-10','z-40','opacity-100'].map(v=> this.classList.toggle(v) )"><img src="${url}" class="max-w-full block rounded cursor-pointer" /></div>`;
         return '<a href="'+url+'" class="link no-anim" target="_blank">'+url+'</a>';
     });
 }
@@ -99,4 +99,8 @@ function isElementInViewPort(element){
     return (rect.top >= 0 && rect.left >= 0 && rect.bottom <= window.innerHeight || document.documentElement.clientHeight && rect.right <= window.innerWidth || document.documentElement.clientWidth);
 }
 
-export { toggleBookmark, toggleSubscription, formatDate, parseMentions, fileType, parseMentionsOnReceive, parseMentionsOnSend, parseLink, isElementInViewPort }
+const formatNumber = (int) => {
+    return Intl.NumberFormat("en", { notation:"compact" }).format(int);
+}
+
+export { toggleBookmark, toggleSubscription, formatDate, parseMentions, fileType, parseMentionsOnReceive, parseMentionsOnSend, parseLink, isElementInViewPort, formatNumber }

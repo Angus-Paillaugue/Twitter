@@ -2,7 +2,6 @@
     import { Tooltip } from 'flowbite-svelte';
     import { searchBar, pageMetaData } from "$lib/stores";
     import { goto } from "$app/navigation";
-    import { fileType } from "$lib/helpers";
     import { browser } from '$app/environment';
 
     export let user;
@@ -101,7 +100,7 @@
                     <a href="/u/{hint.username}" class="w-full overflow-hidden flex flex-col justify-start {index === 0 ? "border-y" : "border-b"} border-border bg-neutral-900">
                         <div class="w-full relative bg-no-repeat bg-center bg-cover h-16 lg:h-24" style="background-image: url('{hint.banner}');">
                             <!-- svelte-ignore a11y-img-redundant-alt -->
-                            <img src="{hint.profilePicture}" alt="Profile picture" class="rounded-full lg:h-20 lg:w-20 h-14 w-14 absolute bottom-0 left-5 translate-y-3/4 ring-4 ring-neutral-800">
+                            <img src="{hint.profilePicture}" alt="Profile picture" class="rounded-full lg:h-20 h-14 aspect-square absolute bottom-0 left-5 translate-y-3/4 ring-4 ring-neutral-800">
                         </div>
                         <div class="h-20 pl-24 lg:pl-28 flex items-start flex-col">
                             <h5>{@html highlightSearchedText(hint.displayName)}</h5>
@@ -111,10 +110,10 @@
                 {:else}
                     <a href="/post/{hint.id}" class="w-full overflow-hidden flex flex-row border-border {index === 0 ? "border-y" : "border-b"} bg-neutral-900">
                         <!-- svelte-ignore a11y-img-redundant-alt -->
-                        <img src="{hint.user.profilePicture}" alt="Profile picture" class="rounded-full lg:h-20 lg:w-20 h-14 w-14 ring-4 m-2 ring-neutral-800">
+                        <img src="{hint.user.profilePicture}" alt="Profile picture" class="rounded-full lg:h-20 aspect-square h-14 ring-4 m-2 ring-neutral-800">
                         <Tooltip>{hint.username}</Tooltip>
-                        <p class="p-2">
-                            {@html hint.text.length > 30 ? highlightSearchedText(hint.text.slice(0,30))+"..." : highlightSearchedText(hint.text)}
+                        <p class="p-2 line-clamp-3 text-ellipsis h-20 overflow-hidden">
+                            {@html highlightSearchedText(hint.text)}
                         </p>
                     </a>
                 {/if}

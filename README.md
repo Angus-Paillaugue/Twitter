@@ -1,9 +1,12 @@
 
 # TODO
 
+ - [ ] Add option to buy the verified checkmark
  - [ ] Fix the autoplay of videos
  - [ ] *Make page transitions work again
  - [ ] Find solution for hiding the messages in console for legacy files stored locally
+ - [x] Add verified profile with a checkmark
+ - [x] Add number of followers to profile
  - [*] Find a solution for hosting files of posts
  - [x] Add some wow factor
  - [x] Delete confidential infos like passwords and subscriptions sent to the +page.svelte by the +page.server.js

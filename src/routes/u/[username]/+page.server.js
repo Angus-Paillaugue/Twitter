@@ -1,4 +1,4 @@
-import { usersRef, postsRef } from "$lib/server/db"
+import { usersRef, postsRef } from "$lib/server/db";
 import { error } from "@sveltejs/kit";
 
 export async function load({ params, locals }) {
