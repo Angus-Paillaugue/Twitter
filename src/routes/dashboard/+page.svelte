@@ -16,6 +16,7 @@
     let isMorePostsToLoad = true;
     let atMenuDisplay = false;
     let isNewPostLoading = false;
+    let certificationModal = false;
     let mentionUsers = [];
     // let childrenMap = [];
     let newPostFiles = [];
@@ -110,9 +111,23 @@
     $pageMetaData.currentPageName = "Dashboard";
 </script>
 
-<svelte:head>
-	<title>Dashboard</title>
-</svelte:head>
+<div class="fixed top-0 left-0 w-full h-full bg-neutral-600/50 transition-opacity flex flex-col justify-center items-center {certificationModal ? "z-40 opacity-100": "-z-10 opacity-0"}">
+    <div class="relative rounded-lg shadow bg-neutral-900 max-w-md max-h-full w-full">
+        <div class="p-6 flex flex-col gap-6 bg-no-repeat items-center rounded-t-lg" style="background-image: url(https://abs.twimg.com/sticky/illustrations/twitter_blue_images_v2/background-600W.png); background-position: 0px -150px;">
+            <div class="rounded-2xl bg-neutral-900 p-2 w-full flex flex-row">
+                <h4 class="leading-7 my-auto h-fit">Premium subscribers will get a blue checkmark once approved.</h4>
+                <img alt="illustration" draggable="false" src="https://abs.twimg.com/responsive-web/client-web/verification-card-v2@3x.8ebee01a.png" class="h-full w-1/4 my-auto">
+            </div>
+            <ul class="list-inside list-disc w-full pl-4 text-neutral-100">
+                <li>Only add a magnificent <svg viewBox="0 0 22 22" class="w-5 h-5 fill-primary-500 inline-block"><g><path d="M20.396 11c-.018-.646-.215-1.275-.57-1.816-.354-.54-.852-.972-1.438-1.246.223-.607.27-1.264.14-1.897-.131-.634-.437-1.218-.882-1.687-.47-.445-1.053-.75-1.687-.882-.633-.13-1.29-.083-1.897.14-.273-.587-.704-1.086-1.245-1.44S11.647 1.62 11 1.604c-.646.017-1.273.213-1.813.568s-.969.854-1.24 1.44c-.608-.223-1.267-.272-1.902-.14-.635.13-1.22.436-1.69.882-.445.47-.749 1.055-.878 1.688-.13.633-.08 1.29.144 1.896-.587.274-1.087.705-1.443 1.245-.356.54-.555 1.17-.574 1.817.02.647.218 1.276.574 1.817.356.54.856.972 1.443 1.245-.224.606-.274 1.263-.144 1.896.13.634.433 1.218.877 1.688.47.443 1.054.747 1.687.878.633.132 1.29.084 1.897-.136.274.586.705 1.084 1.246 1.439.54.354 1.17.551 1.816.569.647-.016 1.276-.213 1.817-.567s.972-.854 1.245-1.44c.604.239 1.266.296 1.903.164.636-.132 1.22-.447 1.68-.907.46-.46.776-1.044.908-1.681s.075-1.299-.165-1.903c.586-.274 1.084-.705 1.439-1.246.354-.54.551-1.17.569-1.816zM9.662 14.85l-3.429-3.428 1.293-1.302 2.072 2.072 4.4-4.794 1.347 1.246z"></path></g></svg> icon next to your profile for the low-low price of <b>$19,99</b>!</li>
+            </ul>
+            <div class="w-full gap-2 grid grid-cols-2">
+                <button type="button" class="button-secondary" on:click={() => {certificationModal = false;}}>No, cancel</button>
+                <a href="/buy-certification" class="button-primary">Buy for 19,99€</a>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="fixed top-0 left-0 bg-neutral-600 bg-opacity-50 w-full h-full flex flex-col justify-center items-center transition-all md:p-4 p-1 {newPostModal ? "z-40 opacity-100" : "-z-10 opacity-0"}">
     <form method="POST" enctype="multipart/form-data" use:enhance={(e) => {isNewPostLoading = true;for(let i=0;i <newPostFiles.length;i++){e.formData.set(`file-${i}`, newPostFiles[i], newPostFiles[i].name);}return ({ update }) => {isNewPostLoading = false;update({ reset: false });}}} class="flex flex-col w-full max-w-md relative max-h-full" action="?/newPost">
@@ -186,7 +201,7 @@
         <div class="flex flex-col">
             <h2>
                 {user.displayName}
-                {#if user.verified}
+                {#if user.certified}
                     <svg viewBox="0 0 22 22" class="w-5 h-5 fill-primary-500 inline-block"><g><path d="M20.396 11c-.018-.646-.215-1.275-.57-1.816-.354-.54-.852-.972-1.438-1.246.223-.607.27-1.264.14-1.897-.131-.634-.437-1.218-.882-1.687-.47-.445-1.053-.75-1.687-.882-.633-.13-1.29-.083-1.897.14-.273-.587-.704-1.086-1.245-1.44S11.647 1.62 11 1.604c-.646.017-1.273.213-1.813.568s-.969.854-1.24 1.44c-.608-.223-1.267-.272-1.902-.14-.635.13-1.22.436-1.69.882-.445.47-.749 1.055-.878 1.688-.13.633-.08 1.29.144 1.896-.587.274-1.087.705-1.443 1.245-.356.54-.555 1.17-.574 1.817.02.647.218 1.276.574 1.817.356.54.856.972 1.443 1.245-.224.606-.274 1.263-.144 1.896.13.634.433 1.218.877 1.688.47.443 1.054.747 1.687.878.633.132 1.29.084 1.897-.136.274.586.705 1.084 1.246 1.439.54.354 1.17.551 1.816.569.647-.016 1.276-.213 1.817-.567s.972-.854 1.245-1.44c.604.239 1.266.296 1.903.164.636-.132 1.22-.447 1.68-.907.46-.46.776-1.044.908-1.681s.075-1.299-.165-1.903c.586-.274 1.084-.705 1.439-1.246.354-.54.551-1.17.569-1.816zM9.662 14.85l-3.429-3.428 1.293-1.302 2.072 2.072 4.4-4.794 1.347 1.246z"></path></g></svg>
                 {/if}
             </h2>
@@ -215,6 +230,13 @@
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" /></svg>
             Settings
         </a>
+
+        {#if !user.certified}
+            <button on:click={() => {certificationModal = true;}} class="card-button">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" /></svg>
+                Certification
+            </button>
+        {/if}
 
         <a href="/log-out" class="card-button">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" /></svg>

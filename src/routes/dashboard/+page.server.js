@@ -1,10 +1,14 @@
 import { postsRef, usersRef } from "$lib/server/db"
 import { randomUUID } from "crypto"
-import { redirect } from "@sveltejs/kit";
+import { error, redirect } from "@sveltejs/kit";
 import { writeFileSync, unlinkSync, existsSync } from 'fs';
 import sharp from "sharp";
 import { fileType } from "$lib/helpers";
 import { Storage } from '@google-cloud/storage';
+import Stripe from "stripe";
+import { STRIPE_KEY } from "$env/static/private";
+
+const stripe = new Stripe(STRIPE_KEY);
 
 export async function load({ locals }) {
     const { user } = locals;

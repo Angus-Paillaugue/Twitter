@@ -34,7 +34,7 @@
 </main>
 
 <div class="fixed top-2 right-2 flex flex-col gap-2 z-50">
-    {#each $toasts as toast}
+    {#each $toasts.reverse() as toast}
         {#if toast.type == "error"}
             <Toast color="red" class="bg-neutral-800 border border-red-600/70 text-neutral-400">
                 <svelte:fragment slot="icon">

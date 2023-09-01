@@ -28,7 +28,7 @@ const webSocketServer = {
 
 export default defineConfig({
 	server: {
-		port: 5173,
+		port: 80,
 	},
 	preview: {
 		port: 80,
