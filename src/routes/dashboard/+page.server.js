@@ -1,14 +1,10 @@
-import { postsRef, usersRef } from "$lib/server/db"
-import { randomUUID } from "crypto"
-import { error, redirect } from "@sveltejs/kit";
+import { postsRef, usersRef } from "$lib/server/db";
+import { randomUUID } from "crypto";
+import { redirect } from "@sveltejs/kit";
 import { writeFileSync, unlinkSync, existsSync } from 'fs';
 import sharp from "sharp";
 import { fileType } from "$lib/helpers";
 import { Storage } from '@google-cloud/storage';
-import Stripe from "stripe";
-import { STRIPE_KEY } from "$env/static/private";
-
-const stripe = new Stripe(STRIPE_KEY);
 
 export async function load({ locals }) {
     const { user } = locals;
@@ -16,13 +12,27 @@ export async function load({ locals }) {
     let posts = await postsRef.find({ username:user.username }).sort({ date:-1 }).project({ _id:0 }).toArray();
 
     posts = structuredClone(await Promise.all(posts.map(async (post) => {
-        let user =(({ password, email, bookmarks, subscriptions, blockedUsers, _id, ...o }) => o)(await usersRef.findOne({ username:post.username }));
-        post.replies = structuredClone(await Promise.all(post.replies.map(async (replie) => {
-            let user = (({ password, email, bookmarks, subscriptions, blockedUsers, _id, ...o }) => o)(await usersRef.findOne({ username:replie.username }));
-            if(!user?.hidden || locals.user.admin) return{ ...replie, user }
-        })));
-        post.replies = post.replies.sort(function(a,b){return new Date(b.date) - new Date(a.date);});
-        if(!user?.hidden || locals.user.admin) return{ ...post, user }
+        if(post?.repost){
+            let repostedBy  =structuredClone(await usersRef.findOne({ username:post.username }));
+            let tempPost = structuredClone(await postsRef.findOne({ id:post.postId }));
+            tempPost.id = post.id;
+            post = tempPost;
+            let user =(({ password, email, bookmarks, subscriptions, blockedUsers, _id, ...o }) => o)(await usersRef.findOne({ username:post.username }));
+            post.replies = structuredClone(await Promise.all(post.replies.map(async (replie) => {
+                let user = (({ password, email, bookmarks, subscriptions, blockedUsers, _id, ...o }) => o)(await usersRef.findOne({ username:replie.username }));
+                if(!user?.hidden || locals.user.admin) return{ ...replie, user }
+            })));
+            post.replies = post.replies.sort(function(a,b){return new Date(b.date) - new Date(a.date);});
+            if(!user?.hidden || locals.user.admin) return{ ...post, user, repostedBy }
+        }else {
+            let user =(({ password, email, bookmarks, subscriptions, blockedUsers, _id, ...o }) => o)(await usersRef.findOne({ username:post.username }));
+            post.replies = structuredClone(await Promise.all(post.replies.map(async (replie) => {
+                let user = (({ password, email, bookmarks, subscriptions, blockedUsers, _id, ...o }) => o)(await usersRef.findOne({ username:replie.username }));
+                if(!user?.hidden || locals.user.admin) return{ ...replie, user }
+            })));
+            post.replies = post.replies.sort(function(a,b){return new Date(b.date) - new Date(a.date);});
+            if(!user?.hidden || locals.user.admin) return{ ...post, user }
+        }
     })));
 
     return { posts };

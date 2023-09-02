@@ -20,6 +20,7 @@
     let isReadMore = false;
     let replieModal = false;
     let isDeletingPost = false;
+    let repostModal = false;
     let postText;
     let newReplieText;
     
@@ -58,6 +59,12 @@
         if(!data.error) goto(`/post/${post.id}`);
     }
 
+    async function repost() {
+        const res = await fetch("/api/repost", { method:"POST", body:JSON.stringify({ id:post.id }) })
+        const data = await res.json();
+        if(!data.error) goto(`/post/${data.id}`);
+    }
+
     onMount(() => {
         const elements = document.querySelectorAll("img, video");
         for(const el of elements) {
@@ -72,6 +79,12 @@
 
 {#if !isDeleted && post?.user}
     <article class="postCard {borderTop ? "border-y" : "border-b"}">
+        {#if post?.repostedBy}
+            <p>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-3.5 h-3.5 inline-block" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"/></svg>
+                {post.repostedBy.username} reposted
+            </p>
+        {/if}
         <div class="flex flex-row justify-between items-center gap-2 w-full">
             <div class="flex flex-row gap-2 items-center">
                 <!-- svelte-ignore a11y-img-redundant-alt -->
@@ -120,8 +133,13 @@
                     </svg>
                     {formatNumber(post.replies.length)}
                 </button>
+                {#if $page.data.user.username === post.username}
+                    <button on:click={() => {repostModal = true}} class="transition-all hover:text-green-600" name="Repost">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-6 h-6" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"/></svg>
+                    </button>
+                {/if}
                 {#if bookmarks}
-                    <button on:click={() => {toggleBookmark(post.id)}} name="addToBookmarks" class="transition-all hover:text-green-600">
+                    <button on:click={() => {toggleBookmark(post.id)}} name="addToBookmarks" class="transition-all hover:text-yellow-600">
                         {#if bookmarks.filter(bookmark => bookmark.id == post.id).length === 1}
                             <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-6 h-6" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z"/><path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/></svg>
                         {:else}
@@ -162,6 +180,21 @@
         </div>
     </div>
 
+    <div class="fixed top-0 left-0 w-full h-full bg-neutral-600/50 transition-opacity flex flex-col justify-center items-center {repostModal ? "z-40 opacity-100": "-z-10 opacity-0"}">
+        <div class="relative rounded-lg shadow bg-neutral-900 max-w-screen-sm max-h-full w-full p-4 overflow-y-auto">
+            <button type="button" on:click={() => {repostModal = false;}} class="absolute top-2.5 right-2.5 text-neutral-400 bg-transparent rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center hover:bg-neutral-800 hover:text-neutral-100 group">
+                <svg class="w-3 h-3 group-hover:rotate-90 transition-all" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/></svg>
+                <span class="sr-only">Close modal</span>
+            </button>
+            <h4>Repost</h4>
+            <p class="my-4">Do you want to repost this publication by <b>@{post.user.username}</b></p>
+            <div class="flex md:flex-row flex-col gap-2 w-full">
+                <button class="button-secondary grow" on:click={() => {repostModal = false}}>No, cancel</button>
+                <button class="button-primary grow" on:click={repost}>Yes, repost</button>
+            </div>
+        </div>
+    </div>
+
     <div class="fixed top-0 left-0 w-full h-full bg-neutral-600/50 transition-opacity flex flex-col justify-center items-center {replieModal ? "z-40 opacity-100": "-z-10 opacity-0"}">
         <div class="relative rounded-lg shadow bg-neutral-900 max-w-screen-md max-h-full w-full p-4 overflow-y-auto">
             <button type="button" on:click={() => {replieModal = false;}} class="absolute top-2.5 right-2.5 text-neutral-400 bg-transparent rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center hover:bg-neutral-800 hover:text-neutral-100 group">
@@ -197,15 +230,16 @@
             {/if}
         </div>
     </div>
-{/if}
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<div class="bg-neutral-800/50 fixed top-0 left-0 w-full h-full transition-all flex flex-col items-center justify-center {isFullScreen ? "opacity-100 z-50" : "opacity-0 -z-10"}" on:click={() => isFullScreen = false}>
-    {#if mediaModalSrc.type === "image"}
-        <img src={gcpBucketBaseUrl+mediaModalSrc.src} alt="" class="rounded-lg max-h-full max-w-full">
-    {:else if mediaModalSrc.type === "video"}
-        <!-- svelte-ignore a11y-media-has-caption -->
-        <video src={gcpBucketBaseUrl+mediaModalSrc.src} class="max-h-full max-w-full"></video>
-    {/if}
-</div>
+
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
+    <div class="bg-neutral-800/50 fixed top-0 left-0 w-full h-full transition-all flex flex-col items-center justify-center {isFullScreen ? "opacity-100 z-50" : "opacity-0 -z-10"}" on:click={() => isFullScreen = false}>
+        {#if mediaModalSrc.type === "image"}
+            <img src={gcpBucketBaseUrl+mediaModalSrc.src} alt="" class="rounded-lg max-h-full max-w-full">
+        {:else if mediaModalSrc.type === "video"}
+            <!-- svelte-ignore a11y-media-has-caption -->
+            <video src={gcpBucketBaseUrl+mediaModalSrc.src} class="max-h-full max-w-full"></video>
+        {/if}
+    </div>
+{/if}

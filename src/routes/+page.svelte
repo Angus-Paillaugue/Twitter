@@ -24,7 +24,7 @@
     $: offset = feed.length;
     $: setActiveTab(), tabIndex;
     $: lastNumberOfPosts = feed.length;
-    $: lastNumberOfPosts, setChildrenMap();
+    // $: lastNumberOfPosts, setChildrenMap();
 
     onMount(() => {
         if(!user){
@@ -61,12 +61,12 @@
     //     return (rect.top >= 0 && rect.left >= 0 && rect.bottom <= window.innerHeight || document.documentElement.clientHeight && rect.right <= window.innerWidth || document.documentElement.clientWidth);
     // }
 
-    const setChildrenMap = () => {
-        if(!postsContainer) return
-        for(const el of postsContainer.children){
-            if(el.nodeName === "ARTICLE") childrenMap = [...childrenMap, { el, top:el.offsetTop, height:el.clientHeight }];
-        }
-    }
+    // const setChildrenMap = () => {
+    //     if(!postsContainer) return
+    //     for(const el of postsContainer.children){
+    //         if(el.nodeName === "ARTICLE") childrenMap = [...childrenMap, { el, top:el.offsetTop, height:el.clientHeight }];
+    //     }
+    // }
     
     async function loadMorePosts() {
         if(isMorePostsToLoad && !morePostsLoading){

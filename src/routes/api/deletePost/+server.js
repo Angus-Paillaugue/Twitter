@@ -7,8 +7,7 @@ const storage = new Storage();
 
 export async function POST({ locals, request }) {
     if(locals.user){
-        const formData = await request.json();
-        const { id } = formData;
+        const { id } = await request.json();
 
         const post = await postsRef.findOne({ id });
         if(post?.file?.length > 0){
