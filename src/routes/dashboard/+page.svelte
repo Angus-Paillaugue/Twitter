@@ -77,6 +77,9 @@
 
     const  calcHeight = (value) => {return Math.min((value.match(/\n/g) || []).length+4, 10) * 20 + 16;}
     async function oninput(){
+        if(textarea.value.length > user.certified ? 1000 : 100){
+            textarea.value = textarea.value.slice(0, user.certified ? 1000 : 100);
+        }
         textarea.style.height = calcHeight(textarea.value) + "px";
         const positionIndex = textarea.selectionStart;
         const textBeforeCaret = textarea.value.slice(0, positionIndex);
@@ -136,7 +139,7 @@
             <span class="sr-only">Close modal</span>
         </button>
         <div class="w-full border rounded-t-lg bg-neutral-700 border-neutral-600">
-            <div class="flex items-center justify-between px-3 py-2 border-b border-neutral-600">
+            <div class="flex items-center px-3 py-2 border-b border-neutral-600">
                 <div class="flex flex-wrap items-center sm:divide-x divide-neutral-600">
                     <div class="flex items-center space-x-1 pr-4">
                         <label for="files" class="p-2 rounded cursor-pointer text-neutral-400 hover:text-neutral-100 hover:bg-neutral-600">
@@ -147,6 +150,7 @@
                         <input type="file" name="files" id="files" accept="image/*,video/*" class="hidden" on:change={newPostFileHandle} multiple/>
                     </div>
                 </div>
+                <p class="ml-auto pr-10">{textarea?.value?.length}/{user.certified ? "1000" : "100"}</p>
             </div>
             
             {#if newPostFiles.length > 0}
