@@ -25,6 +25,7 @@ export async function POST({ locals, request }) {
         }
 
         await postsRef.deleteOne({ id });
+        await postsRef.deleteMany({ postId:id, repost:true });
 
         return new Response(JSON.stringify({ error:false, message:"Post deleted." }));
     }else {

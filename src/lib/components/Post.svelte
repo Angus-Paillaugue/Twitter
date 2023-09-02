@@ -21,6 +21,8 @@
     let replieModal = false;
     let isDeletingPost = false;
     let repostModal = false;
+    let deleteReplieModal = false;
+    let deleteReplieId = null;
     let postText;
     let newReplieText;
     
@@ -55,14 +57,24 @@
 
     async function publishReplie() {
         const res = await fetch("/api/newReplie", { method:"POST", body:JSON.stringify({ text:newReplieText, id:post.id}) });
-        const data = await res.json()
-        if(!data.error) goto(`/post/${post.id}`);
+        const data = await res.json();
+        post.replies = data.replies;
+        newReplieText = "";
     }
 
     async function repost() {
         const res = await fetch("/api/repost", { method:"POST", body:JSON.stringify({ id:post.id }) })
         const data = await res.json();
         if(!data.error) goto(`/post/${data.id}`);
+    }
+
+    async function deleteReplie() {
+        const res = await fetch("/api/deleteReplie", { method:"POST", body:JSON.stringify({ id:deleteReplieId, postId:post.id }) });
+        const data = await res.json();
+        if(!data.error){
+            deleteReplieModal = false;
+            post.replies = post.replies.filter(replie => replie.id !== deleteReplieId);
+        }
     }
 
     onMount(() => {
@@ -182,10 +194,6 @@
 
     <div class="fixed top-0 left-0 w-full h-full bg-neutral-600/50 transition-opacity flex flex-col justify-center items-center {repostModal ? "z-40 opacity-100": "-z-10 opacity-0"}">
         <div class="relative rounded-lg shadow bg-neutral-900 max-w-screen-sm max-h-full w-full p-4 overflow-y-auto">
-            <button type="button" on:click={() => {repostModal = false;}} class="absolute top-2.5 right-2.5 text-neutral-400 bg-transparent rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center hover:bg-neutral-800 hover:text-neutral-100 group">
-                <svg class="w-3 h-3 group-hover:rotate-90 transition-all" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/></svg>
-                <span class="sr-only">Close modal</span>
-            </button>
             <h4>Repost</h4>
             <p class="my-4">Do you want to repost this publication by <b>@{post.user.username}</b></p>
             <div class="flex md:flex-row flex-col gap-2 w-full">
@@ -204,13 +212,14 @@
             <h6>Replies to @{post.user.username}</h6>
             <div class="text-center mt-4">
                 <textarea name="text" rows="6" class="block w-full p-2 rounded-t-lg text-sm border-0 bg-neutral-800 focus:ring-0 text-neutral-100 placeholder-neutral-400" placeholder="Write your replie..." bind:value={newReplieText}></textarea>
-                <button type="submit" class="focus:outline-none text-neutral-100 bg-primary-600 hover:bg-primary-700 font-medium text-sm px-5 py-2.5 flex flex-row gap-2 items-center justify-center disabled:bg-primary-400 disabled:cursor-not-allowed shadow-primary-700 dark:shadow-primary-500 hover:shadow-lg hover:dark:shadow-sm transition-all rounded-b-lg w-full" on:click={publishReplie}>Publish replie</button>
+                <button type="submit" class="focus:outline-none text-neutral-100 bg-primary-600 hover:bg-primary-700 font-medium text-sm px-5 py-2.5 flex flex-row gap-2 items-center justify-center disabled:bg-primary-400 disabled:cursor-not-allowed shadow-primary-500 hover:shadow-sm transition-all rounded-b-lg w-full" on:click={publishReplie}>Publish replie</button>
             </div>
             {#if post.replies.length > 0}
-                <div class="flex flex-col gap-2 mt-4">
+                <ol class="relative border-l border-neutral-700 mt-4">
                     {#each post.replies as replie, index}
-                        <div class="{index === 0 ? "border-y" : "border-b"} border-border py-2 flex flex-col gap-2">
-                            <div class="flex flex-row gap-2">
+                        <li class="{index !== post.replies.length-1 && "mb-10"} ml-4">
+                            <div class="absolute w-3 h-3 rounded-full mt-1.5 -left-1.5 bg-neutral-700"></div>
+                            <div class="flex flex-row gap-2 relative">
                                 <a href="/u/{replie.user.username}">
                                     <!-- svelte-ignore a11y-img-redundant-alt -->
                                     <img src="{replie.user.profilePicture}" alt="Profile picture" class="h-10 w-10 rounded-full">
@@ -219,15 +228,31 @@
                                     <h5>{replie.user.displayName}</h5>
                                     <p class="text-xs">@{replie.user.username}</p>
                                 </div>
-                                <p class="ml-auto">
+                                <small class="ml-auto">
                                     {formatDate(post.date)}
-                                </p>
+                                </small>
+                                {#if  $page.data.user.username === replie.username}
+                                    <button class="absolute top-10 right-2 hover:text-red-600 transition-all" on:click={() => {deleteReplieModal = true; deleteReplieId = replie.id;}}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" /></svg>
+                                    </button>
+                                {/if}
                             </div>
                             <p>{replie.text}</p>
-                        </div>
+                        </li>
                     {/each}
-                </div>
+                </ol>
             {/if}
+        </div>
+    </div>
+
+    <div class="fixed top-0 left-0 w-full h-full bg-neutral-600/50 transition-opacity flex flex-col justify-center items-center {deleteReplieModal ? "z-40 opacity-100": "-z-10 opacity-0"}">
+        <div class="relative rounded-lg shadow bg-neutral-900 max-w-screen-sm max-h-full w-full p-4 overflow-y-auto">
+            <h4>Delete replie</h4>
+            <p class="my-4">Are you sure you want to delete this replie ?<br>This operation is irreversible!</p>
+            <div class="flex md:flex-row flex-col gap-2 w-full">
+                <button class="button-secondary grow" on:click={() => {deleteReplieModal = false}}>No, cancel</button>
+                <button class="button-primary grow" on:click={deleteReplie}>Yes, delete</button>
+            </div>
         </div>
     </div>
 
