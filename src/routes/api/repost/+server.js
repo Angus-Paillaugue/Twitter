@@ -6,7 +6,7 @@ export async function POST({ locals, request }) {
         const { id } = await request.json();
         const repostId = randomUUID();
 
-        await postsRef.insertOne({ username:locals.user.username, repost:true, postId:id, id:repostId, date:new Date().getTime() });
+        await postsRef.insertOne({ username:locals.user.username, repost:true, postId:id, id:repostId, date:new Date() });
 
         return new Response(JSON.stringify({ error:false, id:repostId }));
     }else {
