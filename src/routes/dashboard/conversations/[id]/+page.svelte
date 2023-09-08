@@ -137,8 +137,8 @@
             </header>
             <div class="grid grid-cols-12 gap-y-2 md:p-4 p-1 overflow-y-auto">
                 {#each messages as message}
-                    <div class="{message.sender === user.username ? "col-start-5 col-end-13" : "col-start-1 col-end-9"} md:p-3 p-1 rounded-lg">
-                        <div class="flex {message.sender === user.username ? "flex-row-reverse" : "flex-row"} items-end">
+                    <div class="{message.sender === user.username ? "md:col-start-5 col-start-2 col-end-13" : "col-start-1 md:col-end-9 col-end-11"} rounded-lg">
+                        <div class="flex {message.sender === user.username ? "flex-row-reverse" : "flex-row"} items-end gap-3">
                             {#if message.sender !== user.username}
                                 <a href="/u/{chattingWithUser.username}">
                                     <img src="{chattingWithUser.profilePicture}" alt="Avatar" class="h-8 w-8 rounded-full flex-shrink-0"/>
@@ -146,7 +146,7 @@
                             {:else}
                                 <img src="{user.profilePicture}" alt="Avatar" class="h-8 w-8 rounded-full flex-shrink-0"/>
                             {/if}
-                            <div class="relative {message.sender === user.username ? "mr-3 bg-primary-900 rounded-br-none" : "ml-3 bg-neutral-800 rounded-bl-none"} text-sm py-2 px-4 rounded-xl">
+                            <div class="relative {message.sender === user.username ? "bg-primary-900 rounded-br-none" : "bg-neutral-800 rounded-bl-none"} text-sm py-2 px-4 rounded-xl max-w-full">
                                 {#if message.files.length > 0}
                                     <div class="flex flex-row w-full flex-wrap text-neutral-100">
                                         {#each message.files as file}

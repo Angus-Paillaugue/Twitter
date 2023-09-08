@@ -77,14 +77,14 @@
         <span bind:this={navLinkUnderline} class="h-1 transition-all bottom-0 bg-primary-600 absolute ease-in-out duration-300"></span>
     </div>
 
-    <section class="flex flex-col w-full max-w-md mx-auto" id="Posts">
+    <section class="flex flex-col w-full max-w-lg mx-auto" id="Posts">
         <div class="w-full flex flex-col h-full border-x border-border" bind:this={postsContainer}>
             {#each bookmarks as post, index}
                 <Post post={post} bookmarks={bookmarks} borderTop={index === 0} />
             {/each}
         </div>
     </section>
-    <section class="flex flex-col w-full max-w-md mx-auto" style="display: none;" id="Users">
+    <section class="flex flex-col w-full max-w-lg mx-auto" style="display: none;" id="Users">
         {#each subscriptions as user}
             <a href="/u/{user.username}" class="userCard md:h-auto h-40 w-full shrink-0">
                 <div class="w-full relative bg-no-repeat bg-center bg-cover max-h-64 lg:max-h-80" style="aspect-ratio: 3/1;background-image: url('{user.banner}');" id="profileBanner">
