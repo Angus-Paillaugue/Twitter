@@ -3,6 +3,7 @@
     import { searchBar, pageMetaData } from "$lib/stores";
     import { goto } from "$app/navigation";
     import { browser } from '$app/environment';
+    import { page } from '$app/stores';
 
     export let user;
 
@@ -11,7 +12,7 @@
     let query;
     let searchHint = [];
 
-    $: display = user;
+    $: display = user && $page.route.id !== "/dashboard/conversations/[id]";
     $: if($searchBar && searchInput) searchInput.focus();
     $: getSearchHint(), query;
 

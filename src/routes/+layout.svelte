@@ -4,12 +4,25 @@
     import { Toast } from 'flowbite-svelte';
     import { toasts, searchBar, pageMetaData } from "$lib/stores";
     import { navigating } from '$app/stores';
+    import { onMount } from "svelte";
+    import { io } from "$lib/socket";
+    import { page } from '$app/stores';
     // import { fade } from 'svelte/transition';
 
     export let data;
 
+    let messagesNotification = null
     $: user = data.user;
     $: if($toasts.length > 5) {$toasts = $toasts.slice(0, 5)};
+
+    onMount(() => {
+        io.emit("register", user.username);
+        if($page.route.id !== "/dashboard/conversations/[id]"){
+            io.on("message", async(message) => {
+                messagesNotification = message;
+            });
+        }
+    });
 </script>
 
 
@@ -18,7 +31,17 @@
     <meta name="description" content="{$pageMetaData.description}">
 </svelte:head>
 
-<main class="min-h-screen transition-all w-full {user && "max-sm:pb-14"} flex flex-col items-center {$searchBar && "pt-14"}">
+{#if messagesNotification}
+    <div class="fixed top-2 left-0 w-full flex flex-row roudnded-full items-center justify-center">
+        <a href="/dashboard/conversations/{messagesNotification.conversation}" class="max-w-sm flex w-full flex-row items-center h-12 rounded-full p-2 bg-neutral-900 gap-2">
+            <!-- svelte-ignore a11y-img-redundant-alt -->
+            <img src="{messagesNotification.sender.profilePicture}" alt="Profile picture" class="h-full aspect-square rounded-full">
+            <p>New message from @{messagesNotification.sender.username}</p>
+        </a>
+    </div>
+{/if}
+
+<main class="min-h-screen transition-all w-full {user && $page.route.id !== "/dashboard/conversations/[id]" && "max-sm:pb-14"} flex flex-col items-center {$searchBar && "pt-14"}">
     <div class="w-full max-w-screen-lg max-sm:justify-center h-full flex flex-row pr-4">
         <Navbar user={data?.user}/>
 

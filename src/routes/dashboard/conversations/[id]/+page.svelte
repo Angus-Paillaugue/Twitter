@@ -41,10 +41,11 @@
         let messageText = parseMentionsOnSend(textarea.value.trim());
         if(messageText.length === 0) return;
 
-        const message = { message:messageText, messageId:(Date.now()+Math.floor(Math.random() * 10000)).toString(), conversation, sender:user.username, receiver:chattingWithUser, files:encodedFiles };
+        let message = { message:messageText, messageId:(Date.now()+Math.floor(Math.random() * 10000)).toString(), conversation, sender:user, receiver:chattingWithUser, files:encodedFiles };
 
         io.emit("message", message);
         await fetch("/api/newMessage", { method:"POST", body:JSON.stringify({message, id:conversation}) });
+        message.sender = message.sender.username;
         messages = [...messages, message];
         textarea.value = "";
         encodedFiles = [];
@@ -52,10 +53,9 @@
 
     onMount(() => {
         io.on("message", async(message) => {
-            await fetch("/api/seenMessage", { method:"POST", body:JSON.stringify({ id:message.id }) })
+            await fetch("/api/seenMessage", { method:"POST", body:JSON.stringify({ id:message.id }) });
             messages = [...messages, message];
         });
-        io.emit("register", user.username);
     });
 
     const calcHeight = (value) => {return 42 + Math.min((value.match(/\n/g) || []).length, 3) * 20;}
@@ -172,7 +172,7 @@
             {/if}
         </div>
           
-        <form on:submit|preventDefault={sendMessage} class="w-full sticky bottom-0 z-20">
+        <form on:submit|preventDefault={sendMessage} class="w-full sticky bottom-0 z-20 bg-neutral-900">
             <div class="flex flex-row items-center px-3 py-2 rounded-lg relative">
                 {#if atMenuDisplay}
                     <div class="absolute top-0 left-0 w-full -translate-y-full p-2 bg-neutral-900">

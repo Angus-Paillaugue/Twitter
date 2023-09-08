@@ -11,11 +11,10 @@ const webSocketServer = {
 		let connectedUsers = {};
 
 		io.on('connection', async(socket) => {
-			socket.on('message', (data) => {
-				const { receiver, message, sender } = data;
+			socket.on('message', (message) => {
 
-				if(connectedUsers.hasOwnProperty(receiver.username) && !receiver.blockedUsers.include(sender)){
-					connectedUsers[receiver.username].emit('message',{ conversation: data.conversation ,message });
+				if(connectedUsers.hasOwnProperty(message.receiver.username) && !message.receiver.blockedUsers.includes(message.sender)){
+					connectedUsers[message.receiver.username].emit('message', message);
 				}
 			});
 			socket.on('register',function(username){

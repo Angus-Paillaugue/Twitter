@@ -2,6 +2,8 @@
 # TODO
 
  - [ ] Fix the autoplay of videos
+ - [ ] Add message groups
+ - [x] Add notifications for new messages
  - [ ] *Make page transitions work again
  - [ ] *Find solution for hiding the messages in console for legacy files stored locally
  - [x] Add repost feature
