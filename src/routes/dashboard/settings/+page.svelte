@@ -1,13 +1,13 @@
 <script>
     import { Tooltip  } from 'flowbite-svelte';
-    import { pageMetaData, toasts } from "$lib/stores";
+    import { pageMetaData, newToast } from "$lib/stores";
     import { enhance } from '$app/forms';
     import { onMount } from "svelte";
 
     export let data;
     export let form;
 
-    $: if(form?.err) $toasts = [...$toasts, { type:form.err ? "error" : "success", message:form.msg }];
+    $: if(form?.err) newToast(form.err ? "error" : "success", form.msg);
 
     let user = form?.user ?? data.user;
     $: user = form?.user ?? data.user;

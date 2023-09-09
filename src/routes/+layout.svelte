@@ -17,11 +17,11 @@
 
     onMount(() => {
         io.emit("register", user.username);
-        if($page.route.id !== "/dashboard/conversations/[id]"){
-            io.on("message", async(message) => {
-                messagesNotification = message;
-            });
-        }
+        // if($page.route.id !== "/dashboard/conversations/[id]"){
+        //     io.on("message", async(message) => {
+        //         messagesNotification = message;
+        //     });
+        // }
     });
 </script>
 

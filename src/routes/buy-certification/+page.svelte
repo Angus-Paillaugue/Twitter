@@ -4,7 +4,7 @@
     import { PUBLIC_STRIPE_KEY } from '$env/static/public';
     import { Elements, CardNumber, CardExpiry, CardCvc } from '$lib/components/payment';
     import { Spinner } from 'flowbite-svelte';
-    import { pageMetaData, toasts } from "$lib/stores";
+    import { pageMetaData, newToast } from "$lib/stores";
     import { goto } from "$app/navigation";
 
     let stripe = null;
@@ -36,12 +36,12 @@
         });
         
         if (result.error) {
-            $toasts = [...$toasts, { type:"error", message:result.error.message }];
+            newToast("error", apiRes.message);
             processing = false;
         } else {
             const res = await fetch("/api/buyCertification", { method:"POST", body:JSON.stringify(result.paymentIntent) });
             const data = await res.json();
-            $toasts = [...$toasts, { type:"success", message:data.message }];
+            newToast("success", data.message);
             goto('/dashboard');
         }
 

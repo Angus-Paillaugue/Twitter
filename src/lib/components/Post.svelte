@@ -1,6 +1,6 @@
 <script>
     import { formatDate, parseMentions, fileType, parseLink, formatNumber } from "$lib/helpers";
-    import { toasts } from "$lib/stores";
+    import { newToast } from "$lib/stores";
     import { page } from "$app/stores";
     import { goto } from "$app/navigation";
     import { onMount } from "svelte";
@@ -32,7 +32,7 @@
     async function toggleBookmark() {
         const res = await fetch("/api/toggleBookmark", { method:"POST", body:JSON.stringify({ id:post.id }) });
         const apiRes = await res.json();
-        if(!apiRes.error) bookmarks = apiRes.bookmarks; else $toasts = [ ...$toasts, { type:"error", message:apiRes.message } ]
+        if(!apiRes.error) bookmarks = apiRes.bookmarks; else newToast("error", apiRes.message)
         if($page.route.id.includes("bookmarks") && bookmarks.filter(bookmark => bookmark.id == post.id).length == 0) isDeleted = true;
     }
 
@@ -44,7 +44,7 @@
             isDeleted = true;
             deletePostModal = false;
         }else {
-            $toasts = [ ...$toasts, { type:"error", message:apiRes.message } ];
+            newToast("error", apiRes.message)
         }
         isDeletingPost = false;
     }

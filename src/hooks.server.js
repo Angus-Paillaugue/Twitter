@@ -8,7 +8,7 @@ export const handle = async ({ event, resolve }) => {
     if(!token || !locals.user) {
         if(token){
             const user = await auth(token);
-            if(!user.error) {
+            if(!user?.error) {
                 locals.user = user;
             }else {
                 cookies.delete("token"); 

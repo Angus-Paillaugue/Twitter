@@ -2,10 +2,12 @@
 # TODO
 
  - [ ] Fix the autoplay of videos
+ - [ ] Fix notifications
+ - [ ] Add scroll to bottom on messages page
  - [ ] Add message groups
- - [x] Add notifications for new messages
  - [ ] *Make page transitions work again
  - [ ] *Find solution for hiding the messages in console for legacy files stored locally
+ - [x] Add notifications for new messages
  - [x] Add repost feature
  - [x] Add option to buy the certified checkmark
  - [x] Add certified profile with a checkmark

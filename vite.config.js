@@ -12,10 +12,12 @@ const webSocketServer = {
 
 		io.on('connection', async(socket) => {
 			socket.on('message', (message) => {
-
-				if(connectedUsers.hasOwnProperty(message.receiver.username) && !message.receiver.blockedUsers.includes(message.sender)){
-					connectedUsers[message.receiver.username].emit('message', message);
+				for(const receiver of message.receiver){
+					if(connectedUsers.hasOwnProperty(receiver.username)){
+						connectedUsers[receiver.username].emit('message', message);
+					}
 				}
+
 			});
 			socket.on('register',function(username){
 				socket.username = username;

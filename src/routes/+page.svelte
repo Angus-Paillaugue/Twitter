@@ -1,7 +1,7 @@
 <script>
     import { onMount } from "svelte";
     import { Post } from "$lib/components";
-    import { pageMetaData, toasts } from "$lib/stores";
+    import { pageMetaData, newToast } from "$lib/stores";
     import { enhance } from '$app/forms';
 
     export let data;
@@ -77,7 +77,7 @@
                 feed = [ ...feed, ...apiRes.posts ];
                 if(feed.length === lastNumberOfPosts) isMorePostsToLoad = false;
                 lastNumberOfPosts = feed.length;
-            }else $toasts = [...$toasts, { type:"error", message:apiRes.message }];
+            }else newTodo("error", apiRes.message)
             morePostsLoading = false;
         }
     }

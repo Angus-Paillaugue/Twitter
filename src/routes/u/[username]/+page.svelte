@@ -83,7 +83,7 @@
             if(!apiRes.error || !apiRes.message){
                 posts = [...posts, ...apiRes.posts];
                 isMorePostsToLoad = apiRes.morePosts;
-            }else $toasts = [...$toasts, { type:"error", message:apiRes.message }];
+            }else newToast("error", apiRes.message);
             morePostsLoading = false;
         }
     }
@@ -92,7 +92,7 @@
         const res = await fetch("/api/toggleSubscription", { method:"POST", body:JSON.stringify({ username }) });
         const apiRes = await res.json();
         if(apiRes?.subscriptions?.filter(el => el.username === profile.username)?.length >= 1) profile.noFollowers += 1; else profile.noFollowers -= 1;
-        if(!apiRes.error) subscriptions = apiRes.subscriptions; else $toasts = [...$toasts, { type:"error", message:apiRes.message }];
+        if(!apiRes.error) subscriptions = apiRes.subscriptions; else newToast("error", apiRes.message);
     }
 
     $pageMetaData.title = `${profile.username}'s profile.`;
