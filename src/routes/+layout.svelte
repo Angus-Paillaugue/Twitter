@@ -16,7 +16,7 @@
     $: if($toasts.length > 5) {$toasts = $toasts.slice(0, 5)};
 
     onMount(() => {
-        io.emit("register", user.username);
+        // io.emit("register", user.username);
         // if($page.route.id !== "/dashboard/conversations/[id]"){
         //     io.on("message", async(message) => {
         //         messagesNotification = message;

@@ -1,5 +1,6 @@
 import { redirect } from "@sveltejs/kit";
 import { usersRef, postsRef } from "$lib/server/db";
+import { Storage } from '@google-cloud/storage';
 
 export async function load({ locals }) {
     const { user } = locals;
@@ -18,10 +19,31 @@ export const actions = {
             const formData = Object.fromEntries(await request.formData());
             const { email, bio, profilePicture, banner, displayName } = formData;
             const { user } = locals;
+            const storage = new Storage();
 
-            if(!email || !bio || !displayName) return { err:true, msg:"Fields can not be empty!", email, bio, displayName };
+            if(!email || !bio || !displayName) return { err:true, msg:"Fields can not be empty!" };   
+
+            if(profilePicture){
+                let ext = profilePicture.name.split(".").at(-1);
+                let filePath = `static/files/${user.username}-temp.${ext}`
+                let options = { destination: user.username+"."+ext };
     
-            await usersRef.findOneAndUpdate({ username:user.username }, { $set:{ email, bio:bio.replaceAll("\n", "<br />"), profilePicture, banner, displayName } });
+                storage.bucket("hellkeeperbucket").file(user.username+"-profilePicture."+ext).exists().then(async(data) => {
+                    if(data) await storage.bucket("hellkeeperbucket").file(user.username).delete();
+                    await storage.bucket("hellkeeperbucket").upload(filePath, options);
+
+
+                    storage.bucket("hellkeeperbucket").file(user.username+"-banner."+ext).exists().then(async(data) => {
+                        ext = banner.name.split(".").at(-1);
+                        filePath = `static/files/${user.username}-temp.${ext}`
+                        options = { destination: user.username+"."+ext };
+                        if(data) await storage.bucket("hellkeeperbucket").file(user.username).delete();
+                        await storage.bucket("hellkeeperbucket").upload(filePath, options);
+                    });
+                });
+            }
+    
+            // await usersRef.updateOne({ username:user.username }, { $set:{ email, bio:bio.replaceAll("\n", "<br />"), banner, displayName } });
             return { err:false, msg:"Saved modifications" };
         } catch (err) {return { err:true, msg:err };}
     },

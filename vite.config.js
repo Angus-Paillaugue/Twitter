@@ -17,7 +17,6 @@ const webSocketServer = {
 						connectedUsers[receiver.username].emit('message', message);
 					}
 				}
-
 			});
 			socket.on('register',function(username){
 				socket.username = username;

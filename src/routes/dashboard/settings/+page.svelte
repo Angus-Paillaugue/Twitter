@@ -15,7 +15,7 @@
     let tabIndex = 0;
     let sectionsList = [];
     let navLinkUnderline;
-    let profilePicture = form?.profilePicture ?? user.profilePicture
+    let profilePicture = form?.profilePicture ?? user.profilePicture;
     let banner = form?.banner ?? user.banner
 
     $: setActiveTab(), tabIndex;
@@ -56,18 +56,18 @@
     </div>
     <div class="w-full mt-4 p-4 bg-neutral-950 border border-border rounded-lg">
         <section class="w-full" id="Profile">
-            <form use:enhance={(e) => {e.formData.set("profilePicture",profilePicture);e.formData.set("banner", banner);return ({ update }) => update({ reset: false });}} method="POST" action="?/save" class="flex flex-col gap-6 w-full">
+            <form use:enhance method="POST" action="?/save" class="flex flex-col gap-6 w-full">
                 <div>
                     <label for="email" class="block mb-2">E-mail</label>
-                    <input type="email" placeholder="E-mail" name="email" value="{form?.email ?? user.email}" class="border text-sm rounded-lg block w-full p-2.5 bg-neutral-800 border-neutral-700 placeholder-neutral-400 text-white focus:ring-primary-500 focus:border-primary-500 focus:outline-none outline-none transition-all">
+                    <input type="email" placeholder="E-mail" name="email" value="{user.email}" class="border text-sm rounded-lg block w-full p-2.5 bg-neutral-800 border-neutral-700 placeholder-neutral-400 text-white focus:ring-primary-500 focus:border-primary-500 focus:outline-none outline-none transition-all">
                 </div>
                 <div>
                     <label for="bio" class="block mb-2">Bio</label>
-                    <textarea id="bio" name="bio" rows="4" class="border text-sm rounded-lg block w-full p-2.5 bg-neutral-800 border-neutral-700 placeholder-neutral-400 text-white focus:ring-primary-500 focus:border-primary-500 focus:outline-none outline-none transition-all" placeholder="Your bio...">{(form?.bio ?? user.bio).replaceAll("<br />", "\n")}</textarea>
+                    <textarea id="bio" name="bio" rows="4" class="border text-sm rounded-lg block w-full p-2.5 bg-neutral-800 border-neutral-700 placeholder-neutral-400 text-white focus:ring-primary-500 focus:border-primary-500 focus:outline-none outline-none transition-all" placeholder="Your bio...">{(user.bio).replaceAll("<br />", "\n")}</textarea>
                 </div>
                 <div>
                     <label for="displayName" class="block mb-2">Display name</label>
-                    <input type="text" placeholder="Display name" name="displayName" value="{form?.displayName ?? user.displayName ?? user.username}" class="border text-sm rounded-lg block w-full p-2.5 bg-neutral-800 border-neutral-700 placeholder-neutral-400 text-white focus:ring-primary-500 focus:border-primary-500 focus:outline-none outline-none transition-all">
+                    <input type="text" placeholder="Display name" name="displayName" value="{user.displayName ?? user.username}" class="border text-sm rounded-lg block w-full p-2.5 bg-neutral-800 border-neutral-700 placeholder-neutral-400 text-white focus:ring-primary-500 focus:border-primary-500 focus:outline-none outline-none transition-all">
                 </div>
                 <div>
                     <label for="username" class="block mb-2">
@@ -104,14 +104,7 @@
                     Profile picture
                     <label for="profilePicture" class="cursor-pointer group relative h-20 w-20 rounded-full overflow-hidden">
                         <img src="{profilePicture}" alt="" class="w-full h-full">
-                        <input type="file" name="profilePicture" id="profilePicture" class="hidden" accept="image/*" on:change={(e) => {
-                            const reader = new FileReader();
-                            let file = e?.target?.files[0];
-                            reader.addEventListener("load", () => {
-                                profilePicture = reader.result;
-                            },false,);
-                            if (file) reader.readAsDataURL(file);
-                        }}>
+                        <input type="file" name="profilePicture" id="profilePicture" class="hidden" accept="image/*">
                         <div class="hover:bg-neutral-900/50 group-hover:opacity-100 opacity-0 transition-all z-10 absolute inset-0 flex flex-col items-center justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
@@ -123,14 +116,7 @@
                     Banner
                     <label for="banner" class="cursor-pointer group relative">
                         <img src="{banner}" alt="" class="aspect-[3/1] w-full">
-                        <input type="file" name="banner" id="banner" class="hidden" accept="image/*" on:change={(e) => {
-                            const reader = new FileReader();
-                            let file = e?.target?.files[0];
-                            reader.addEventListener("load", () => {
-                                banner = reader.result;
-                            },false,);
-                            if (file) reader.readAsDataURL(file);
-                        }}>
+                        <input type="file" name="banner" id="banner" class="hidden" accept="image/*">
                         <div class="hover:bg-neutral-900/50 group-hover:opacity-100 opacity-0 transition-all z-10 absolute inset-0 flex flex-col items-center justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
