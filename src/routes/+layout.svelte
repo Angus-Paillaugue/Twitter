@@ -26,7 +26,7 @@
 
 
 <svelte:head>
-    <title>{$pageMetaData.title} - X</title>
+    <title>{$pageMetaData.title} - Y</title>
     <meta name="description" content="{$pageMetaData.description}">
 </svelte:head>
 
@@ -41,7 +41,7 @@
 {/if}
 
 <main class="min-h-screen transition-all w-full {user && $page.route.id !== "/dashboard/conversations/[id]" && "max-sm:pb-14"} flex flex-col items-center {$searchBar && "pt-14"}">
-    <div class="w-full max-w-screen-lg max-sm:justify-center h-full flex flex-row pr-4">
+    <div class="w-full max-w-screen-lg max-sm:justify-center h-full flex flex-row md:pr-4">
         <Navbar user={data?.user}/>
 
         <!-- {#key data.url}

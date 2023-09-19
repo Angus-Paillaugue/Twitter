@@ -58,7 +58,7 @@
     async function publishReplie() {
         const res = await fetch("/api/newReplie", { method:"POST", body:JSON.stringify({ text:newReplieText, id:post.id}) });
         const data = await res.json();
-        post.replies = data.replies;
+        post.replies = [...post.replies, data.replie];
         newReplieText = "";
     }
 
@@ -81,7 +81,6 @@
         const elements = document.querySelectorAll("img, video");
         for(const el of elements) {
             el.addEventListener("error", (e) => {
-                console.log(e);
                 // For legacy files stored locally
                 e.target.src = "/files/"+e.target.src.split("/").at(-1);
             });
@@ -229,7 +228,7 @@
                                     <p class="text-xs">@{replie.user.username}</p>
                                 </div>
                                 <small class="ml-auto">
-                                    {formatDate(post.date)}
+                                    {formatDate(replie.date)}
                                 </small>
                                 {#if  $page.data?.user?.username ?? "" === replie.username}
                                     <button class="absolute top-10 right-2 hover:text-red-600 transition-all" on:click={() => {deleteReplieModal = true; deleteReplieId = replie.id;}}>
@@ -237,7 +236,7 @@
                                     </button>
                                 {/if}
                             </div>
-                            <p>{replie.text}</p>
+                            <p>{@html replie.text.replace("\n", "<br />")}</p>
                         </li>
                     {/each}
                 </ol>

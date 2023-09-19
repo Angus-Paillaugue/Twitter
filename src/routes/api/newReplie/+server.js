@@ -15,5 +15,5 @@ export async function POST({ locals, request }) {
 
     post.replies = post.replies.sort(function(a,b){return new Date(b.date) - new Date(a.date);});
 
-    return new Response(JSON.stringify({ error:false, replies:post.replies }));
+    return new Response(JSON.stringify({ error:false, replie:post.replies[0] }));
 };

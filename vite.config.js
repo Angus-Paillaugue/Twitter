@@ -16,9 +16,7 @@ const webSocketServer = {
 			connectedUsers[username] = socket;
 
 			socket.on('message', (message) => {
-				console.log(connectedUsers, message);
 				for(const receiver of message.receiver){
-					console.log(receiver.username);
 					if(connectedUsers.hasOwnProperty(receiver.username)){
 						connectedUsers[receiver.username].emit('message', message);
 					}

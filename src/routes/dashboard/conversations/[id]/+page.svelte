@@ -1,10 +1,10 @@
 <script>
-    // import { io } from "$lib/socket";
     import { enhance } from "$app/forms"
     import { pageMetaData } from "$lib/stores";
     import { parseMentionsOnReceive, parseLink, parseMentionsOnSend } from "$lib/helpers";
     import { Tooltip } from "flowbite-svelte";
-    import { io } from 'socket.io-client'
+    import { io } from 'socket.io-client';
+    import { onMount, afterUpdate } from "svelte"
 
     export let data;
     export let form;
@@ -20,6 +20,21 @@
     let atMenuDisplay = false;
     let textarea;
     let fileInput;
+    let messagesContainer;
+
+    onMount(() => {
+        if(messagesContainer)scrollToBottom(window);
+    })
+
+    $: if(messages && messagesContainer) {
+		console.log("tick");
+		scrollToBottom(window);
+	}
+
+    afterUpdate(() => {
+		console.log("afterUpdate");
+		if(messagesContainer) scrollToBottom(window);
+    });
 
     socket.on('message', async(message) => {
         await fetch("/api/seenMessage", { method:"POST", body:JSON.stringify({ id:message.id }) });
@@ -47,9 +62,11 @@
         let messageText = parseMentionsOnSend(textarea.value.trim());
         if(messageText.length === 0) return;
 
-        let message = { message:messageText, messageId:(Date.now()+Math.floor(Math.random() * 10000)).toString(), receiver:chattingWith, conversation:conversation.id, sender:{username:user.username}, files:encodedFiles };
+        let message = { message:messageText, messageId:(Date.now()+Math.floor(Math.random() * 10000)).toString(), receiver:chattingWith.filter(el => el !== user.username), conversation:conversation.id, sender:{username:user.username}, files:encodedFiles };
 
-        io.emit("message", message);
+        messages = [...messages, message];
+
+        socket.emit("message", message);
         await fetch("/api/newMessage", { method:"POST", body:JSON.stringify({message, id:conversation.id}) });
         textarea.value = "";
         encodedFiles = [];
@@ -103,10 +120,14 @@
                 for (var i in value) {
                     stack.push(value[i]);
                 }
-            }
+            } 
         }
         return bytes;
     }
+
+    const scrollToBottom = async (node) => {
+        node.scroll({ top: node.scrollHeight, behavior: 'smooth' });
+    }; 
 
     if(conversation?.type === "dm"){
         $pageMetaData.title = `Chatting with ${chattingWith.filter(el => el.username !== user.username)[0].username}`;
@@ -118,10 +139,9 @@
     $pageMetaData.currentPageName = "Messages";
 </script>
 
-
-<div class="flex flex-col justify-between w-full min-h-screen">
+<div class="flex flex-col justify-between w-full min-h-screen relative">
     <div>
-        <header class="p-4 pb-0 flex flex-row gap-2 items-center">
+        <header class="p-4 pb-0 flex flex-row gap-2 items-center sticky top-0 bg-neutral-900">
             {#if conversation?.type === "dm"}
                 <img src="{chattingWith.filter(el => el.username !== user.username)[0].profilePicture}" alt="Avatar" class="h-8 w-8 rounded-full"/>
                 <h4>
@@ -144,7 +164,7 @@
                 </button>
             {/if}
         </header>
-        <div class="grid grid-cols-12 gap-y-2 md:p-4 p-1 overflow-y-auto">
+        <div class="grid grid-cols-12 gap-y-2 md:p-4 p-1 overflow-y-auto" bind:this={messagesContainer}>
             {#each messages as message}
                 <div class="{message.sender.username === user.username ? "md:col-start-5 col-start-2 col-end-13" : "col-start-1 md:col-end-9 col-end-11"} rounded-lg">
                     <div class="flex {message.sender.username === user.username ? "flex-row-reverse" : "flex-row"} items-end gap-3">

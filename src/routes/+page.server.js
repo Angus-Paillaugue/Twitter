@@ -80,7 +80,7 @@ export const actions = {
         if(usernameIsTaken) return { signIn:{success:false, formData, message:"This username is already taken!"} };
 
         const isASCII = (str) => {return /^[\x00-\x7F]*$/.test(str);}
-        if(!isASCII(username)) return { signIn:{success:false, formData, message:"Usernames can only be composed of letters, numbers and special characters!"} };
+        if(!isASCII(username) && username.includes(" ")) return { signIn:{success:false, formData, message:"Usernames can only be composed of letters, numbers and special characters!"} };
 
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(password, salt);
