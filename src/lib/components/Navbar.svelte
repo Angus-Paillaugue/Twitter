@@ -48,7 +48,7 @@
 {#if display}
     <div class="{$searchBar ? "sm:h-[calc(100vh-3.5rem)] sm:top-14" : "sm:h-screen sm:top-0"} transition-all max-sm:w-full h-14 sm:border-r sm:border-border max-sm:bg-neutral-900/80 backdrop-blur md:mr-4 max-sm:z-40 fixed sm:sticky max-sm:left-0 bottom-0 flex flex-row max-sm:justify-between sm:flex-col gap-4 text-neutral-100 text-lg p-2 sm:p-4">
         <a href="/" name="Home" class="hover:bg-neutral-800 p-2 ml-2 rounded-full w-fit max-sm:hidden">
-            <svg viewBox="0 0 24 24" class="fill-neutral-100 w-6 sm:w-8"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+            <img src="/logo.svg" alt="" class="fill-neutral-100 w-6 sm:w-8">
         </a>
         <a href="/" class="flex flex-row gap-2 items-center px-4 py-2 transition-all rounded-full border border-transparent hover:border-border" data-navbar-section="Home">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 sm:w-8 aspect-square transition-all"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" /></svg>

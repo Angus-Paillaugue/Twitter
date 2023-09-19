@@ -1,4 +1,4 @@
-import { auth } from "$lib/server/auth"
+import { auth } from "$lib/server/auth";
 import { redirect } from "@sveltejs/kit";
 
 export const handle = async ({ event, resolve }) => {

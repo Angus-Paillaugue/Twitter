@@ -11,8 +11,14 @@ const webSocketServer = {
 		let connectedUsers = {};
 
 		io.on('connection', async(socket) => {
+			var handshakeData = socket.request;
+			const username = handshakeData._query['username'];
+			connectedUsers[username] = socket;
+
 			socket.on('message', (message) => {
+				console.log(connectedUsers, message);
 				for(const receiver of message.receiver){
+					console.log(receiver.username);
 					if(connectedUsers.hasOwnProperty(receiver.username)){
 						connectedUsers[receiver.username].emit('message', message);
 					}

@@ -1,15 +1,16 @@
 <script>
-    import { io } from "$lib/socket";
-    import { onMount } from "svelte";
+    // import { io } from "$lib/socket";
     import { enhance } from "$app/forms"
     import { pageMetaData } from "$lib/stores";
     import { parseMentionsOnReceive, parseLink, parseMentionsOnSend } from "$lib/helpers";
     import { Tooltip } from "flowbite-svelte";
+    import { io } from 'socket.io-client'
 
     export let data;
     export let form;
-
+    
     const { conversation, chattingWith, user } = data;
+    const socket = io("http://localhost:5171/", { query:`conversationId=${conversation.id}` });
     user.blockedUsers = form?.blockedUsers ?? user.blockedUsers;
     let messages = data.messages ?? [];
     let moreModal = false;
@@ -20,11 +21,9 @@
     let textarea;
     let fileInput;
 
-    onMount(() => {
-        io.on("message", async(message) => {
-            await fetch("/api/seenMessage", { method:"POST", body:JSON.stringify({ id:message.id }) });
-            messages = [...messages, message];
-        });
+    socket.on('message', async(message) => {
+        await fetch("/api/seenMessage", { method:"POST", body:JSON.stringify({ id:message.id }) });
+        messages = [...messages, message];
     });
 
     async function encodeFile(e) {

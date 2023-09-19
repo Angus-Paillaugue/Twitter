@@ -5,7 +5,6 @@
     import { toasts, searchBar, pageMetaData } from "$lib/stores";
     import { navigating } from '$app/stores';
     import { onMount } from "svelte";
-    import { io } from "$lib/socket";
     import { page } from '$app/stores';
     // import { fade } from 'svelte/transition';
 
