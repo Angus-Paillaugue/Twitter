@@ -56,7 +56,7 @@
     </div>
     <div class="w-full mt-4 p-4 bg-neutral-950 border border-border rounded-lg">
         <section class="w-full" id="Profile">
-            <form use:enhance method="POST" action="?/save" class="flex flex-col gap-6 w-full">
+            <form use:enhance method="POST" enctype="multipart/form-data" action="?/save" class="flex flex-col gap-6 w-full">
                 <div>
                     <label for="email" class="block mb-2">E-mail</label>
                     <input type="email" placeholder="E-mail" name="email" value="{user.email}" class="border text-sm rounded-lg block w-full p-2.5 bg-neutral-800 border-neutral-700 placeholder-neutral-400 text-white focus:ring-primary-500 focus:border-primary-500 focus:outline-none outline-none transition-all">

@@ -2,7 +2,7 @@
 # TODO
 
  - [ ] Fix the autoplay of videos
- - [ ] Fix profile pictures
+ - [x] Fix profile pictures
  - [ ] Add message groups
  - [ ] *Make page transitions work again
  - [ ] *Find solution for hiding the messages in console for legacy files stored locally

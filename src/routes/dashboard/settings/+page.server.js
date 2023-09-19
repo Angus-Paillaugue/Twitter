@@ -1,6 +1,7 @@
 import { redirect } from "@sveltejs/kit";
 import { usersRef, postsRef } from "$lib/server/db";
 import { Storage } from '@google-cloud/storage';
+import { unlinkSync, writeFileSync } from "fs";
 
 export async function load({ locals }) {
     const { user } = locals;
@@ -10,7 +11,7 @@ export async function load({ locals }) {
         if(!user?.hidden || locals.user.admin) return user;
     }));
 
-    return user
+    return user;
 }
 
 export const actions = {
@@ -21,31 +22,37 @@ export const actions = {
             const { user } = locals;
             const storage = new Storage();
 
-            if(!email || !bio || !displayName) return { err:true, msg:"Fields can not be empty!" };   
-
-            if(profilePicture){
+            if(!email || !bio || !displayName) return { err:true, msg:"Fields can not be empty!" };
+            let profilePicturePath = user.profilePicture;
+            let bannerPath = user.banner;
+            
+            if(profilePicture?.size > 0){
                 let ext = profilePicture.name.split(".").at(-1);
-                let filePath = `static/files/${user.username}-temp.${ext}`
-                let options = { destination: user.username+"."+ext };
-    
-                storage.bucket("hellkeeperbucket").file(user.username+"-profilePicture."+ext).exists().then(async(data) => {
-                    if(data) await storage.bucket("hellkeeperbucket").file(user.username).delete();
-                    await storage.bucket("hellkeeperbucket").upload(filePath, options);
-
-
-                    storage.bucket("hellkeeperbucket").file(user.username+"-banner."+ext).exists().then(async(data) => {
-                        ext = banner.name.split(".").at(-1);
-                        filePath = `static/files/${user.username}-temp.${ext}`
-                        options = { destination: user.username+"."+ext };
-                        if(data) await storage.bucket("hellkeeperbucket").file(user.username).delete();
-                        await storage.bucket("hellkeeperbucket").upload(filePath, options);
-                    });
-                });
+                let filePath = `static/files/${user.username}-profile-picture-temp.${ext}`;
+                writeFileSync(filePath, Buffer.from(await profilePicture.arrayBuffer()));
+                let options = { destination: user.username+"-profile-picture."+ext };
+                let file = await storage.bucket("hellkeeperbucket").file(user.username+"-profile-picture-temp."+ext).exists();
+                if(file[0]) await storage.bucket("hellkeeperbucket").file(user.username).delete();
+                await storage.bucket("hellkeeperbucket").upload(filePath, options);
+                unlinkSync(filePath);
+                profilePicturePath = `https://storage.googleapis.com/hellkeeperbucket/${user.username}-profile-picture.${ext}`
             }
-    
-            // await usersRef.updateOne({ username:user.username }, { $set:{ email, bio:bio.replaceAll("\n", "<br />"), banner, displayName } });
+
+            if(banner?.size > 0){
+                let ext = banner.name.split(".").at(-1);
+                let filePath = `static/files/${user.username}-banner-temp.${ext}`;
+                writeFileSync(filePath, Buffer.from(await banner.arrayBuffer()));
+                let options = { destination: user.username+"-banner."+ext };
+                let file = await storage.bucket("hellkeeperbucket").file(user.username+"-banner-temp."+ext).exists();
+                if(file[0]) await storage.bucket("hellkeeperbucket").file(user.username).delete();
+                await storage.bucket("hellkeeperbucket").upload(filePath, options);
+                unlinkSync(filePath);
+                bannerPath = `https://storage.googleapis.com/hellkeeperbucket/${user.username}-banner.${ext}`;
+            }
+
+            await usersRef.updateOne({ username:user.username }, { $set:{ email, bio:bio.replaceAll("\n", "<br />"), displayName, profilePicture:profilePicturePath, banner:bannerPath } });
             return { err:false, msg:"Saved modifications" };
-        } catch (err) {return { err:true, msg:err };}
+        } catch (err) {console.log(err);return { err:true, msg:err };}
     },
     unblockUser: async({ request, locals }) => {
         const { user } = locals;
