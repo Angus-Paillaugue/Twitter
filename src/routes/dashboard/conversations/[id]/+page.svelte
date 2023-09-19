@@ -7,6 +7,8 @@
 
     export let data;
     export let form;
+
+    $: if(form?.groupName){conversation.groupName = form.groupName;}
     
     const { conversation, chattingWith, user } = data;
     const socket = io("http://localhost:5171/", { query:`conversationId=${conversation.id}` });
@@ -21,9 +23,7 @@
     let fileInput;
     let messagesContainer;
 
-    $: if(messagesContainer) {
-        scrollToBottom();
-    }
+    $: if(messagesContainer) {scrollToBottom();}
 
     socket.on('message', async(message) => {
         await fetch("/api/seenMessage", { method:"POST", body:JSON.stringify({ id:message.id }) });
@@ -248,6 +248,11 @@
             {#if conversation.admin === user.username}
                 <form use:enhance action="?/deleteGroup" method="POST" class="flex flex-col gap-2 mt-6">
                     <button class="button-danger w-full">Delete group</button>
+                </form>
+
+                <form use:enhance action="?/renameGroup" method="POST" class="mt-6">
+                    <input type="text" placeholder="Group name" name="name" value={form?.name ?? conversation.groupName} class="border text-sm rounded-lg block w-full p-2.5 bg-neutral-800 border-neutral-700 placeholder-neutral-400 text-white focus:ring-primary-500 focus:border-primary-500 focus:outline-none outline-none transition-all mb-2">
+                    <button class="button-primary w-full">Rename</button>
                 </form>
             {:else}
                 <form use:enhance action="?/leaveGroup" method="POST" class="flex flex-col gap-2 mt-6">

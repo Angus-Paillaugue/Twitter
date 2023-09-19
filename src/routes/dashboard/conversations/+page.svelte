@@ -67,8 +67,18 @@
                 {/if}
             {:else}
                 <a href="/dashboard/conversations/{conversation.id}" class="flex flex-row items-center gap-2 w-full transition-all hover:bg-neutral-800 rounded p-2 relative">
-                    <div class="flex flex-col gap-1">
+                    <div class="flex flex-row items-center justify-between gap-2 w-full">
                         <h6>{conversation.groupName}</h6>
+                        <div class="flex -space-x-4">
+                            {#each conversation.users as user, index}
+                                {#if index < 4}
+                                    <img class="w-10 h-10 border-2 rounded-full border-neutral-600" src="{user.profilePicture}" alt="">
+                                {/if}
+                            {/each}
+                            {#if conversation.users.length > 4}
+                                <div class="flex items-center justify-center w-10 h-10 text-xs font-medium text-white bg-neutral-600 border-2 rounded-full border-neutral-800">+{conversation.users.length - 4}</div>
+                            {/if}
+                        </div>
                     </div>
                 </a>
             {/if}

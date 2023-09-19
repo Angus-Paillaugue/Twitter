@@ -55,5 +55,17 @@ export const actions = {
 
         await messagesRef.deleteMany({ sender:user.username, conversation:id });
         throw redirect(303, "/dashboard/conversations");
+    },
+    renameGroup: async({ params, locals, request }) => {
+        const { id } = params;
+        const { user } = locals;
+        const formData = Object.fromEntries(await request.formData());
+        const { name } = formData;
+        
+        const conversation = await conversationsRef.findOne({ id });
+        if(conversation.type === "group" && conversation.admin === user.username){
+            await conversationsRef.updateOne({ id }, { $set:{ groupName:name } });
+            return { success:true, msg:`You changed the group name to '${name}'`, groupName:name };
+        }else return { success:false, msg:"You are not the owner of this group.", groupName:name };
     }
 };

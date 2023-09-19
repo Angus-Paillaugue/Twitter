@@ -115,7 +115,7 @@
             </h2>
             <p class="text-sm">@{profile.username}</p>
         </div>
-        {#if user}
+        {#if user && user.username !== profile.username}
             <button class="button-primary ml-auto" on:click={() => {toggleSubscription(profile.username)}}>
                 {#if isSubscribed}
                     Followed
