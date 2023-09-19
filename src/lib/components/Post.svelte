@@ -76,16 +76,6 @@
             post.replies = post.replies.filter(replie => replie.id !== deleteReplieId);
         }
     }
-
-    onMount(() => {
-        const elements = document.querySelectorAll("img, video");
-        for(const el of elements) {
-            el.addEventListener("error", (e) => {
-                // For legacy files stored locally
-                e.target.src = "/files/"+e.target.src.split("/").at(-1);
-            });
-        }
-    })
 </script>
 
 {#if !isDeleted && post?.user}

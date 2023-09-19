@@ -1,17 +1,20 @@
 <script>
     import { onMount } from "svelte";
     import { Post } from "$lib/components";
-    import { pageMetaData, toasts } from "$lib/stores";
+    import { pageMetaData } from "$lib/stores";
     import { fade } from 'svelte/transition';
     import { formatNumber, fileType } from "$lib/helpers";
 
     export let data;
 
     const { profile, user } = data;
+    const gcpBucketBaseUrl = "https://storage.googleapis.com/hellkeeperbucket/";
     let bookmarks = user?.bookmarks ?? [];
     let posts = data.posts;
     let subscriptions = user?.subscriptions ?? [];
+    let mediaModalSrc = {type:"", src:""};
     let fullBio = false;
+    let isFullScreen = false;
     let morePostsLoading = false;
     let isMorePostsToLoad = true;
     // let childrenMap = [];
@@ -21,11 +24,19 @@
     let bioP;
     let postsContainer;
     let navLinkUnderline;
+    let fullScreenModalVideoEl;
     $: isSubscribed = subscriptions.filter(el => el.username == profile.username).length > 0;
     $: offset = posts.length;
     $: if(fullBio){bioP.style.maxHeight = bioP.scrollHeight+24+"px";}else if(bioP){bioP.style.maxHeight = "24px";}
     $: offset = posts.length;
     $: setActiveTab(), tabIndex;
+    $: {
+        if(isFullScreen){
+            if(mediaModalSrc.type === "video"){setTimeout(()=>{fullScreenModalVideoEl.play()},0)}
+        }else {
+            if(mediaModalSrc.type === "video"){fullScreenModalVideoEl.pause()}
+        }
+    }
 
     onMount(() => {
         sectionsList = document.querySelectorAll("section");
@@ -95,6 +106,12 @@
         if(!apiRes.error) subscriptions = apiRes.subscriptions; else newToast("error", apiRes.message);
     }
 
+    const showMediaFS = (type, src) => {
+        mediaModalSrc.type = type;
+        mediaModalSrc.src = src;
+        isFullScreen = true;
+    }
+
     $pageMetaData.title = `${profile.username}'s profile.`;
     $pageMetaData.description = `${profile.username}'s profile.`;
     $pageMetaData.currentPageName = "Profile";
@@ -152,19 +169,34 @@
                 <Post post={post} bookmarks={bookmarks} borderTop={false} />
             {/each}
         </section>
-        <section class="w-full flex flex-col h-full" id="Videos" bind:this={postsContainer}>
+        <section class="w-full grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-2 h-full" id="Videos" bind:this={postsContainer}>
             {#each posts as post}
-                {#if fileType(post?.file[0]?.split(".")?.at(-1)) === "video"}
-                    <Post post={post} bookmarks={bookmarks} borderTop={false} />
-                {/if}
+                {#each post.file as file}
+                    {#if fileType(file) === "video"}
+                        <!-- svelte-ignore a11y-media-has-caption -->
+                        <video src={gcpBucketBaseUrl+file} class="rounded-lg cursor-pointer mx-auto" on:click={(e) => {showMediaFS("video", e.target.src);}}></video>
+                    {/if}
+                {/each}
             {/each}
         </section>
-        <section class="w-full flex flex-col h-full" id="Photos" bind:this={postsContainer}>
+        <section class="w-full grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-2 h-full" id="Photos" bind:this={postsContainer}>
             {#each posts as post}
-                {#if fileType(post?.file[0]?.split(".")?.at(-1)) === "image"}
-                    <Post post={post} bookmarks={bookmarks} borderTop={false} />
-                {/if}
+                {#each post.file as file}
+                    {#if fileType(file) === "image"}
+                        <!-- svelte-ignore a11y-img-redundant-alt -->
+                        <!-- svelte-ignore a11y-click-events-have-key-events -->
+                        <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                        <img class="rounded-lg w-full cursor-pointer mx-auto" src={gcpBucketBaseUrl+file} alt="Post image" on:click={(e) => {showMediaFS("image", e.target.src);}}>
+                    {/if}
+                {/each}
             {/each}
         </section>
+    </div>
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
+    <div class="bg-neutral-800/50 fixed top-0 left-0 w-full h-full transition-all flex flex-col items-center justify-center {isFullScreen ? "opacity-100 z-50" : "opacity-0 -z-10"}" on:click={() => isFullScreen = false}>
+        <img src={mediaModalSrc.src} alt="" class="rounded-lg max-h-full max-w-full {mediaModalSrc.type !== "image" && "hidden"}">
+            <!-- svelte-ignore a11y-media-has-caption -->
+        <video src={mediaModalSrc.src} playsinline loop controls bind:this={fullScreenModalVideoEl} class="max-h-full max-w-full {mediaModalSrc.type !== "video" && "hidden"}"></video>
     </div>
 </main>
