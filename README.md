@@ -3,10 +3,10 @@
 
  - [ ] Fix the autoplay of videos
  - [ ] Fix profile pictures
- - [ ] Add auto scroll to bottom on messages page
  - [ ] Add message groups
  - [ ] *Make page transitions work again
  - [ ] *Find solution for hiding the messages in console for legacy files stored locally
+ - [x] Add auto scroll to bottom on messages page
  - [x] Fix notifications
  - [x] Add notifications for new messages
  - [x] Add repost feature
