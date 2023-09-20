@@ -3,7 +3,7 @@
 
  - [ ] Fix the autoplay of videos
  - [ ] *Make page transitions work again
- - [ ] *Find solution for hiding the messages in console for legacy files stored locally
+ - [x] *Find solution for hiding the messages in console for legacy files stored locally
  - [x] Add possibility to add and remove users from groups
  - [x] Add message groups
  - [x] Fix profile pictures
