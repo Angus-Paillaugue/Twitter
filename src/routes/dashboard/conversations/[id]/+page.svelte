@@ -10,25 +10,34 @@
 
     $: if(form?.groupName){conversation.groupName = form.groupName;}
     
-    const { conversation, chattingWith, user } = data;
+    const { user } = data;
+    let { chattingWith, conversation, followedUsers } = data;
+    followedUsers = followedUsers.map(el => {return {...el, display:false}});
     const socket = io("http://localhost:5171/", { query:`conversationId=${conversation.id}` });
     user.blockedUsers = form?.blockedUsers ?? user.blockedUsers;
-    let messages = data.messages ?? [];
-    let moreModal = false;
     const maxFileSizeMo = 4.4;
+    let messages = data.messages ?? [];
     let mentionUsers = [];
     let encodedFiles = [];
+    let moreModal = false;
+    let addUserForm = false;
     let atMenuDisplay = false;
     let textarea;
     let fileInput;
     let messagesContainer;
-
+    let addUserToConversationInput;
     $: if(messagesContainer) {scrollToBottom();}
 
     socket.on('message', async(message) => {
         await fetch("/api/seenMessage", { method:"POST", body:JSON.stringify({ id:message.id }) });
         messages = [...messages, message];
     });
+
+    async function addUserToConversationInputHandle() {
+        if(addUserToConversationInput.value.length === 0) return followedUsers = followedUsers.map(el => {return {...el, display:false}});
+        let query = new RegExp( addUserToConversationInput.value, 'i' );
+        followedUsers = followedUsers.map(el => {if(chattingWith.filter(a => el.username.match(query)?.input === a.username).length > 0){return {...el, display:false}} else if(el.username.match(query)) { return {...el, display:true}}else return {...el, display:false}})
+    }
 
     async function encodeFile(e) {
 		const files = e.target.files;
@@ -116,7 +125,23 @@
 
     const scrollToBottom = async (behavior = "smooth") => {
         messagesContainer.scroll({ top: messagesContainer.scrollHeight, behavior });
-    }; 
+    };
+
+    async function removeUserFromGroup(username) {
+        const res = await fetch("/api/removeUserFromGroup", { method:"POST", body:JSON.stringify({ conversationId:conversation.id, username }) });
+        const data = await res.json();
+        if(data.error) return console.log(data.error); 
+        conversation.users = conversation.users.filter(el => el.username !== username);
+        chattingWith = chattingWith.filter(el => el.username !== username);
+    }
+    async function addUserToGroup(el) {
+        const res = await fetch("/api/addUserToGroup", { method:"POST", body:JSON.stringify({ conversationId:conversation.id, username:el.username }) });
+        const data = await res.json();
+        if(data.error) return console.log(data.error); 
+        followedUsers = followedUsers.map(el => {if(el.username === el.username){return {...el, display:false}}else {return el}});
+        chattingWith = [...chattingWith, el];
+        addUserToConversationInput.value = "";
+    }
 
     if(conversation?.type === "dm"){
         $pageMetaData.title = `Chatting with ${chattingWith.filter(el => el.username !== user.username)[0].username}`;
@@ -246,14 +271,51 @@
         <h4>Details</h4>
         {#if conversation?.type === "group"}
             {#if conversation.admin === user.username}
-                <form use:enhance action="?/deleteGroup" method="POST" class="flex flex-col gap-2 mt-6">
+                <h5 class="mt-6">Group settings</h5>
+                <form use:enhance action="?/deleteGroup" method="POST" class="flex flex-col gap-2">
                     <button class="button-danger w-full">Delete group</button>
                 </form>
 
-                <form use:enhance action="?/renameGroup" method="POST" class="mt-6">
+                <form use:enhance action="?/renameGroup" method="POST" class="mt-4">
                     <input type="text" placeholder="Group name" name="name" value={form?.name ?? conversation.groupName} class="border text-sm rounded-lg block w-full p-2.5 bg-neutral-800 border-neutral-700 placeholder-neutral-400 text-white focus:ring-primary-500 focus:border-primary-500 focus:outline-none outline-none transition-all mb-2">
                     <button class="button-primary w-full">Rename</button>
                 </form>
+
+                <h5 class="mt-6">Manage users</h5>
+                <button class="button-primary button-sm w-full mb-2" on:click={() => {addUserForm = !addUserForm;}}>
+                    Add user
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                </button>
+                <div class="overflow-hidden {addUserForm ? "max-h-56 mb-2" :"max-h-0"} transition-all">
+                    {#if followedUsers.filter(el => el.display).length > 0}
+                        <div class="flex flex-row flex-wrap gap-2 mb-2">
+                            {#each followedUsers as user}
+                                {#if user.display}
+                                    <button class="p-2 flex flex-row items-center gap-4 bg-neutral-900 hover:bg-neutral-800 border border-border text-neutral-100 w-fit transition-all rounded-xl cursor-pointer hover:rounded-3xl" on:click={() => {addUserToGroup(user)}}>
+                                        <img src="{user.profilePicture}" alt="Avatar" class="h-8 w-8 rounded-full flex-shrink-0"/>
+                                        <div class="flex flex-col"><h6>{ user.username }</h6></div>
+                                    </button>
+                                {/if}
+                            {/each}
+                        </div>
+                    {/if}
+                    <input type="text" placeholder="Username" class="border text-sm rounded-lg block w-full p-2.5 bg-neutral-800 border-neutral-700 placeholder-neutral-400 text-white focus:ring-primary-500 focus:border-primary-500 focus:outline-none outline-none transition-all" on:keyup={addUserToConversationInputHandle} bind:this={addUserToConversationInput}>
+                </div>
+                <div class="flex flex-row flex-wrap gap-2">
+                    {#each chattingWith.filter(el =>el.username !== user.username) as user}
+                        <div class="p-2 flex flex-row items-center gap-4 bg-neutral-900 border text-neutral-100 w-fit transition-all border-border rounded-3xl cursor-pointer hover:rounded-xl overflow-hidden relative group">
+                            <img src="{user.profilePicture}" alt="Avatar" class="h-8 w-8 rounded-full flex-shrink-0"/>
+                            <div class="flex flex-col"><h6>{ user.username }</h6></div>
+                            <div class="absolute top-0 left-0 w-full h-full opacity-0 transition-all bg-neutral-800/50 group-hover:opacity-100 flex flex-row items-center justify-end">
+                                <button class="h-full aspect-square flex flex-row items-center justify-center" on:click={() => {removeUserFromGroup(user.username)}}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 transition-all">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                      </svg>
+                                </button>
+                            </div>
+                        </div>
+                    {/each}
+                </div>
             {:else}
                 <form use:enhance action="?/leaveGroup" method="POST" class="flex flex-col gap-2 mt-6">
                     <button class="button-danger w-full">Leave group</button>

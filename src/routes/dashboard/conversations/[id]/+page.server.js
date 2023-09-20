@@ -3,6 +3,7 @@ import { redirect } from "@sveltejs/kit";
 
 export async function load({ params, locals }) {
     const { id } = params;
+    const { user } = locals;
 
     const conversation = structuredClone(await conversationsRef.findOne({ id }));
     if(!conversation.users.includes(locals.user.username)) throw redirect(303, "/dashboard");
@@ -15,7 +16,10 @@ export async function load({ params, locals }) {
 
     messages = messages.map(message => {return {...message, sender:chattingWith.filter(user => user.username === message.sender)[0]}});
 
-    return { messages, conversation, chattingWith };
+    let followedUsers = await usersRef.find({ username: { $in:user.subscriptions.map(el => el.username) } }).project({ _id:0, password:0, email:0, bookmarks:0, blockedUsers:0 }).toArray();
+    followedUsers = followedUsers.filter(el => el.username !== user.username);
+
+    return { messages, conversation, chattingWith, followedUsers };
 };
 
 export const actions = {

@@ -38,7 +38,9 @@ body {
 .material-button.round {
 	@apply inline-flex items-center justify-center text-base focus:outline-none font-semibold flex-row gap-2 transition-all text-neutral-100 rounded-full lg:p-4 md:p-3 p-2 hover:bg-neutral-800
 }
-
+.button-sm {
+	@apply px-3 py-1 sm:py-1.5 sm:px-4 text-sm sm:text-base
+}
 .link:not(.no-anim) {
 	@apply bg-gradient-to-l bg-left-bottom from-primary-500/70 to-primary-500/70 font-normal text-primary-600 cursor-pointer h-fit bg-[length:0_2px] bg-no-repeat transition-[background-size] duration-300 ease-in hover:bg-[length:100%_2px] hover:bg-right-bottom break-words md:text-sm text-base;
 }

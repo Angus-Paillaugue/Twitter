@@ -2,9 +2,9 @@
 # TODO
 
  - [ ] Fix the autoplay of videos
- - [ ] Add possibility to add and remove users from groups
  - [ ] *Make page transitions work again
  - [ ] *Find solution for hiding the messages in console for legacy files stored locally
+ - [x] Add possibility to add and remove users from groups
  - [x] Add message groups
  - [x] Fix profile pictures
  - [x] Add auto scroll to bottom on messages page
