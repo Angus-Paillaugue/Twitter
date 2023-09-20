@@ -182,9 +182,9 @@
             </button>
         {/if}
     </header>
-    <div class="grid grid-cols-12 gap-y-2 md:p-4 p-1 overflow-y-auto grow h-full no-scrollbar" bind:this={messagesContainer}>
+    <div class="flex flex-col gap-y-2 items-start justify-start md:p-4 p-1 overflow-y-auto grow h-full no-scrollbar" bind:this={messagesContainer}>
         {#each messages as message}
-            <div class="{message.sender.username === user.username ? "md:col-start-5 col-start-2 col-end-13" : "col-start-1 md:col-end-9 col-end-11"} rounded-lg">
+            <div class="{message.sender.username === user.username && "ml-auto"} max-w-[70%] rounded-lg">
                 <div class="flex {message.sender.username === user.username ? "flex-row-reverse" : "flex-row"} items-end gap-3">
                     {#if message.sender.username !== user.username}
                         <a href="/u/{message.sender.username}">
