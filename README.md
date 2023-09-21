@@ -2,7 +2,9 @@
 # TODO
 
  - [ ] Fix the autoplay of videos
+ - [ ] Fix home page recommended videos algorithm
  - [ ] *Make page transitions work again
+ - [x] On conversation page change sidebar to host all conversations
  - [x] *Find solution for hiding the messages in console for legacy files stored locally
  - [x] Add possibility to add and remove users from groups
  - [x] Add message groups

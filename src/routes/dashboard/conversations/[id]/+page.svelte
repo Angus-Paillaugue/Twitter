@@ -9,14 +9,19 @@
     export let form;
 
     $: if(form?.groupName){conversation.groupName = form.groupName;}
-    
-    const { user } = data;
-    let { chattingWith, conversation, followedUsers } = data;
-    followedUsers = followedUsers.map(el => {return {...el, display:false}});
-    const socket = io("http://localhost:5171/", { query:`conversationId=${conversation.id}` });
-    user.blockedUsers = form?.blockedUsers ?? user.blockedUsers;
-    const maxFileSizeMo = 4.4;
+    let user = data.user;
+    let chattingWith = data.chattingWith;
+    let conversation = data.conversation; 
+    let followedUsers = data.followedUsers.map(el => {return {...el, display:false}});
     let messages = data.messages ?? [];
+    $: user = data.user;
+    $: chattingWith = data.chattingWith;
+    $: conversation = data.conversation; 
+    $: followedUsers = data.followedUsers.map(el => {return {...el, display:false}});
+    $: messages = data.messages ?? [];
+    const socket = io("http://localhost:5171/", { query:`conversationId=${conversation.id}` });
+    $: user.blockedUsers = form?.blockedUsers ?? user.blockedUsers;
+    const maxFileSizeMo = 4.4;
     let mentionUsers = [];
     let encodedFiles = [];
     let moreModal = false;
@@ -182,12 +187,12 @@
             </button>
         {/if}
     </header>
-    <div class="flex flex-col gap-y-2 items-start justify-start md:p-4 p-1 overflow-y-auto grow h-full no-scrollbar" bind:this={messagesContainer}>
+    <div class="flex flex-col gap-y-2 items-start justify-start overflow-y-auto grow h-full no-scrollbar" bind:this={messagesContainer}>
         {#each messages as message}
             <div class="{message.sender.username === user.username && "ml-auto"} max-w-[70%] rounded-lg">
                 <div class="flex {message.sender.username === user.username ? "flex-row-reverse" : "flex-row"} items-end gap-3">
                     {#if message.sender.username !== user.username}
-                        <a href="/u/{message.sender.username}">
+                        <a href="/u/{message.sender.username}" class="flex-shrink-0">
                             <img src="{chattingWith.filter(el => el.username === message.sender.username)[0].profilePicture}" alt="Avatar" class="h-8 w-8 rounded-full flex-shrink-0"/>
                         </a>
                     {:else}

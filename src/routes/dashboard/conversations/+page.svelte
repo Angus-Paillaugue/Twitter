@@ -1,6 +1,6 @@
 <script>
-    import { enhance } from "$app/forms";
     import { pageMetaData } from "$lib/stores";
+    import { goto } from "$app/navigation";
     import { quintOut } from 'svelte/easing';
 	import { crossfade } from 'svelte/transition';
 	import { flip } from 'svelte/animate';
@@ -35,13 +35,26 @@
         newConversationUsers = newConversationUsers.filter(el => el.selected || el.username.match(query)).map(el => {return {...el,display:true}});
     }
 
+    async function newConversation() {
+        const res = await fetch("/api/newConversation", { method:"POST", body:JSON.stringify({ users:newConversationUsers.filter(el => el.selected).map(el => el.username) }) });
+        const data = await res.json();
+        if(data?.id){
+            goto('/').then(() => goto(`/dashboard/conversations/${data.id}`));
+        }
+    }
+
     $pageMetaData.title = "Messages";
     $pageMetaData.description = "Messages";
     $pageMetaData.currentPageName = "Messages";
 </script>
 
 <section class="w-full p-2">
-    <button class="button-primary w-full" on:click={() => { newConversationModal = true;}}>New conversation</button>
+    <button class="button-primary w-full group" on:click={() => { newConversationModal = true;}}>
+        New conversation
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 group-hover:scale-110 transition-all">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+        </svg>
+    </button>
     <div class="mt-6 flex flex-col gap-4">
         {#each conversationsWithMe as conversation}
             {#if conversation?.type === "dm"}
@@ -89,7 +102,7 @@
 
 <div class="fixed top-0 left-0 w-full h-full bg-neutral-600/50 transition-opacity flex flex-col justify-center items-center {newConversationModal ? "z-40 opacity-100": "-z-10 opacity-0"}">
     <div class="relative rounded-lg shadow bg-neutral-900 max-w-md max-h-full w-full">
-        <form method="POST" use:enhance={(e) => {e.formData.set("users",JSON.stringify(newConversationUsers.filter(el => el.selected).map(el => el.username)));return ({ update }) => update({ reset: false });}} action="?/newConversation" class="p-6 flex flex-col gap-2">
+        <form on:submit|preventDefault={newConversation} class="p-6 flex flex-col gap-2">
             <h4>New conversation</h4>
             <p class="text-xs mb-2">To chat with someone, you need to follow him/her.</p>
             <input type="text" placeholder="Username" class="border text-sm rounded-lg block w-full p-2.5 bg-neutral-800 border-neutral-700 placeholder-neutral-400 text-white focus:ring-primary-500 focus:border-primary-500 focus:outline-none outline-none transition-all" on:keyup={newConversationInputHandle} bind:this={newConversationInput}>

@@ -6,6 +6,7 @@ export async function load({ params, locals }) {
     const { user } = locals;
 
     const conversation = structuredClone(await conversationsRef.findOne({ id }));
+    if(!conversation)throw redirect(303, "/dashboard/conversations");
     if(!conversation.users.includes(locals.user.username)) throw redirect(303, "/dashboard");
     let messages = await messagesRef.find({ conversation:id }).project({ _id:0 }).toArray();
     
@@ -19,7 +20,25 @@ export async function load({ params, locals }) {
     let followedUsers = await usersRef.find({ username: { $in:user.subscriptions.map(el => el.username) } }).project({ _id:0, password:0, email:0, bookmarks:0, blockedUsers:0 }).toArray();
     followedUsers = followedUsers.filter(el => el.username !== user.username);
 
-    return { messages, conversation, chattingWith, followedUsers };
+    let conversationsWithMe = await conversationsRef.find({ users:user.username }).sort({ lastMessage:-1 }).project({ _id:0 }).toArray();
+
+    conversationsWithMe = structuredClone(await Promise.all(conversationsWithMe.map(async (conversation) => {
+        let lastMessage = await messagesRef.find({ conversation:conversation.id }).sort({ date:-1 }).limit(1).project({ _id:0 }).toArray();
+        if(lastMessage.length > 0){
+            lastMessage = lastMessage[0];
+            const parseMention = (text) => {return text.replace(new RegExp(/(?=(<user>))(\w|\W)*(?<=<\/user>)/, "gm"), function(match) {return match.slice(6, -7);});}
+            lastMessage.message = parseMention(lastMessage.message);
+        }
+        conversation.users = await usersRef.find({ username:{ $in:conversation.users } }).project({ _id:Object, email:0, password:0, subscriptions:0 }).toArray();
+        if(Object.keys(lastMessage).length > 0) {
+            return { ...conversation, lastMessage:lastMessage, users:conversation.users }
+        }else {
+            return { ...conversation, users:conversation.users }
+        }
+    })));
+    conversationsWithMe = conversationsWithMe.filter(n => n);
+
+    return { messages, conversation, chattingWith, followedUsers, conversationsWithMe };
 };
 
 export const actions = {
