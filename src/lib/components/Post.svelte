@@ -89,7 +89,8 @@
         <div class="flex flex-row justify-between items-center gap-2 w-full">
             <div class="flex flex-row gap-2 items-center">
                 <!-- svelte-ignore a11y-img-redundant-alt -->
-                <a href="/u/{post.user.username}"><img src="{post.user.profilePicture}" class="rounded-full h-12 w-12" alt="Profile picture"></a>
+                <a href="/u/{post.user.username}" class="bg-center bg-cover rounded-full h-12 w-12" style="background-image: url({post.user.profilePicture});">
+                </a>
                 <div class="flex flex-col">
                     <h5>
                         {post.user.displayName}

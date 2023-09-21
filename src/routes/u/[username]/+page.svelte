@@ -25,6 +25,8 @@
     let postsContainer;
     let navLinkUnderline;
     let fullScreenModalVideoEl;
+    let scrollTop = 0;
+    let scaleDownProfilePicture = false
     $: isSubscribed = subscriptions.filter(el => el.username == profile.username).length > 0;
     $: offset = posts.length;
     $: if(fullBio){bioP.style.maxHeight = bioP.scrollHeight+24+"px";}else if(bioP){bioP.style.maxHeight = "24px";}
@@ -40,6 +42,7 @@
 
     onMount(() => {
         sectionsList = document.querySelectorAll("section");
+        scaleDownProfilePicture = document.body.scrollTop > 180 || document.documentElement.scrollTop > 180;
 
         setActiveTab();
         window.onresize = setActiveTab;
@@ -52,6 +55,8 @@
             // When the user is [modifier]px from the bottom, fire the event.
             let modifier = 500; 
             if(currentScroll + modifier > documentHeight) loadPosts();
+
+            scaleDownProfilePicture = document.body.scrollTop > 180 || document.documentElement.scrollTop > 180;
 
             // let bottomTrigger = window.scrollY + window.innerHeight/2;
             // let isVideoPlaying = false;
@@ -118,13 +123,14 @@
 </script>
 
 <main class="w-full">
-    <div class="w-full relative bg-no-repeat bg-center bg-cover max-h-64 lg:max-h-80" style="height: 25vw; background-image: url('{profile.banner}');">
+    <div class="w-full relative bg-no-repeat bg-center bg-cover max-h-64 lg:max-h-80 -z-10" style="height: 25vw; background-image: url('{profile.banner}');"></div>
+    <div class="lg:h-[108px] md:h-[70px] mb-2 flex flex-col sm:flex-row items-start gap-2 lg:p-4 p-2 max-sm:-mt-10 transition-all sm:pl-0">
         <!-- svelte-ignore a11y-img-redundant-alt -->
-        <img src="{profile.profilePicture}" alt="Profile picture" class="rounded-full lg:h-36 transition-all lg:w-36 md:h-24 md:w-24 w-16 h-16 absolute bottom-0 left-2 md:left-5 translate-y-3/4 ring-4 ring-neutral-800">
-    </div>
-    <div class="lg:h-[108px] md:h-[70px] mb-2 flex flex-col sm:flex-row items-start md:items-center gap-2 lg:p-4 p-2 max-sm:pt-14 lg:pl-44 md:pl-32 pl-2">
-        <div class="h-full flex flex-col items-start">
-            <h2>
+        <div class="rounded-full transition-all {scaleDownProfilePicture ? "lg:h-24 lg:w-24 md:h-20 md:w-20 w-14 h-14" : "lg:h-36 lg:w-36 md:h-24 md:w-24 w-16 h-16"} bottom-0 ring-4 ring-neutral-800 sm:-translate-y-1/3 bg-center bg-cover" style="background-image: url({profile.profilePicture});">
+        </div>
+            
+        <div>
+            <h2 class="max-md:text-lg">
                 {profile.displayName}
                 {#if profile.certified}
                     <svg viewBox="0 0 22 22" class="w-5 h-5 fill-primary-500 inline-block"><g><path d="M20.396 11c-.018-.646-.215-1.275-.57-1.816-.354-.54-.852-.972-1.438-1.246.223-.607.27-1.264.14-1.897-.131-.634-.437-1.218-.882-1.687-.47-.445-1.053-.75-1.687-.882-.633-.13-1.29-.083-1.897.14-.273-.587-.704-1.086-1.245-1.44S11.647 1.62 11 1.604c-.646.017-1.273.213-1.813.568s-.969.854-1.24 1.44c-.608-.223-1.267-.272-1.902-.14-.635.13-1.22.436-1.69.882-.445.47-.749 1.055-.878 1.688-.13.633-.08 1.29.144 1.896-.587.274-1.087.705-1.443 1.245-.356.54-.555 1.17-.574 1.817.02.647.218 1.276.574 1.817.356.54.856.972 1.443 1.245-.224.606-.274 1.263-.144 1.896.13.634.433 1.218.877 1.688.47.443 1.054.747 1.687.878.633.132 1.29.084 1.897-.136.274.586.705 1.084 1.246 1.439.54.354 1.17.551 1.816.569.647-.016 1.276-.213 1.817-.567s.972-.854 1.245-1.44c.604.239 1.266.296 1.903.164.636-.132 1.22-.447 1.68-.907.46-.46.776-1.044.908-1.681s.075-1.299-.165-1.903c.586-.274 1.084-.705 1.439-1.246.354-.54.551-1.17.569-1.816zM9.662 14.85l-3.429-3.428 1.293-1.302 2.072 2.072 4.4-4.794 1.347 1.246z"></path></g></svg>
@@ -171,24 +177,28 @@
         </section>
         <section class="w-full grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-2 h-full" id="Videos" bind:this={postsContainer}>
             {#each posts as post}
-                {#each post.file as file}
-                    {#if fileType(file) === "video"}
-                        <!-- svelte-ignore a11y-media-has-caption -->
-                        <video src={gcpBucketBaseUrl+file} class="rounded-lg cursor-pointer mx-auto" on:click={(e) => {showMediaFS("video", e.target.src);}}></video>
-                    {/if}
-                {/each}
+                {#if post.file}
+                    {#each post.file as file}
+                        {#if fileType(file) === "video"}
+                            <!-- svelte-ignore a11y-media-has-caption -->
+                            <video src={gcpBucketBaseUrl+file} class="rounded-lg cursor-pointer mx-auto" on:click={(e) => {showMediaFS("video", e.target.src);}}></video>
+                        {/if}
+                    {/each}
+                {/if}
             {/each}
         </section>
         <section class="w-full grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-2 h-full" id="Photos" bind:this={postsContainer}>
             {#each posts as post}
-                {#each post.file as file}
-                    {#if fileType(file) === "image"}
-                        <!-- svelte-ignore a11y-img-redundant-alt -->
-                        <!-- svelte-ignore a11y-click-events-have-key-events -->
-                        <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                        <img class="rounded-lg w-full cursor-pointer mx-auto" src={gcpBucketBaseUrl+file} alt="Post image" on:click={(e) => {showMediaFS("image", e.target.src);}}>
-                    {/if}
-                {/each}
+                {#if post.file}
+                    {#each post.file as file}
+                        {#if fileType(file) === "image"}
+                            <!-- svelte-ignore a11y-click-events-have-key-events -->
+                            <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                            <!-- svelte-ignore a11y-img-redundant-alt -->
+                            <img class="rounded-lg w-full cursor-pointer mx-auto" src={gcpBucketBaseUrl+file} alt="Post image" on:click={(e) => {showMediaFS("image", e.target.src);}}>
+                        {/if}
+                    {/each}
+                {/if}
             {/each}
         </section>
     </div>

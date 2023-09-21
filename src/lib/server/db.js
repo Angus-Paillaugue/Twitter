@@ -10,6 +10,5 @@ const usersRef = database.collection("users");
 const postsRef = database.collection("posts");
 const messagesRef = database.collection("messages");
 const conversationsRef = database.collection("conversations");
-const repliesRef = database.collection("replies");
 
-export { usersRef, postsRef, messagesRef, conversationsRef, repliesRef }
+export { usersRef, postsRef, messagesRef, conversationsRef }
