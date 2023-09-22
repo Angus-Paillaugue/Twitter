@@ -105,8 +105,8 @@
             <h5 class="mt-16 mb-10">Join today.</h5>
             <div class="w-full max-w-md">
                 <div class="w-full font-medium text-center text-neutral-400 flex flex-row justify-between relative mb-2">
-                    <button class="inline-flex items-center justify-center p-4 border-b-2 border-transparent group w-full transition-all {tabIndex === 0 ? "rounded-t-lg text-primary-500" : "rounded-t-lg hover:border-neutral-700 hover:text-neutral-300"}" on:click={() => {tabIndex = 0}} data-section="Log-in">Log-in</button>
-                    <button class="inline-flex items-center justify-center p-4 border-b-2 border-transparent group w-full transition-all {tabIndex === 1 ? "rounded-t-lg text-primary-500" : "rounded-t-lg hover:border-neutral-700 hover:text-neutral-300"}" on:click={() => {tabIndex = 1}} data-section="Sign-in">Sign-in</button>
+                    <button class="inline-flex items-center justify-center p-4 border-b-2 border-transparent group w-full transition-all no-scale {tabIndex === 0 ? "rounded-t-lg text-primary-500" : "rounded-t-lg hover:border-neutral-700 hover:text-neutral-300"}" on:click={() => {tabIndex = 0}} data-section="Log-in">Log-in</button>
+                    <button class="inline-flex items-center justify-center p-4 border-b-2 border-transparent group w-full transition-all no-scale {tabIndex === 1 ? "rounded-t-lg text-primary-500" : "rounded-t-lg hover:border-neutral-700 hover:text-neutral-300"}" on:click={() => {tabIndex = 1}} data-section="Sign-in">Sign-in</button>
                     <span bind:this={navLinkUnderline} class="h-1 transition-all bottom-0 bg-primary-600 absolute ease-in-out duration-300"></span>
                 </div>
 

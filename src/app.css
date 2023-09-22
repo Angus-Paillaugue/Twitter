@@ -20,13 +20,14 @@
 
 * {
 	scroll-behavior: smooth;
+	@apply focus:ring-1 focus:ring-white focus:ring-offset-2 focus:ring-offset-neutral-900
 }
 
 body {
 	@apply overflow-x-hidden text-neutral-600 bg-neutral-900;
 }
-[class^='button-'] {
-	@apply active:scale-95 transition-all duration-200
+[class^='button-']:not(.no-scale), button:not(.no-scale), a:not(.no-scale) {
+	@apply active:scale-95 transition-all duration-200;
 }
 .button-primary {
 	@apply inline-flex flex-row items-center justify-center gap-2 px-5 py-2 sm:py-3 sm:px-8 text-sm sm:text-base font-semibold transition-all duration-200 bg-white border border-white text-neutral-900 hover:rounded-lg rounded-3xl focus:outline-none disabled:cursor-not-allowed disabled:bg-neutral-300;
@@ -41,7 +42,7 @@ body {
 	@apply inline-flex items-center justify-center text-base focus:outline-none font-semibold flex-row gap-2 transition-all text-neutral-100 rounded-full lg:p-4 md:p-3 p-2 hover:bg-neutral-800
 }
 .button-sm {
-	@apply px-3 py-1 sm:py-1.5 sm:px-4 text-sm sm:text-base
+	@apply px-3 py-1 sm:py-1.5 sm:px-4 text-sm sm:text-base;
 }
 .link:not(.no-anim) {
 	@apply bg-gradient-to-l bg-left-bottom from-primary-500/70 to-primary-500/70 font-normal text-primary-600 cursor-pointer h-fit bg-[length:0_2px] bg-no-repeat transition-[background-size] duration-300 ease-in hover:bg-[length:100%_2px] hover:bg-right-bottom break-words md:text-sm text-base;
@@ -77,33 +78,33 @@ p, label {
 }
 
 .card {
-  @apply rounded-lg md:p-10 p-6 w-full flex flex-col items-start gap-4 text-start transition-all border border-neutral-700
+  	@apply rounded-lg md:p-10 p-6 w-full flex flex-col items-start gap-4 text-start transition-all border border-neutral-700
 }
 .card-button {
-  @apply rounded-lg md:p-10 p-6 w-full flex flex-col justify-start items-start gap-6 cursor-pointer disabled:cursor-not-allowed text-xl text-start hover:shadow-lg hover:-translate-y-1 transition-all border relative text-neutral-100 border-border
+  	@apply rounded-lg md:p-10 p-6 w-full flex flex-col justify-start items-start gap-6 cursor-pointer disabled:cursor-not-allowed text-xl text-start hover:shadow-lg hover:-translate-y-1 transition-all border relative text-neutral-100 border-border
 }
 .card-button p {
-  @apply leading-5 mt-2
+  	@apply leading-5 mt-2;
 }
 .card-button svg {
-  @apply text-2xl
+  	@apply text-2xl;
 }
 
 
 .postCard {
-  @apply md:p-4 p-2 flex flex-col items-start gap-4 text-start transition-all w-full border-border
+  	@apply md:p-4 p-2 flex flex-col items-start gap-4 text-start transition-all w-full border-border;
 }
 
 .userCard {
-  @apply flex flex-col cursor-pointer relative transition-all overflow-hidden border border-border
+  	@apply flex flex-col cursor-pointer relative transition-all overflow-hidden border border-border;
 }
 
 .no-scrollbar::-webkit-scrollbar {
-  display: none;
+  	display: none;
 }
 .no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+	-ms-overflow-style: none;
+	scrollbar-width: none;
 }
 
 @keyframes dash {
