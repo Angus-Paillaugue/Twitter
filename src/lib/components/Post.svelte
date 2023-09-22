@@ -199,7 +199,7 @@
             <h6>Replies to @{post.user.username}</h6>
             <div class="text-center mt-4">
                 <textarea name="text" rows="6" class="block w-full p-2 rounded-t-lg text-sm border-0 bg-neutral-800 focus:ring-0 text-neutral-100 placeholder-neutral-400" placeholder="Write your replie..." bind:value={newReplieText}></textarea>
-                <button type="submit" class="focus:outline-none text-neutral-100 bg-primary-600 hover:bg-primary-700 font-medium text-sm px-5 py-2.5 flex flex-row gap-2 items-center justify-center disabled:bg-primary-400 disabled:cursor-not-allowed shadow-primary-500 hover:shadow-sm transition-all rounded-b-lg w-full" on:click={publishReplie}>Publish replie</button>
+                <button type="submit" class="focus:outline-none text-neutral-100 bg-primary-600 hover:bg-primary-700 font-medium text-sm px-5 py-2.5 flex flex-row gap-2 items-center justify-center disabled:bg-primary-400 disabled:cursor-not-allowed shadow-primary-500 hover:shadow-sm transition-all rounded-b-lg w-full no-scale" on:click={publishReplie}>Publish replie</button>
             </div>
             {#if post.replies.length > 0}
                 <ol class="relative border-l border-neutral-700 mt-4">

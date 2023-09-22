@@ -2,6 +2,7 @@
 # TODO
 
  - [ ] Fix the autoplay of videos
+ - [ ] Fix uploading of profile pictures and banners (old ones are not removed)
  - [ ] Fix home page recommended videos algorithm
  - [ ] *Make page transitions work again
  - [x] On conversation page change sidebar to host all conversations

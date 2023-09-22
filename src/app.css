@@ -15,12 +15,14 @@
 	@apply bg-neutral-400 hover:bg-neutral-500;
 }
 ::selection {
-	@apply text-primary-100 bg-primary-800;
+	@apply text-primary-100 bg-primary-900;
 }
 
 * {
 	scroll-behavior: smooth;
-	@apply focus:ring-1 focus:ring-white focus:ring-offset-2 focus:ring-offset-neutral-900
+}
+*:focus-visible {
+	@apply ring-1 ring-white ring-offset-2 ring-offset-neutral-900
 }
 
 body {

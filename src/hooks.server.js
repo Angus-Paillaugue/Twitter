@@ -17,7 +17,7 @@ export const handle = async ({ event, resolve }) => {
         }
     }
     
-    if(url.pathname.startsWith("/dashboard") && !locals.user){
+    if(!url.pathname === "/" && !locals.user){
         cookies.delete("token"); 
         throw redirect(303, `/`);
     }
