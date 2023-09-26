@@ -31,9 +31,7 @@ export const actions = {
                 let ext = profilePicture.name.split(".").at(-1);
                 let filePath = `static/files/${user.username}-profile-picture-temp.${ext}`;
                 writeFileSync(filePath, Buffer.from(await profilePicture.arrayBuffer()));
-                let options = { destination: `profile-pictures/${user.username}-profile-picture-${randomUUID()}.${ext}` };
-                let file = await storage.bucket("hellkeeperbucket").file(user.username+"-profile-picture-temp."+ext).exists();
-                if(file[0]) await storage.bucket("hellkeeperbucket").file(user.username).delete();
+                let options = { destination: `profile-pictures/${user.username}-profile-picture.${ext}` };
                 await storage.bucket("hellkeeperbucket").upload(filePath, options);
                 unlinkSync(filePath);
                 profilePicturePath = `https://storage.googleapis.com/hellkeeperbucket/${options.destination}`
@@ -43,9 +41,7 @@ export const actions = {
                 let ext = banner.name.split(".").at(-1);
                 let filePath = `static/files/${user.username}-banner-temp.${ext}`;
                 writeFileSync(filePath, Buffer.from(await banner.arrayBuffer()));
-                let options = { destination: `banners/${user.username}-banner-${randomUUID()}.${ext}` };
-                let file = await storage.bucket("hellkeeperbucket").file(user.username+"-banner-temp."+ext).exists();
-                if(file[0]) await storage.bucket("hellkeeperbucket").file(user.username).delete();
+                let options = { destination: `banners/${user.username}-banner.${ext}` };
                 await storage.bucket("hellkeeperbucket").upload(filePath, options);
                 unlinkSync(filePath);
                 bannerPath = `https://storage.googleapis.com/hellkeeperbucket/${options.destination}`;

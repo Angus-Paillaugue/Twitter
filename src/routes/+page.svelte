@@ -1,7 +1,7 @@
 <script>
     import { onMount } from "svelte";
     import { Post } from "$lib/components";
-    import { pageMetaData, newToast } from "$lib/stores";
+    import { pageMetaData } from "$lib/stores";
     import { enhance } from '$app/forms';
 
     export let data;

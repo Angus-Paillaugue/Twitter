@@ -102,8 +102,7 @@
                 {/if}
                 <div class="flex flex-col gap-2 text-neutral-300">
                     Profile picture
-                    <label for="profilePicture" class="cursor-pointer group relative h-20 w-20 rounded-full overflow-hidden">
-                        <img src="{profilePicture}" alt="" class="w-full h-full">
+                    <label for="profilePicture" class="cursor-pointer group relative h-20 w-20 rounded-full overflow-hidden bg-center bg-no-repeat bg-cover" style="background-image: url({profilePicture});">
                         <input type="file" name="profilePicture" id="profilePicture" class="hidden" accept="image/*">
                         <div class="hover:bg-neutral-900/50 group-hover:opacity-100 opacity-0 transition-all z-10 absolute inset-0 flex flex-col items-center justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">

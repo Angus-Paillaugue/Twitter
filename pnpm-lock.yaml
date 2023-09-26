@@ -47,6 +47,9 @@ dependencies:
   stripe:
     specifier: ^13.3.0
     version: 13.3.0
+  svelte-lazyimage-cache:
+    specifier: 1.0.9-remake
+    version: 1.0.9-remake
   svelte-local-storage-store:
     specifier: ^0.5.0
     version: 0.5.0(svelte@4.1.1)
@@ -2339,6 +2342,10 @@ packages:
     dependencies:
       svelte: 4.1.1
     dev: true
+
+  /svelte-lazyimage-cache@1.0.9-remake:
+    resolution: {integrity: sha512-Zh+c9AtE1fAEh4lZebHS7vGK0PFHFtuqMA1notE3+50O8wzioXqA3YlMvmAKxOYPEQ+vveSSgbwtjMPAUvlo5A==}
+    dev: false
 
   /svelte-local-storage-store@0.5.0(svelte@4.1.1):
     resolution: {integrity: sha512-SEDrpapeia6fUqta+r1NvSLlJYPkZ4pBcl15EYIOSPNzy6vhpoXu8cnzUDmZxsWl7fZGAHxrVH9UyZCbyO4W+g==}
