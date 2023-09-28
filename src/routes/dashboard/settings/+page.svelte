@@ -1,5 +1,5 @@
 <script>
-    import { Tooltip  } from 'flowbite-svelte';
+    import { Tooltip } from 'flowbite-svelte';
     import { pageMetaData, newToast } from "$lib/stores";
     import { enhance } from '$app/forms';
     import { onMount } from "svelte";
