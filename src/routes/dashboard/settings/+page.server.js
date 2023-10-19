@@ -2,7 +2,6 @@ import { redirect } from "@sveltejs/kit";
 import { usersRef, postsRef } from "$lib/server/db";
 import { Storage } from '@google-cloud/storage';
 import { unlinkSync, writeFileSync } from "fs";
-import { randomUUID } from "crypto";
 
 export async function load({ locals }) {
     const { user } = locals;
